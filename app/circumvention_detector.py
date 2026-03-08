@@ -52,11 +52,11 @@ EXCLUSION_CIRCUMVENTION = [
 # Signals suggesting creation of duplicate accounts to bypass controls
 # or claim multiple bonuses. (Source: Fingerprint.com fraud typologies)
 MULTI_ACCOUNTING = [
-    "new account", "create another account", "open another account",
+    "create another account", "open another account",
     "make a new account", "register a new account",
     "different email", "use a different email",
     "different name", "use a different name",
-    "second account", "another account",
+    "second account",
     "my other account", "my second account",
     "bypass the ban", "get around the ban",
     "get around the block", "bypass the block",

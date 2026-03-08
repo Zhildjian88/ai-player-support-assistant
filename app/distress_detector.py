@@ -264,13 +264,13 @@ SAFE_RESPONSES = {
     ),
 
     "tl": (
-        "Labis kaming naaawa na marinig na nagdaranas ka ng napakahirap na panahon. "
-        "Alamin na may tulong na available at hindi mo kailangang harapin ito nang mag-isa.\n\n"
-        "Kung mayroon kang mga naiisip na saktan ang iyong sarili, mangyaring makipag-ugnayan "
-        "sa crisis helpline sa iyong bansa agad — libre, kumpidensyal, at available 24 oras sa isang araw.\n\n"
-        "Ipinaalam ko na ang iyong mensahe sa aming koponan ng kapakanan ng manlalaro, "
-        "at makikipag-ugnayan sila sa iyo sa lalong madaling panahon. Samantala, maaari kong tulungan kang "
-        "i-activate ang pansamantalang pahinga ng account o self-exclusion kung makakatulong iyon."
+        "Labis kaming naaawa sa inyong nararamdaman. "
+        "Nais naming ipaalam na may tulong na handang ibigay at hindi kayo nag-iisa sa pagharap sa sitwasyong ito.\n\n"
+        "Kung mayroon kayong mga naiisip na saktan ang inyong sarili, mangyaring makipag-ugnayan "
+        "sa crisis helpline sa inyong bansa agad — libre, kumpidensyal, at available 24 oras sa isang araw.\n\n"
+        "Ipinaalam na namin ang inyong mensahe sa aming koponan ng kapakanan ng manlalaro, "
+        "at makikipag-ugnayan sila sa inyo sa lalong madaling panahon. Samantala, maaari naming tulungan kayong "
+        "i-activate ang pansamantalang pahinga ng account o self-exclusion kung makakatulong ito."
     ),
 
     "zh": (

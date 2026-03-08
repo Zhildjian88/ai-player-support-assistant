@@ -1,5 +1,9 @@
 [
   {
+    "question": "what is KYC know your customer verification",
+    "answer": "KYC stands for Know Your Customer \u2014 it is a mandatory identity verification process required by financial regulators to prevent fraud, money laundering, and underage gambling.\n\nAt SiDOBet, KYC requires you to submit:\n\u2022 A valid government-issued photo ID (passport, national ID, or driving licence)\n\u2022 A recent proof of address (utility bill or bank statement, dated within 3 months)\n\nVerification is required before your first withdrawal. Once approved, you have full access to all platform features. The process typically takes 24\u201348 hours."
+  },
+  {
     "id": "F001",
     "category": "payments",
     "question": "why is my withdrawal pending",
@@ -178,5 +182,25 @@
     "category": "general",
     "question": "what age do I need to be to register",
     "answer": "You must be at least 21 years old to register and play. We perform age verification as part of our KYC process. Underage gambling is prohibited and accounts found to be in violation will be closed."
+  },
+  {
+    "question": "what happens to my bonus if I change my payment method",
+    "answer": "Changing your payment method does not affect active bonuses. Your bonus balance and wagering progress are linked to your account, not your payment method. You can freely update or change your payment methods without losing any bonus funds or progress."
+  },
+  {
+    "question": "can I play from a different country while travelling abroad",
+    "answer": "You can generally access your account while travelling, however some countries are restricted due to licensing and regulatory requirements. If you are unable to access the platform from your travel destination, this is due to geo-restrictions in that jurisdiction. Please contact support before travelling if you are unsure whether your destination is restricted."
+  },
+  {
+    "question": "why was my deposit declined or failed",
+    "answer": "Deposits can be declined for several reasons:\n\u2022 Insufficient funds in your bank account or card\n\u2022 Your bank blocking online gambling transactions (contact your bank to allow)\n\u2022 Incorrect card details entered\n\u2022 3D Secure verification not completed\n\u2022 Daily or monthly deposit limit reached on your account\n\nIf the problem persists, try a different payment method or contact our support team for assistance."
+  },
+  {
+    "question": "can I have multiple accounts or register twice",
+    "answer": "No. Each player is permitted one account only. Creating multiple accounts is a violation of our Terms and Conditions and may result in all accounts being permanently closed and any winnings forfeited. If you have lost access to your account, please contact support to recover it rather than registering again."
+  },
+  {
+    "question": "what is a wagering requirement rollover playthrough",
+    "answer": "A wagering requirement (also called rollover or playthrough) is the number of times you must bet your bonus amount before you can withdraw winnings from it. For example, a $100 bonus with a 20x wagering requirement means you must place $2,000 in bets before withdrawing. Different games contribute differently \u2014 slots typically count 100%, while table games may count less. Check the specific bonus terms for full details."
   }
 ]
