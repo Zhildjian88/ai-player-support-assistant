@@ -1,6 +1,6 @@
 [
   {
-    "question": "what is KYC know your customer verification",
+    "question": "what is KYC know your customer verification identity",
     "answer": "KYC stands for Know Your Customer \u2014 it is a mandatory identity verification process required by financial regulators to prevent fraud, money laundering, and underage gambling.\n\nAt SiDOBet, KYC requires you to submit:\n\u2022 A valid government-issued photo ID (passport, national ID, or driving licence)\n\u2022 A recent proof of address (utility bill or bank statement, dated within 3 months)\n\nVerification is required before your first withdrawal. Once approved, you have full access to all platform features. The process typically takes 24\u201348 hours."
   },
   {
@@ -138,7 +138,7 @@
   {
     "id": "F023",
     "category": "responsible_gaming",
-    "question": "how do I self-exclude",
+    "question": "how do I self exclude self-exclude",
     "answer": "Self-exclusion is available in your Responsible Gaming settings. You can choose a period of 6 months, 1 year, 3 years, or permanent. This cannot be reversed during the exclusion period."
   },
   {

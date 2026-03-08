@@ -313,6 +313,18 @@ function App({ onSwitchToOps }) {
       return;
     }
 
+    // Client-side abusive / gibberish message handler
+    const ABUSE_WORDS = ["fuck","shit","cunt","bastard","asshole","dickhead","bitch","motherfucker","wanker","idiot","stupid bot","useless bot","hate you","fuck you","screw you"];
+    const msgLower = msg.toLowerCase();
+    if (ABUSE_WORDS.some(w => msgLower.includes(w))) {
+      setMessages(prev => [
+        ...prev,
+        { role:"user", content:displayLabel },
+        { role:"assistant", content:"I understand you may be frustrated. I'm here to help — please let me know what you need assistance with and I'll do my best to resolve it for you." }
+      ]);
+      return;
+    }
+
     // Normal path — POST to backend
     setMessages(prev => [...prev, { role:"user", content:displayLabel }]);
     setTyping(true);
@@ -339,11 +351,13 @@ function App({ onSwitchToOps }) {
       }]);
     } catch (err) {
       setApiStatus("offline");
+      const retryMsg = msg;
       setMessages(prev => [...prev, {
         role:"assistant",
-        content:t.offline,
+        content:t.offline + "\n\nThe server may be waking up (cold start). Please wait 30 seconds and try again.",
         escalated:false,
         isError:true,
+        retryMsg,
       }]);
     } finally {
       setTyping(false);
@@ -591,6 +605,9 @@ function App({ onSwitchToOps }) {
                       <div style={{background:msg.isError?"#1a0e0e":msg.signal==="physical_danger"?"#1a0a0a":"#1a1d27",border:`1px solid ${msg.isError?"#7f1d1d":msg.signal==="physical_danger"?"#ef4444":"#2a2d3a"}`,borderRadius:"18px 18px 18px 4px",padding:"10px 14px",fontSize:"0.87em",lineHeight:1.7,color:msg.signal==="physical_danger"?"#fca5a5":"#e2e8f0",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
                         {msg.content}
                       </div>
+                      {msg.isError && msg.retryMsg && (
+                        <button onClick={() => sendMessage(msg.retryMsg)} style={{marginTop:6,background:"#1e2235",border:"1px solid #374151",borderRadius:8,padding:"5px 12px",color:"#94a3b8",fontSize:"0.75em",cursor:"pointer"}}>↩ Retry</button>
+                      )}
                       {msg.escalated && !msg.isError && (
                         <div style={{background:"linear-gradient(135deg,#1e1a2e,#1a1d27)",borderLeft:"3px solid #f59e0b",borderRadius:8,padding:"8px 12px",marginTop:6,fontSize:"0.77em",color:"#fcd34d"}}>
                           ⚡ A support agent has been notified and will follow up with you shortly.
