@@ -1,0 +1,212 @@
+[
+  {
+    "id": "A001",
+    "category": "payments",
+    "trigger": "withdrawal pending",
+    "tags": ["withdrawal","pending","payment"],
+    "responses": {
+      "en": "Your withdrawal is currently being reviewed by our security team as part of our standard verification process. Most withdrawals are completed within 1–3 business days. If your withdrawal has been pending for longer than 3 business days, please contact our support team with your Payment ID for an update.",
+      "th": "การถอนเงินของคุณกำลังได้รับการตรวจสอบโดยทีมความปลอดภัยของเราในฐานะส่วนหนึ่งของกระบวนการยืนยันมาตรฐาน การถอนเงินส่วนใหญ่จะเสร็จสิ้นภายใน 1–3 วันทำการ หากการถอนเงินของคุณค้างอยู่นานกว่า 3 วันทำการ กรุณาติดต่อทีมสนับสนุนของเราพร้อมรหัสการชำระเงินของคุณ",
+      "id": "Penarikan Anda saat ini sedang ditinjau oleh tim keamanan kami sebagai bagian dari proses verifikasi standar kami. Sebagian besar penarikan diselesaikan dalam 1–3 hari kerja. Jika penarikan Anda telah tertunda lebih dari 3 hari kerja, silakan hubungi tim dukungan kami dengan ID Pembayaran Anda.",
+      "vi": "Yêu cầu rút tiền của bạn đang được đội ngũ bảo mật của chúng tôi xem xét như một phần trong quy trình xác minh tiêu chuẩn. Hầu hết các yêu cầu rút tiền được hoàn tất trong vòng 1–3 ngày làm việc. Nếu yêu cầu của bạn đã chờ hơn 3 ngày làm việc, vui lòng liên hệ nhóm hỗ trợ kèm Mã thanh toán của bạn.",
+      "ms": "Pengeluaran anda sedang disemak oleh pasukan keselamatan kami sebagai sebahagian daripada proses pengesahan standard kami. Kebanyakan pengeluaran diselesaikan dalam masa 1–3 hari bekerja. Jika pengeluaran anda telah tertunda lebih daripada 3 hari bekerja, sila hubungi pasukan sokongan kami dengan ID Pembayaran anda.",
+      "tl": "Ang iyong withdrawal ay kasalukuyang sinusuri ng aming security team bilang bahagi ng aming karaniwang proseso ng pag-verify. Karamihan sa mga withdrawal ay natapos sa loob ng 1–3 araw ng trabaho. Kung ang iyong withdrawal ay nakabinbin nang higit sa 3 araw ng trabaho, makipag-ugnayan sa aming support team kasama ang iyong Payment ID."
+    }
+  },
+  {
+    "id": "A002",
+    "category": "payments",
+    "trigger": "deposit not received",
+    "tags": ["deposit","missing","not received"],
+    "responses": {
+      "en": "If your deposit has not appeared in your account balance, please allow up to 30 minutes for processing. If it has been longer, please check with your bank or payment provider that the transaction was successful. If confirmed, please contact support with your transaction reference number and we will investigate immediately.",
+      "th": "หากเงินฝากของคุณยังไม่ปรากฏในยอดเงินบัญชี กรุณารอสูงสุด 30 นาทีสำหรับการดำเนินการ หากผ่านไปนานกว่านั้น กรุณาตรวจสอบกับธนาคารหรือผู้ให้บริการชำระเงินของคุณว่าธุรกรรมสำเร็จหรือไม่ หากได้รับการยืนยัน กรุณาติดต่อฝ่ายสนับสนุนพร้อมหมายเลขอ้างอิงธุรกรรม",
+      "id": "Jika deposit Anda belum muncul di saldo akun, harap tunggu hingga 30 menit untuk pemrosesan. Jika sudah lebih lama, periksa dengan bank atau penyedia pembayaran Anda bahwa transaksi berhasil. Jika dikonfirmasi, hubungi dukungan dengan nomor referensi transaksi Anda.",
+      "vi": "Nếu khoản tiền nạp chưa xuất hiện trong số dư tài khoản, vui lòng chờ tối đa 30 phút để xử lý. Nếu đã lâu hơn, hãy kiểm tra với ngân hàng hoặc nhà cung cấp thanh toán xem giao dịch có thành công không. Nếu được xác nhận, hãy liên hệ hỗ trợ kèm mã tham chiếu giao dịch.",
+      "ms": "Jika deposit anda belum muncul dalam baki akaun, sila tunggu sehingga 30 minit untuk pemprosesan. Jika lebih lama, sila semak dengan bank atau pembekal pembayaran anda bahawa transaksi berjaya. Jika disahkan, hubungi sokongan dengan nombor rujukan transaksi anda.",
+      "tl": "Kung ang iyong deposito ay hindi pa lumabas sa iyong balanse, mangyaring maghintay ng hanggang 30 minuto para sa pagpoproseso. Kung mas matagal na, suriin sa iyong bangko o payment provider kung matagumpay ang transaksyon. Kung nakumpirma, makipag-ugnayan sa support kasama ang iyong reference number."
+    }
+  },
+  {
+    "id": "A003",
+    "category": "kyc",
+    "trigger": "kyc documents",
+    "tags": ["kyc","documents","verification","identity"],
+    "responses": {
+      "en": "To complete your identity verification, please submit a clear photo or scan of a valid government-issued photo ID (passport, national ID, or driving licence) and a proof of address document such as a utility bill or bank statement issued within the last 3 months. Documents must show your full name and current address.",
+      "th": "เพื่อให้การยืนยันตัวตนของคุณสมบูรณ์ กรุณาส่งรูปถ่ายหรือสแกนที่ชัดเจนของบัตรประจำตัวประชาชนที่ออกโดยรัฐบาล (หนังสือเดินทาง บัตรประชาชน หรือใบขับขี่) และเอกสารยืนยันที่อยู่ เช่น ใบแจ้งค่าสาธารณูปโภคหรือใบแจ้งยอดธนาคารที่ออกภายใน 3 เดือนที่ผ่านมา",
+      "id": "Untuk menyelesaikan verifikasi identitas Anda, silakan kirimkan foto atau scan yang jelas dari KTP/paspor/SIM yang valid dan dokumen bukti alamat seperti tagihan utilitas atau rekening koran yang diterbitkan dalam 3 bulan terakhir.",
+      "vi": "Để hoàn tất xác minh danh tính, vui lòng gửi ảnh chụp rõ ràng hoặc bản scan giấy tờ tùy thân do cơ quan nhà nước cấp (hộ chiếu, CMND/CCCD, hoặc bằng lái xe) và tài liệu xác nhận địa chỉ như hóa đơn tiện ích hoặc sao kê ngân hàng trong vòng 3 tháng gần đây.",
+      "ms": "Untuk melengkapkan pengesahan identiti anda, sila hantar foto atau imbasan yang jelas bagi kad pengenalan kerajaan yang sah (pasport, kad pengenalan, atau lesen memandu) dan dokumen bukti alamat seperti bil utiliti atau penyata bank yang dikeluarkan dalam 3 bulan lepas.",
+      "tl": "Upang makumpleto ang iyong identity verification, mangyaring mag-submit ng malinaw na larawan o scan ng valid na government-issued ID (passport, national ID, o driver's license) at proof of address tulad ng utility bill o bank statement na inisyu sa nakalipas na 3 buwan."
+    }
+  },
+  {
+    "id": "A004",
+    "category": "account",
+    "trigger": "account locked",
+    "tags": ["account","locked","suspended","restricted"],
+    "responses": {
+      "en": "Your account has been temporarily restricted. This may be due to multiple failed login attempts, a routine security review, or a compliance check. Please contact our support team directly via live chat so we can verify your identity and restore access as quickly as possible.",
+      "th": "บัญชีของคุณถูกจำกัดชั่วคราว อาจเป็นเพราะการพยายามเข้าสู่ระบบล้มเหลวหลายครั้ง การตรวจสอบความปลอดภัยตามปกติ หรือการตรวจสอบการปฏิบัติตามกฎระเบียบ กรุณาติดต่อทีมสนับสนุนของเราโดยตรงผ่านแชทสด",
+      "id": "Akun Anda telah dibatasi sementara. Ini mungkin karena beberapa kali gagal login, tinjauan keamanan rutin, atau pemeriksaan kepatuhan. Silakan hubungi tim dukungan kami melalui live chat agar kami dapat memverifikasi identitas Anda dan memulihkan akses secepat mungkin.",
+      "vi": "Tài khoản của bạn đã bị hạn chế tạm thời. Điều này có thể do nhiều lần đăng nhập thất bại, kiểm tra bảo mật định kỳ hoặc kiểm tra tuân thủ. Vui lòng liên hệ trực tiếp với nhóm hỗ trợ qua live chat để chúng tôi có thể xác minh danh tính và khôi phục quyền truy cập.",
+      "ms": "Akaun anda telah disekat buat sementara waktu. Ini mungkin disebabkan oleh beberapa percubaan log masuk yang gagal, semakan keselamatan rutin, atau semakan pematuhan. Sila hubungi pasukan sokongan kami melalui live chat.",
+      "tl": "Ang iyong account ay pansamantalang na-restrict. Maaaring ito ay dahil sa maraming nabigong pag-login, regular na security review, o compliance check. Mangyaring makipag-ugnayan sa aming support team sa pamamagitan ng live chat."
+    }
+  },
+  {
+    "id": "A005",
+    "category": "promotions",
+    "trigger": "wagering requirement",
+    "tags": ["wagering","rollover","bonus","requirement"],
+    "responses": {
+      "en": "A wagering requirement means you need to bet the bonus amount a certain number of times before any winnings can be withdrawn. For example, a bonus with a 20x wagering requirement means you must place bets totalling 20 times the bonus amount before withdrawing. The specific requirement for each promotion is listed in its terms and conditions.",
+      "th": "ข้อกำหนดการพนันหมายความว่าคุณต้องเดิมพันจำนวนโบนัสหลายครั้งก่อนที่จะถอนเงินรางวัลได้ ตัวอย่างเช่น โบนัสที่มีข้อกำหนด 20 เท่าหมายความว่าคุณต้องวางเดิมพันรวมเป็น 20 เท่าของจำนวนโบนัส ข้อกำหนดเฉพาะสำหรับแต่ละโปรโมชั่นระบุไว้ในข้อกำหนดและเงื่อนไข",
+      "id": "Persyaratan taruhan berarti Anda perlu memasang taruhan sebesar jumlah bonus beberapa kali sebelum kemenangan dapat ditarik. Misalnya, bonus dengan persyaratan 20x berarti Anda harus memasang taruhan totalnya 20 kali lipat dari jumlah bonus. Persyaratan khusus untuk setiap promosi tercantum dalam syarat dan ketentuan.",
+      "vi": "Yêu cầu cược có nghĩa là bạn cần đặt cược số tiền thưởng một số lần nhất định trước khi có thể rút tiền thắng. Ví dụ: tiền thưởng với yêu cầu 20x nghĩa là bạn phải đặt cược tổng cộng gấp 20 lần số tiền thưởng. Yêu cầu cụ thể cho mỗi khuyến mãi được ghi trong điều khoản và điều kiện.",
+      "ms": "Keperluan pertaruhan bermaksud anda perlu mempertaruhkan jumlah bonus beberapa kali sebelum kemenangan boleh dikeluarkan. Sebagai contoh, bonus dengan keperluan 20x bermaksud anda mesti membuat pertaruhan berjumlah 20 kali ganda jumlah bonus. Keperluan khusus untuk setiap promosi tersenarai dalam terma dan syarat.",
+      "tl": "Ang wagering requirement ay nangangahulugang kailangan mong i-bet ang halaga ng bonus nang ilang beses bago maaaring i-withdraw ang mga panalo. Halimbawa, ang bonus na may 20x wagering requirement ay nangangahulugang kailangan mong mag-place ng mga taya na kabuuang 20 beses ng halaga ng bonus."
+    }
+  },
+  {
+    "id": "A006",
+    "category": "responsible_gaming",
+    "trigger": "set deposit limit",
+    "tags": ["deposit limit","responsible gaming","limit"],
+    "responses": {
+      "en": "You can manage your deposit limits at any time in the Responsible Gaming section of your Account Settings. You can set daily, weekly, or monthly limits. Reductions take effect immediately. Increases may be subject to a 24-hour cooling-off period. We encourage you to set limits that reflect your entertainment budget.",
+      "th": "คุณสามารถจัดการขีดจำกัดการฝากเงินได้ตลอดเวลาในส่วนการเล่นพนันอย่างรับผิดชอบในการตั้งค่าบัญชีของคุณ คุณสามารถตั้งขีดจำกัดรายวัน รายสัปดาห์ หรือรายเดือน การลดขีดจำกัดมีผลทันที การเพิ่มอาจต้องรอ 24 ชั่วโมง",
+      "id": "Anda dapat mengelola batas deposit kapan saja di bagian Responsible Gaming pada Pengaturan Akun Anda. Anda dapat menetapkan batas harian, mingguan, atau bulanan. Pengurangan berlaku segera. Peningkatan mungkin dikenakan periode pendinginan 24 jam.",
+      "vi": "Bạn có thể quản lý hạn mức tiền gửi bất cứ lúc nào trong phần Chơi có trách nhiệm của Cài đặt tài khoản. Bạn có thể đặt hạn mức hàng ngày, hàng tuần hoặc hàng tháng. Giảm hạn mức có hiệu lực ngay lập tức. Tăng hạn mức có thể phải chờ 24 giờ.",
+      "ms": "Anda boleh mengurus had deposit pada bila-bila masa dalam bahagian Perjudian Bertanggungjawab di Tetapan Akaun anda. Anda boleh menetapkan had harian, mingguan, atau bulanan. Pengurangan berkuat kuasa dengan segera. Peningkatan mungkin tertakluk kepada tempoh penyejukan 24 jam.",
+      "tl": "Maaari mong pamahalaan ang iyong mga deposit limit anumang oras sa seksyon ng Responsible Gaming ng iyong Account Settings. Maaari kang magtakda ng araw-araw, lingguhang, o buwanang limitasyon. Ang mga pagbabago na nagpapababa ng limitasyon ay agad na magkakabisa."
+    }
+  },
+  {
+    "id": "A007",
+    "category": "responsible_gaming",
+    "trigger": "self exclusion",
+    "tags": ["self-exclusion","exclude","block account","stop gambling"],
+    "responses": {
+      "en": "Self-exclusion allows you to voluntarily block access to your account for a period of your choosing. Options range from 6 months to permanent exclusion. Once set, self-exclusion cannot be reversed during the chosen period. To begin, go to Responsible Gaming in your Account Settings or contact our support team directly.",
+      "th": "การยกเว้นตนเองช่วยให้คุณปิดกั้นการเข้าถึงบัญชีของคุณโดยสมัครใจเป็นระยะเวลาที่คุณเลือก ตัวเลือกมีตั้งแต่ 6 เดือนจนถึงการยกเว้นถาวร เมื่อตั้งค่าแล้ว ไม่สามารถยกเลิกการยกเว้นตนเองได้ในช่วงเวลาที่เลือก",
+      "id": "Pengecualian diri memungkinkan Anda memblokir akses ke akun secara sukarela untuk jangka waktu yang Anda pilih. Pilihan berkisar dari 6 bulan hingga pengecualian permanen. Setelah ditetapkan, pengecualian diri tidak dapat dibatalkan selama periode yang dipilih.",
+      "vi": "Tự loại trừ cho phép bạn tự nguyện chặn quyền truy cập vào tài khoản trong khoảng thời gian bạn chọn. Các tùy chọn từ 6 tháng đến vĩnh viễn. Sau khi đặt, không thể hoàn tác trong thời gian đã chọn. Để bắt đầu, vào Chơi có trách nhiệm trong Cài đặt tài khoản.",
+      "ms": "Pengecualian diri membolehkan anda menyekat akses ke akaun anda secara sukarela untuk tempoh yang anda pilih. Pilihan dari 6 bulan hingga pengecualian kekal. Setelah ditetapkan, pengecualian diri tidak boleh dibatalkan semasa tempoh yang dipilih.",
+      "tl": "Ang self-exclusion ay nagpapahintulot sa iyo na boluntaryong harangan ang access sa iyong account para sa isang panahon na iyong pipiliin. Ang mga pagpipilian ay mula 6 buwan hanggang permanenteng exclusion. Kapag itinakda na, hindi maaaring baguhin ang self-exclusion sa panahon ng pagpili."
+    }
+  },
+  {
+    "id": "A008",
+    "category": "security",
+    "trigger": "suspicious login",
+    "tags": ["suspicious","login","unauthorised","hacked","security"],
+    "responses": {
+      "en": "If you believe someone has accessed your account without your permission, please take these steps immediately: change your password using the Forgot Password option, enable two-factor authentication in your Security Settings, and contact our security team via live chat. We will review your account login history and take immediate protective action.",
+      "th": "หากคุณเชื่อว่ามีผู้เข้าถึงบัญชีของคุณโดยไม่ได้รับอนุญาต กรุณาดำเนินการเหล่านี้ทันที: เปลี่ยนรหัสผ่านโดยใช้ตัวเลือกลืมรหัสผ่าน เปิดใช้งานการยืนยันตัวตนสองขั้นตอนในการตั้งค่าความปลอดภัย และติดต่อทีมความปลอดภัยของเราผ่านแชทสด",
+      "id": "Jika Anda yakin seseorang telah mengakses akun Anda tanpa izin, segera lakukan langkah-langkah ini: ubah kata sandi Anda menggunakan opsi Lupa Kata Sandi, aktifkan autentikasi dua faktor, dan hubungi tim keamanan kami melalui live chat.",
+      "vi": "Nếu bạn cho rằng ai đó đã truy cập tài khoản mà không có sự cho phép của bạn, hãy thực hiện ngay các bước sau: đổi mật khẩu bằng tùy chọn Quên mật khẩu, bật xác thực hai yếu tố trong Cài đặt bảo mật, và liên hệ đội ngũ bảo mật qua live chat.",
+      "ms": "Jika anda percaya seseorang telah mengakses akaun anda tanpa kebenaran, sila ambil langkah-langkah ini dengan segera: tukar kata laluan anda menggunakan pilihan Lupa Kata Laluan, aktifkan pengesahan dua faktor, dan hubungi pasukan keselamatan kami melalui live chat.",
+      "tl": "Kung naniniwala kang may nag-access sa iyong account nang walang pahintulot, mangyaring gawin agad ang mga hakbang na ito: baguhin ang iyong password gamit ang Forgot Password, i-enable ang two-factor authentication sa iyong Security Settings, at makipag-ugnayan sa aming security team sa pamamagitan ng live chat."
+    }
+  },
+  {
+    "id": "A009",
+    "category": "payments",
+    "trigger": "withdrawal rejected",
+    "tags": ["withdrawal","rejected","declined","failed"],
+    "responses": {
+      "en": "Your withdrawal was not processed. Common reasons include: incomplete identity verification (KYC), active bonus wagering requirements that have not been fulfilled, or a mismatch between your deposit and withdrawal methods. Please check your account verification status and any active bonus conditions, or contact support for a specific explanation.",
+      "th": "การถอนเงินของคุณไม่ได้รับการดำเนินการ สาเหตุทั่วไป ได้แก่ การยืนยันตัวตนไม่ครบถ้วน ข้อกำหนดการพนันโบนัสที่ยังไม่ครบ หรือความไม่ตรงกันระหว่างวิธีการฝากและถอนเงิน กรุณาตรวจสอบสถานะการยืนยันบัญชีและเงื่อนไขโบนัสที่ใช้งานอยู่",
+      "id": "Penarikan Anda tidak diproses. Alasan umum meliputi: verifikasi identitas (KYC) yang tidak lengkap, persyaratan taruhan bonus yang belum terpenuhi, atau ketidaksesuaian antara metode deposit dan penarikan. Periksa status verifikasi akun dan kondisi bonus aktif Anda.",
+      "vi": "Yêu cầu rút tiền của bạn không được xử lý. Các lý do phổ biến bao gồm: xác minh danh tính (KYC) chưa hoàn tất, chưa đáp ứng yêu cầu cược thưởng, hoặc phương thức rút tiền không khớp với phương thức nạp tiền. Vui lòng kiểm tra trạng thái xác minh và điều kiện thưởng đang hoạt động.",
+      "ms": "Pengeluaran anda tidak diproses. Sebab-sebab biasa termasuk: pengesahan identiti (KYC) yang tidak lengkap, keperluan taruhan bonus yang belum dipenuhi, atau ketidakpadanan antara kaedah deposit dan pengeluaran. Sila semak status pengesahan akaun anda.",
+      "tl": "Hindi naproseso ang iyong withdrawal. Ang mga karaniwang dahilan ay kinabibilangan ng: hindi kumpleto ang identity verification (KYC), hindi pa natutupad ang mga wagering requirement ng bonus, o hindi magkatugma ang iyong deposit at withdrawal method."
+    }
+  },
+  {
+    "id": "A010",
+    "category": "promotions",
+    "trigger": "bonus expired",
+    "tags": ["bonus","expired","forfeited"],
+    "responses": {
+      "en": "Bonuses have a set expiry period stated in the promotion terms. If your bonus expired before the wagering requirement was completed, the bonus and any associated winnings are forfeited per our standard terms. Please check the promotions page regularly to claim new offers before they expire.",
+      "th": "โบนัสมีระยะเวลาหมดอายุที่กำหนดไว้ในข้อกำหนดโปรโมชั่น หากโบนัสของคุณหมดอายุก่อนที่จะครบข้อกำหนดการพนัน โบนัสและเงินรางวัลที่เกี่ยวข้องจะถูกริบตามข้อกำหนดมาตรฐานของเรา",
+      "id": "Bonus memiliki periode kedaluwarsa yang ditetapkan dalam syarat promosi. Jika bonus Anda kedaluwarsa sebelum persyaratan taruhan selesai, bonus dan kemenangan terkait akan hangus. Periksa halaman promosi secara rutin untuk mengklaim penawaran baru.",
+      "vi": "Tiền thưởng có thời hạn hết hạn được nêu trong điều khoản khuyến mãi. Nếu tiền thưởng hết hạn trước khi hoàn thành yêu cầu cược, tiền thưởng và tiền thắng liên quan sẽ bị tịch thu. Vui lòng kiểm tra trang khuyến mãi thường xuyên.",
+      "ms": "Bonus mempunyai tempoh tamat tempoh yang dinyatakan dalam terma promosi. Jika bonus anda tamat tempoh sebelum keperluan pertaruhan selesai, bonus dan kemenangan berkaitan akan dilucutkan. Sila semak halaman promosi secara kerap.",
+      "tl": "Ang mga bonus ay may nakatakdang expiry period na nakasaad sa mga tuntunin ng promosyon. Kung nag-expire ang iyong bonus bago makumpleto ang wagering requirement, ang bonus at anumang kaugnay na panalo ay ibibigay-up ayon sa aming karaniwang tuntunin."
+    }
+  },
+  {
+    "id": "A011",
+    "category": "general",
+    "trigger": "contact support",
+    "tags": ["contact","support","help","email","phone","live chat"],
+    "responses": {
+      "en": "Our customer support team is available 24 hours a day, 7 days a week. You can reach us via live chat on the website (fastest response), by email at support@playsafe.com, or by phone during business hours (9am–6pm UTC+7). For account security issues, please use live chat for immediate assistance.",
+      "th": "ทีมสนับสนุนลูกค้าของเราพร้อมให้บริการ 24 ชั่วโมงต่อวัน 7 วันต่อสัปดาห์ คุณสามารถติดต่อเราผ่านแชทสดบนเว็บไซต์ (การตอบสนองเร็วที่สุด) ทางอีเมล support@playsafe.com หรือทางโทรศัพท์ในช่วงเวลาทำการ (9.00–18.00 น. UTC+7)",
+      "id": "Tim dukungan pelanggan kami tersedia 24 jam sehari, 7 hari seminggu. Anda dapat menghubungi kami melalui live chat di website (respons tercepat), email di support@playsafe.com, atau telepon selama jam kerja (09.00–18.00 UTC+7).",
+      "vi": "Đội ngũ hỗ trợ khách hàng của chúng tôi hoạt động 24 giờ mỗi ngày, 7 ngày mỗi tuần. Bạn có thể liên hệ qua live chat trên trang web (phản hồi nhanh nhất), email support@playsafe.com, hoặc điện thoại trong giờ làm việc (9:00–18:00 UTC+7).",
+      "ms": "Pasukan sokongan pelanggan kami tersedia 24 jam sehari, 7 hari seminggu. Anda boleh menghubungi kami melalui live chat di laman web (respons terpantas), e-mel di support@playsafe.com, atau telefon semasa waktu perniagaan (9 pagi–6 petang UTC+7).",
+      "tl": "Ang aming customer support team ay available 24 oras sa isang araw, 7 araw sa isang linggo. Maaari kang makipag-ugnayan sa amin sa pamamagitan ng live chat sa website (pinakamabilis na tugon), sa email sa support@playsafe.com, o sa telepono sa oras ng trabaho (9am–6pm UTC+7)."
+    }
+  },
+  {
+    "id": "A012",
+    "category": "kyc",
+    "trigger": "verification rejected",
+    "tags": ["verification","rejected","id","document","kyc failed"],
+    "responses": {
+      "en": "Your identity verification was not approved. This is usually because the document was blurry, expired, or did not match the details on your account. Please resubmit with a clear, current document. Ensure the full document is visible, well-lit, and all details are readable. If you continue to have issues, our support team can assist.",
+      "th": "การยืนยันตัวตนของคุณไม่ได้รับการอนุมัติ โดยปกติเป็นเพราะเอกสารเบลอ หมดอายุ หรือไม่ตรงกับรายละเอียดในบัญชีของคุณ กรุณาส่งใหม่พร้อมเอกสารที่ชัดเจนและเป็นปัจจุบัน",
+      "id": "Verifikasi identitas Anda tidak disetujui. Ini biasanya karena dokumen buram, kedaluwarsa, atau tidak sesuai dengan detail akun Anda. Silakan kirim ulang dengan dokumen yang jelas dan terkini.",
+      "vi": "Xác minh danh tính của bạn không được phê duyệt. Thường là do tài liệu bị mờ, hết hạn, hoặc không khớp với thông tin tài khoản. Vui lòng gửi lại tài liệu rõ ràng và hiện tại.",
+      "ms": "Pengesahan identiti anda tidak diluluskan. Ini biasanya kerana dokumen kabur, tamat tempoh, atau tidak sepadan dengan butiran akaun anda. Sila hantar semula dengan dokumen yang jelas dan terkini.",
+      "tl": "Hindi naaprubahan ang iyong identity verification. Ito ay karaniwang dahil ang dokumento ay malabo, nag-expire, o hindi tumutugma sa mga detalye sa iyong account. Mangyaring muling mag-submit ng malinaw at kasalukuyang dokumento."
+    }
+  },
+  {
+    "id": "A013",
+    "category": "payments",
+    "trigger": "how long withdrawal",
+    "tags": ["withdrawal","time","how long","processing"],
+    "responses": {
+      "en": "Withdrawal processing times depend on your chosen payment method. E-wallets (GoPay, OVO, GCash, PromptPay) typically process within 24 hours. Bank transfers take 3 to 5 business days. Cryptocurrency withdrawals are usually completed within a few hours subject to network confirmation times. VIP players may receive expedited processing.",
+      "th": "ระยะเวลาการประมวลผลการถอนเงินขึ้นอยู่กับวิธีการชำระเงินที่คุณเลือก กระเป๋าเงินอิเล็กทรอนิกส์ (PromptPay, TrueMoney) มักจะประมวลผลภายใน 24 ชั่วโมง การโอนเงินผ่านธนาคารใช้เวลา 3–5 วันทำการ",
+      "id": "Waktu pemrosesan penarikan tergantung pada metode pembayaran yang Anda pilih. E-wallet (GoPay, OVO) biasanya diproses dalam 24 jam. Transfer bank memerlukan 3–5 hari kerja. Penarikan cryptocurrency biasanya selesai dalam beberapa jam.",
+      "vi": "Thời gian xử lý rút tiền phụ thuộc vào phương thức thanh toán bạn chọn. Ví điện tử (ViettelPay, MoMo) thường xử lý trong vòng 24 giờ. Chuyển khoản ngân hàng mất 3–5 ngày làm việc. Rút tiền bằng tiền điện tử thường hoàn tất trong vài giờ.",
+      "ms": "Masa pemprosesan pengeluaran bergantung pada kaedah pembayaran yang anda pilih. E-wallet biasanya diproses dalam masa 24 jam. Pindahan bank mengambil masa 3–5 hari bekerja. Pengeluaran mata wang kripto biasanya selesai dalam beberapa jam.",
+      "tl": "Ang oras ng pagpoproseso ng withdrawal ay nakasalalay sa iyong piniling paraan ng pagbabayad. Ang mga e-wallet (GCash) ay karaniwang napoproseso sa loob ng 24 na oras. Ang mga bank transfer ay tumatagal ng 3–5 araw ng trabaho."
+    }
+  },
+  {
+    "id": "A014",
+    "category": "account",
+    "trigger": "password reset",
+    "tags": ["password","reset","forgot","login","access"],
+    "responses": {
+      "en": "To reset your password, click the Forgot Password link on the login page and enter your registered email address. You will receive a password reset link within a few minutes. If you do not see it, check your spam or junk folder. The reset link expires after 1 hour. If you continue to have issues, please contact support.",
+      "th": "หากต้องการรีเซ็ตรหัสผ่าน คลิกลิงก์ลืมรหัสผ่านในหน้าเข้าสู่ระบบและกรอกที่อยู่อีเมลที่ลงทะเบียน คุณจะได้รับลิงก์รีเซ็ตรหัสผ่านภายในไม่กี่นาที ลิงก์รีเซ็ตจะหมดอายุหลังจาก 1 ชั่วโมง",
+      "id": "Untuk mereset kata sandi, klik tautan Lupa Kata Sandi di halaman login dan masukkan alamat email terdaftar Anda. Anda akan menerima tautan reset kata sandi dalam beberapa menit. Tautan reset kedaluwarsa setelah 1 jam.",
+      "vi": "Để đặt lại mật khẩu, nhấp vào liên kết Quên mật khẩu trên trang đăng nhập và nhập địa chỉ email đã đăng ký. Bạn sẽ nhận được liên kết đặt lại mật khẩu trong vài phút. Liên kết đặt lại hết hạn sau 1 giờ.",
+      "ms": "Untuk menetapkan semula kata laluan, klik pautan Lupa Kata Laluan di halaman log masuk dan masukkan alamat e-mel berdaftar anda. Anda akan menerima pautan tetapan semula kata laluan dalam beberapa minit. Pautan tetapan semula tamat tempoh selepas 1 jam.",
+      "tl": "Upang i-reset ang iyong password, i-click ang Forgot Password link sa login page at ilagay ang iyong registered email address. Makakatanggap ka ng password reset link sa loob ng ilang minuto. Nag-e-expire ang reset link pagkatapos ng 1 oras."
+    }
+  },
+  {
+    "id": "A015",
+    "category": "responsible_gaming",
+    "trigger": "cooling off",
+    "tags": ["cooling off","break","pause","time out"],
+    "responses": {
+      "en": "A cooling-off period temporarily suspends your ability to log in and bet for a set duration. Options include 24 hours, 7 days, or 30 days. During this period you will not be able to place bets or access your gaming account. Cooling-off periods cannot be cancelled once activated. You can set this in your Responsible Gaming settings.",
+      "th": "ช่วงเวลาพักผ่อนจะระงับความสามารถในการเข้าสู่ระบบและเดิมพันชั่วคราวตามระยะเวลาที่กำหนด ตัวเลือกได้แก่ 24 ชั่วโมง 7 วัน หรือ 30 วัน ในช่วงเวลานี้คุณจะไม่สามารถวางเดิมพันหรือเข้าถึงบัญชีเกมของคุณได้",
+      "id": "Periode pendinginan menangguhkan kemampuan Anda untuk login dan bertaruh untuk durasi yang ditentukan. Pilihannya meliputi 24 jam, 7 hari, atau 30 hari. Selama periode ini Anda tidak dapat memasang taruhan atau mengakses akun game. Periode pendinginan tidak dapat dibatalkan setelah diaktifkan.",
+      "vi": "Thời gian hạ nhiệt tạm thời đình chỉ khả năng đăng nhập và cược của bạn trong thời gian nhất định. Các tùy chọn bao gồm 24 giờ, 7 ngày hoặc 30 ngày. Trong thời gian này bạn không thể đặt cược hoặc truy cập tài khoản. Không thể hủy thời gian hạ nhiệt sau khi kích hoạt.",
+      "ms": "Tempoh penyejukan menangguhkan kemampuan anda untuk log masuk dan membuat pertaruhan untuk tempoh yang ditetapkan. Pilihan termasuk 24 jam, 7 hari, atau 30 hari. Semasa tempoh ini anda tidak boleh membuat pertaruhan atau mengakses akaun permainan. Tempoh penyejukan tidak boleh dibatalkan setelah diaktifkan.",
+      "tl": "Ang cooling-off period ay pansamantalang sinususpinde ang iyong kakayahang mag-login at manghosla para sa isang nakatakdang tagal. Kasama sa mga pagpipilian ang 24 na oras, 7 araw, o 30 araw. Sa panahong ito hindi ka makakapagtaya o makakaaccess ng iyong gaming account."
+    }
+  }
+]

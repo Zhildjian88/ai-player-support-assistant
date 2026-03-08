@@ -1,0 +1,27 @@
+# ── requirements-api.txt ──────────────────────────────────────────────────────
+# FastAPI-only dependencies for Render deployment.
+# Excludes: streamlit, sentence-transformers, faiss-cpu, jupyter
+# (these are only needed for local dev / ops console / neural embeddings)
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# LLM providers
+groq>=0.9.0
+anthropic>=0.40.0
+
+# Language detection
+langdetect>=1.0.9
+
+# Data & utilities
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+httpx>=0.27.0
+requests>=2.31.0
+
+# Lexical similarity (TF-IDF — no model download, works with USE_NEURAL_EMBEDDINGS=false)
+# faiss-cpu is excluded; similarity_service.py falls back to TF-IDF automatically
+scikit-learn>=1.3.0
+numpy>=1.26.0

@@ -1,0 +1,39 @@
+flowchart TD
+U[User Message] --> L[Language Detection]
+L --> P1[Policy Guardrail]
+P1 -->|Violation| R1[Policy Refusal Response]
+P1 --> P2[Distress Detection]
+P2 -->|Distress Detected| E1[Escalation Queue — CRITICAL]
+P2 --> P3[Responsible Gaming Detector]
+P3 -->|RG Signal| E2[RG Escalation — HIGH]
+P3 --> P4[Fraud / Security Detector]
+P4 -->|Security Risk| E3[Security Escalation — HIGH]
+P4 --> P5[Circumvention Detector]
+P5 -->|Welfare subtype| E4[Welfare Escalation — HIGH]
+P5 -->|Fraud subtype| E5[Fraud Escalation — HIGH]
+P5 --> S1[Account Service]
+S1 -->|Match| A1[Account Response]
+S1 --> S2[Payment Service]
+S2 -->|Match| A2[Payment Response]
+S2 --> S3[Promotions Service]
+S3 -->|Match| A3[Promotions Response]
+S3 --> K1[Game Rules Keyword Match]
+K1 -->|Match| A4[Game Rules Response]
+K1 --> K2[FAQ Keyword Match]
+K2 -->|Match| A5[FAQ Response]
+K2 --> C1[Cache Service]
+C1 -->|Cache Hit| A6[Cached Response]
+C1 --> V1[Semantic Retrieval FAISS]
+V1 -->|Similarity Match| A7[Semantic Response]
+V1 --> LLM[LLM Fallback]
+LLM --> A8[Generated Response]
+A1 --> O[Response Builder]
+A2 --> O
+A3 --> O
+A4 --> O
+A5 --> O
+A6 --> O
+A7 --> O
+A8 --> O
+O --> LOG[Audit Logger]
+LOG --> UI[Streamlit UI]

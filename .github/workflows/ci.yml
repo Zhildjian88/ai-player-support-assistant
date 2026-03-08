@@ -1,0 +1,53 @@
+# ── GitHub Actions CI ─────────────────────────────────────────────────────────
+# Runs on every push and pull request to main.
+# Installs dependencies, initialises the database, and runs the full test suite.
+#
+# Note: This CI uses requirements.txt (full local deps).
+# Render deployment uses requirements-api.txt (API-only, no Streamlit/faiss).
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: CI
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Initialise database
+        run: python -m app.db_init
+
+      - name: Run test suite
+        run: pytest tests/ -v --tb=short
+        env:
+          # LLM fallback disabled in CI — all tests use the deterministic stub.
+          # API keys are not needed and must never be committed to the repo.
+          # On Render, set GROQ_API_KEY in the Render dashboard → Environment Variables.
+          GROQ_API_KEY: ""
+          ANTHROPIC_API_KEY: ""
+          ENABLE_LLM_FALLBACK: "false"
+          USE_NEURAL_EMBEDDINGS: "false"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results
+          path: .pytest_cache/

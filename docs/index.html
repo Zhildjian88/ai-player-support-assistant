@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SiDOBet — Player Support</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, #root { height: 100%; width: 100%; }
+    body { background: #0d0f14; font-family: 'Sora', 'Segoe UI', sans-serif; color: #e2e8f0; overflow: hidden; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0d0f14; }
+    ::-webkit-scrollbar-thumb { background: #2a2d3a; border-radius: 2px; }
+    select option { background: #1e2235; color: #c8cde0; }
+    @keyframes pulse { 0%,100%{opacity:.3;transform:scale(.8)} 50%{opacity:1;transform:scale(1)} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .msg-appear { animation: fadeIn 0.25s ease forwards; }
+    .login-appear { animation: slideUp 0.4s ease forwards; }
+    .dot { width:6px;height:6px;border-radius:50%;background:#475569;display:inline-block; }
+    .dot:nth-child(1){animation:pulse 1.2s infinite .0s}
+    .dot:nth-child(2){animation:pulse 1.2s infinite .2s}
+    .dot:nth-child(3){animation:pulse 1.2s infinite .4s}
+    .qa-btn:hover { border-color: #6366f1 !important; color: #a5b4fc !important; background: #1e2133 !important; }
+    .lang-btn:hover { border-color: #6366f1 !important; }
+    .enter-btn:hover { opacity: 0.88; }
+    .send-btn:hover { opacity: 0.88; }
+    .rg-manage:hover { text-decoration: underline; }
+    /* ── Ops console ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ops-tab-btn:hover { background: #1e2235 !important; color: #a5b4fc !important; }
+    .ops-tab-btn.active { background: #1e2235 !important; color: #a5b4fc !important; border-bottom: 2px solid #6366f1 !important; }
+    .ops-row:hover { background: #141722 !important; }
+    .mode-toggle:hover { background: #1e2235 !important; color: #a5b4fc !important; }
+    .ops-refresh:hover { background: #1e2235 !important; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+// Set this to your FastAPI backend URL.
+// Local:  http://localhost:8000
+// Remote: https://your-server.com
+// ── BACKEND URL ───────────────────────────────────────────────────────────────
+// After deploying to Render, replace the URL below with your Render URL.
+// Example: "https://ai-player-support-assistant.onrender.com"
+// Leave as localhost for local development only.
+const API_BASE = window.SIDOBET_API_URL || "https://ai-player-support-assistant.onrender.com/";
+
+// ─── PLAYER DATA ──────────────────────────────────────────────────────────────
+const PLAYERS = {
+  U1003: { name:"James Wilson",    flag:"🇦🇺", country:"Australia",   tier:"standard", status:"restricted", kyc:"pending",  lang:"en", balance:"AUD 240",         withdrawal:"AUD 80 (blocked — KYC required)", since:"Feb 2026", rg:false },
+  U1001: { name:"Budi Santoso",    flag:"🇮🇩", country:"Indonesia",   tier:"standard", status:"active",     kyc:"verified", lang:"id", balance:"IDR 2,840,000",   withdrawal:"IDR 1,500,000 (under review)",   since:"Jun 2024", rg:false },
+  U1002: { name:"Somchai Prayoon", flag:"🇹🇭", country:"Thailand",    tier:"gold",     status:"active",     kyc:"verified", lang:"th", balance:"THB 18,500",      withdrawal:null,                             since:"Nov 2023", rg:false },
+  U1005: { name:"Nguyen Van An",   flag:"🇻🇳", country:"Vietnam",     tier:"platinum", status:"active",     kyc:"verified", lang:"vi", balance:"VND 48,200,000",  withdrawal:null,                             since:"Aug 2022", rg:false },
+  U1009: { name:"Tran Thi Bich",   flag:"🇻🇳", country:"Vietnam",     tier:"diamond",  status:"active",     kyc:"verified", lang:"vi", balance:"VND 182,500,000", withdrawal:null,                             since:"May 2021", rg:false },
+  U1010: { name:"Juan dela Cruz",  flag:"🇵🇭", country:"Philippines", tier:"gold",     status:"active",     kyc:"verified", lang:"tl", balance:"PHP 24,600",      withdrawal:null,                             since:"Jul 2023", rg:false },
+  U1006: { name:"Siriporn Kamon",  flag:"🇹🇭", country:"Thailand",    tier:"standard", status:"active",     kyc:"verified", lang:"th", balance:"THB 3,200",       withdrawal:null,                             since:"Jan 2025", rg:true  },
+};
+
+const LANGS = [
+  { code:"en", label:"English",          flag:"🇬🇧" },
+  { code:"th", label:"ภาษาไทย",          flag:"🇹🇭" },
+  { code:"id", label:"Bahasa Indonesia", flag:"🇮🇩" },
+  { code:"vi", label:"Tiếng Việt",       flag:"🇻🇳" },
+  { code:"tl", label:"Filipino",         flag:"🇵🇭" },
+  { code:"zh", label:"中文",             flag:"🇨🇳" },
+];
+
+// ─── i18n ─────────────────────────────────────────────────────────────────────
+const UI = {
+  en: { sel:"Select your account to continue", enter:"Enter Support Chat →", footer:"🔒 Secure · 🌐 Multilingual · 🛡️ Responsible Gaming", liveChat:"Live Chat", switchBtn:"← Switch", rgBanner:"Responsible Gaming", rgDefault:"Set deposit limits | Track your spend | Stay in control", rgActive:"⚠️ RG tools active on your account", rgManage:"Manage →", acct:"Account Summary", pendingWith:"⏳ Pending Withdrawal", quick:"Quick Actions", welcome:n=>`Welcome back, ${n} 👋`, welcomeBody:"I'm your SiDOBet Support assistant. I can help you with withdrawals, account queries, game rules, promotions, and responsible gaming tools.", welcomeSub:"Type your question below or use the Quick Actions panel.", placeholder:"Type your message here… (any language supported)", offline:"⚠️ Support server is offline. Please try again later or contact support@sidobet.com", statusLbl:"Status", kycLbl:"KYC", balLbl:"Balance", tierLbl:"Tier", statusVal:{active:"Active",restricted:"Restricted",suspended:"Suspended",self_excluded:"Self-Excluded"}, kycVal:{verified:"Verified",pending:"Pending",failed:"Failed"}, tierVal:{diamond:"Diamond",platinum:"Platinum",gold:"Gold",standard:"Standard"}, qaLabels:["💳 Check Balance","⏳ Withdrawal Status","🎁 Active Promotions","🔐 KYC Status","🎮 Game Rules & T&C","🛡️ Responsible Gaming"] },
+  th: { sel:"เลือกบัญชีของคุณเพื่อดำเนินการต่อ", enter:"เข้าสู่แชทสนับสนุน →", footer:"🔒 ปลอดภัย · 🌐 หลายภาษา · 🛡️ การเล่นที่รับผิดชอบ", liveChat:"แชทสด", switchBtn:"← เปลี่ยน", rgBanner:"การเล่นเกมอย่างรับผิดชอบ", rgDefault:"ตั้งวงเงินฝาก | ติดตามการใช้จ่าย | ควบคุมตัวเอง", rgActive:"⚠️ เครื่องมือ RG เปิดใช้งานในบัญชีของคุณ", rgManage:"จัดการ →", acct:"สรุปบัญชี", pendingWith:"⏳ การถอนเงินที่รอดำเนินการ", quick:"การดำเนินการด่วน", welcome:n=>`ยินดีต้อนรับกลับมา, ${n} 👋`, welcomeBody:"ฉันคือผู้ช่วยสนับสนุน SiDOBet ฉันสามารถช่วยคุณเกี่ยวกับการถอนเงิน การสอบถามบัญชี กฎของเกม โปรโมชัน และเครื่องมือการเล่นเกมอย่างรับผิดชอบ", welcomeSub:"พิมพ์คำถามของคุณด้านล่าง หรือใช้แผงการดำเนินการด่วน", placeholder:"พิมพ์ข้อความของคุณที่นี่…", offline:"⚠️ เซิร์ฟเวอร์ออฟไลน์ กรุณาลองใหม่ภายหลัง", statusLbl:"สถานะ", kycLbl:"KYC", balLbl:"ยอดเงิน", tierLbl:"ระดับ", statusVal:{active:"ใช้งานอยู่",restricted:"ถูกจำกัด",suspended:"ถูกระงับ",self_excluded:"ยกเว้นตนเอง"}, kycVal:{verified:"ยืนยันแล้ว",pending:"รอดำเนินการ",failed:"ไม่ผ่าน"}, tierVal:{diamond:"ไดมอนด์",platinum:"แพลทินัม",gold:"ทอง",standard:"มาตรฐาน"}, qaLabels:["💳 ตรวจสอบยอดเงิน","⏳ สถานะการถอนเงิน","🎁 โปรโมชันที่ใช้งานอยู่","🔐 สถานะ KYC","🎮 กฎเกม & ข้อตกลง","🛡️ การเล่นเกมอย่างรับผิดชอบ"] },
+  id: { sel:"Pilih akun Anda untuk melanjutkan", enter:"Masuk ke Obrolan Dukungan →", footer:"🔒 Aman · 🌐 Multibahasa · 🛡️ Permainan Bertanggung Jawab", liveChat:"Live Chat", switchBtn:"← Ganti", rgBanner:"Permainan Bertanggung Jawab", rgDefault:"Atur batas setoran | Lacak pengeluaran | Tetap terkendali", rgActive:"⚠️ Alat RG aktif di akun Anda", rgManage:"Kelola →", acct:"Ringkasan Akun", pendingWith:"⏳ Penarikan Tertunda", quick:"Tindakan Cepat", welcome:n=>`Selamat datang kembali, ${n} 👋`, welcomeBody:"Saya adalah asisten Dukungan SiDOBet. Saya dapat membantu Anda dengan penarikan, pertanyaan akun, aturan permainan, promosi, dan alat permainan bertanggung jawab.", welcomeSub:"Ketik pertanyaan Anda di bawah atau gunakan panel Tindakan Cepat.", placeholder:"Ketik pesan Anda di sini…", offline:"⚠️ Server sedang offline. Silakan coba lagi nanti.", statusLbl:"Status", kycLbl:"KYC", balLbl:"Saldo", tierLbl:"Tingkat", statusVal:{active:"Aktif",restricted:"Dibatasi",suspended:"Ditangguhkan",self_excluded:"Pengecualian Diri"}, kycVal:{verified:"Terverifikasi",pending:"Tertunda",failed:"Gagal"}, tierVal:{diamond:"Diamond",platinum:"Platinum",gold:"Emas",standard:"Standar"}, qaLabels:["💳 Cek Saldo","⏳ Status Penarikan","🎁 Promosi Aktif","🔐 Status KYC","🎮 Aturan Game & S&K","🛡️ Permainan Bertanggung Jawab"] },
+  vi: { sel:"Chọn tài khoản của bạn để tiếp tục", enter:"Vào Chat Hỗ Trợ →", footer:"🔒 Bảo mật · 🌐 Đa ngôn ngữ · 🛡️ Chơi game có trách nhiệm", liveChat:"Chat Trực Tiếp", switchBtn:"← Chuyển", rgBanner:"Chơi Game Có Trách Nhiệm", rgDefault:"Đặt giới hạn nạp | Theo dõi chi tiêu | Kiểm soát bản thân", rgActive:"⚠️ Công cụ RG đang hoạt động trên tài khoản của bạn", rgManage:"Quản lý →", acct:"Tóm Tắt Tài Khoản", pendingWith:"⏳ Rút Tiền Đang Chờ", quick:"Thao Tác Nhanh", welcome:n=>`Chào mừng trở lại, ${n} 👋`, welcomeBody:"Tôi là trợ lý Hỗ trợ SiDOBet của bạn. Tôi có thể giúp bạn về rút tiền, truy vấn tài khoản, quy tắc trò chơi, khuyến mãi và các công cụ chơi game có trách nhiệm.", welcomeSub:"Nhập câu hỏi của bạn bên dưới hoặc sử dụng bảng Thao Tác Nhanh.", placeholder:"Nhập tin nhắn của bạn tại đây…", offline:"⚠️ Máy chủ đang offline. Vui lòng thử lại sau.", statusLbl:"Trạng thái", kycLbl:"KYC", balLbl:"Số dư", tierLbl:"Hạng", statusVal:{active:"Hoạt động",restricted:"Bị hạn chế",suspended:"Bị tạm ngừng",self_excluded:"Tự loại trừ"}, kycVal:{verified:"Đã xác minh",pending:"Đang chờ",failed:"Thất bại"}, tierVal:{diamond:"Kim Cương",platinum:"Bạch Kim",gold:"Vàng",standard:"Tiêu Chuẩn"}, qaLabels:["💳 Kiểm Tra Số Dư","⏳ Trạng Thái Rút Tiền","🎁 Khuyến Mãi Đang Hoạt Động","🔐 Trạng Thái KYC","🎮 Luật Chơi & Điều Khoản","🛡️ Chơi Game Có Trách Nhiệm"] },
+  tl: { sel:"Piliin ang iyong account para magpatuloy", enter:"Pumasok sa Support Chat →", footer:"🔒 Ligtas · 🌐 Maraming Wika · 🛡️ Responsableng Paglalaro", liveChat:"Live Chat", switchBtn:"← Palitan", rgBanner:"Responsableng Paglalaro", rgDefault:"Magtakda ng limitasyon | Subaybayan ang gastos | Manatiling kontrolado", rgActive:"⚠️ Aktibo ang mga RG tool sa iyong account", rgManage:"Pamahalaan →", acct:"Buod ng Account", pendingWith:"⏳ Nakabinbing Withdrawal", quick:"Mabilis na Aksyon", welcome:n=>`Maligayang pagbabalik, ${n} 👋`, welcomeBody:"Ako ang iyong SiDOBet Support assistant. Maaari kitang tulungan sa mga withdrawal, katanungan sa account, patakaran ng laro, promosyon, at mga tool para sa responsableng paglalaro.", welcomeSub:"I-type ang iyong tanong sa ibaba o gamitin ang Quick Actions panel.", placeholder:"I-type ang iyong mensahe dito…", offline:"⚠️ Ang server ay offline. Pakisubukan ulit mamaya.", statusLbl:"Katayuan", kycLbl:"KYC", balLbl:"Balanse", tierLbl:"Antas", statusVal:{active:"Aktibo",restricted:"Limitado",suspended:"Suspendido",self_excluded:"Self-Excluded"}, kycVal:{verified:"Napatunayan",pending:"Nakabinbin",failed:"Nabigo"}, tierVal:{diamond:"Diamond",platinum:"Platinum",gold:"Ginto",standard:"Pamantayan"}, qaLabels:["💳 Tingnan ang Balanse","⏳ Katayuan ng Withdrawal","🎁 Mga Aktibong Promosyon","🔐 Katayuan ng KYC","🎮 Mga Patakaran ng Laro & T&C","🛡️ Responsableng Paglalaro"] },
+  zh: { sel:"请选择您的账户以继续", enter:"进入客服聊天 →", footer:"🔒 安全 · 🌐 多语言 · 🛡️ 负责任博彩", liveChat:"在线客服", switchBtn:"← 切换", rgBanner:"负责任博彩", rgDefault:"设置存款限额 | 跟踪消费 | 保持自控", rgActive:"⚠️ 您的账户已启用 RG 工具", rgManage:"管理 →", acct:"账户摘要", pendingWith:"⏳ 待处理提款", quick:"快速操作", welcome:n=>`欢迎回来，${n} 👋`, welcomeBody:"我是您的 SiDOBet 客服助手。我可以帮您处理提款、账户查询、游戏规则、促销活动以及负责任博彩工具。", welcomeSub:"请在下方输入您的问题，或使用快速操作面板。", placeholder:"在此输入您的消息…", offline:"⚠️ 服务器离线，请稍后重试。", statusLbl:"状态", kycLbl:"KYC", balLbl:"余额", tierLbl:"等级", statusVal:{active:"正常",restricted:"受限",suspended:"已暂停",self_excluded:"自我排除"}, kycVal:{verified:"已验证",pending:"待审核",failed:"未通过"}, tierVal:{diamond:"钻石",platinum:"铂金",gold:"黄金",standard:"标准"}, qaLabels:["💳 查询余额","⏳ 提款状态","🎁 当前优惠活动","🔐 KYC 状态","🎮 游戏规则 & 条款","🛡️ 负责任博彩"] },
+};
+
+// ─── SAFETY KEYWORDS (mirrors distress_detector.py + rg_detector.py) ──────────
+const DISTRESS_KEYWORDS = [
+  "suicide","suicidal","kill myself","killing myself","end my life","take my life",
+  "want to die","wanna die","wish i was dead","thinking about dying","thought about dying",
+  "cannot live anymore","can't live anymore","no reason to live","nothing to live for",
+  "give up on life","given up on life","end it all","end it","nothing left to live",
+  "better off dead","better off without me","hurt myself","harm myself",
+  "last message","goodbye to everyone","saying goodbye",
+  "don't want to be here anymore","don't want to be here",
+  "can't go on","cannot go on","i can't go on","no point in living","no point anymore",
+  "life isn't worth","life is not worth",
+  "我要自杀","我想自杀","我要去死","我想死","活不下去","活不下去了","不想活了","不想活",
+  "结束生命","结束我的生命","伤害自己","伤害我自己","没有活下去的理由","没有活的意义","人生没有意义","生活没有意义",
+  "อยากตาย","อยากฆ่าตัวตาย","ฆ่าตัวตาย","ไม่อยากมีชีวิตอยู่","ไม่อยากอยู่แล้ว","ทำร้ายตัวเอง","จบชีวิต",
+  "ingin mati","mau mati","pengen mati","bunuh diri","ingin bunuh diri","mau bunuh diri",
+  "tidak ingin hidup","tak mau hidup lagi","menyakiti diri","menyakiti diri sendiri",
+  "akhiri hidup","mengakhiri hidup saya","tiada sebab untuk hidup","ingin menamatkan hidup",
+  "muốn chết","muốn tự tử","tự tử","không muốn sống","không muốn sống nữa",
+  "tự làm hại bản thân","kết thúc cuộc đời","không còn lý do để sống",
+  "gusto kong mamatay","gusto ko nang mamatay","magpakamatay","gustong magpakamatay",
+  "ayaw ko nang mabuhay","ayaw ko nang mabuhay pa","saktan ang sarili ko","tapusin na ang buhay ko",
+  "lost everything","lost it all","lost all my savings","drained my savings",
+  "maxed out my credit card","maxed out credit cards","lost my house","losing my house","lost my home",
+  "lost my job because of gambling","lost my job gambling",
+  "can't pay my rent","cannot pay my rent","can't pay rent",
+  "can't pay my bills","cannot pay my bills","can't pay my mortgage","cannot pay my mortgage",
+  "gambling to pay rent","need a win to pay","gambling with money i need",
+  "gambling money i can't afford","borrowed money to gamble","borrowed money and cannot pay",
+  "loan sharks","loan shark","in debt because of gambling","gambling debt",
+  "stole money to gamble","stolen money to gamble","sold my belongings to gamble",
+  "nothing left","completely broke","absolutely broke","penniless",
+  "last dollar","last cent","last penny","empty wallet","wallet is empty","overdraft","overdrawn",
+  "wife left me because of gambling","husband left me because of gambling",
+  "partner left me because of gambling","divorce because of gambling","divorcing because of gambling",
+  "family left me","family has left me","lost my family","lost my marriage",
+  "kids taken away","lost custody","gambling ruined my marriage","gambling destroyed my marriage",
+  "gambling ruined my relationship","gambling destroyed my relationship",
+  "gambling affecting my family","family suffering because of gambling",
+  "hiding gambling from","lying to my family about gambling","lying about gambling","hiding my gambling",
+  "ruined my life","destroyed my life","gambling ruined my life",
+  "gambling has ruined everything","gambling destroyed everything",
+  "life is over","my life is over","don't care anymore","i don't care anymore",
+  "no way out","there is no way out","cannot take this anymore","can't take this anymore",
+  "cannot cope anymore","can't cope anymore","in serious trouble",
+  "feel hopeless","feeling hopeless","completely hopeless",
+  "feel worthless","feeling worthless",
+  "so ashamed of my gambling","so much shame about gambling","so guilty about gambling",
+  "consumed by guilt","crying because of gambling","crying over my losses",
+];
+
+const RG_KEYWORDS = [
+  "cannot stop gambling","can't stop gambling","cant stop gambling","unable to stop gambling",
+  "tried to stop gambling","tried to quit gambling","keep going back to gambling",
+  "gambling again even though","relapsed gambling","hooked on gambling","hooked on betting",
+  "obsessed with gambling","obsessed with betting","one more go","just one more bet",
+  "just one more spin","last bet","last spin","last hand",
+  "can't resist gambling","cannot resist gambling","urge to gamble","urge to bet",
+  "craving to gamble","can't help myself gambling","gambling all night","betting all night",
+  "been gambling for hours","gambled all day","gambling everyday","gambling every day",
+  "gambling all the time","can't stop thinking about gambling","lost track of time gambling",
+  "chasing losses","chasing my losses","trying to win back","win back what i lost",
+  "get my money back","get back my losses","need to win back","have to win it back",
+  "keep depositing to recover","depositing more to chase","doubling up to recover",
+  "increasing bets to recover","gamble to forget","gambling to forget",
+  "gamble to escape","gambling to escape","gamble when stressed","gambling when stressed",
+  "gamble when depressed","gambling when depressed","gambling to cope","gamble to cope",
+  "gambling helps me feel better","only feel good when gambling",
+  "spending too much on gambling","spend too much on gambling",
+  "spent more than i can afford","gambling money i need","gambling my rent money",
+  "gambling my savings","losing too much","lost too much money gambling","keep losing money",
+  "asked family for money to gamble","borrowed money for gambling","need money to gamble",
+  "irritable when i don't gamble","restless when i can't gamble",
+  "anxious when i can't bet","moody when i can't gamble","need to gamble to feel normal",
+  "hiding my gambling","hiding gambling from my family","lying about gambling",
+  "lying to my partner about gambling","secret gambling account","gambling in secret",
+  "self exclude","self-exclude","self exclusion","self-exclusion",
+  "close my account","block my account","freeze my account","delete my account","deactivate my account",
+  "deposit limit","spending limit","loss limit","wager limit","session limit",
+  "time limit on my account","cooling off","cooling-off period","take a break","pause my account",
+  "temporary block","need help with gambling","help me stop gambling","help me stop",
+  "gamstop","gamban","gambling blocker","self-assessment","gambling quiz",
+  "am i a problem gambler","responsible gaming tools","safer gambling tools",
+  "gambling affecting my family","gambling affecting my relationship","gambling affecting my marriage",
+  "gambling affecting my work","affecting my family","affecting my relationship",
+  "addicted to gambling","gambling addiction","gambling problem","problem gambler",
+  "compulsive gambler","compulsive gambling","cannot control","can't control my gambling",
+  "out of control","losing control","lost control of gambling",
+  "spend too much","spending too much","cannot control my spending",
+];
+
+const PHYSICAL_DANGER_KEYWORDS = [
+  "being kidnapped","i am being kidnapped","im being kidnapped",
+  "someone kidnapped","kidnapped me","held captive","held hostage",
+  "being held hostage","i am a hostage","im a hostage",
+  "taken against my will","not allowed to leave",
+  "being attacked","someone is attacking me","they are hurting me",
+  "being hurt","someone is threatening me","threatening to hurt me",
+  "threatening to kill me","going to kill me","they will kill me",
+  "being beaten","being hit","being abused",
+  "please call police","call 911","call 999","call 000","call 112",
+  "need police","send help","i need help urgently","urgent help",
+  "someone help me","please help me now","im in danger",
+  "i am in danger","my life is in danger","fearing for my life",
+  "fear for my life","scared for my life",
+  "if you get this call police","send this to police",
+  "remember my name in case","tell my family",
+];
+
+const PHYSICAL_DANGER_RESPONSE =
+  "🚨 This message has been flagged as an urgent safety concern.\n\n" +
+  "If you or someone else is in immediate physical danger, please contact emergency services immediately:\n\n" +
+  "🆘 999 (UK/MY/SG) · 911 (US/PH) · 000 (AU) · 112 (EU/TH/ID/VN)\n\n" +
+  "Your message has been escalated to our player safety team as the highest priority. " +
+  "If you are unable to call for help, please stay on the line and we will do our best to assist you.";
+
+const DISTRESS_RESPONSES = {
+  en:"I'm really sorry to hear you're going through such a difficult time. Please know that support is available and you do not have to face this alone.\n\nIf you are having thoughts of self-harm, please reach out to a crisis helpline in your country immediately — they are free, confidential, and available 24 hours a day.\n\nI have flagged your message to our player welfare team, who will follow up with you as soon as possible.",
+  th:"ฉันเสียใจมากที่ได้ยินว่าคุณกำลังเผชิญกับช่วงเวลาที่ยากลำบากเช่นนี้ ขอให้รู้ว่ายังมีความช่วยเหลืออยู่ และคุณไม่จำเป็นต้องเผชิญกับสิ่งนี้เพียงลำพัง\n\nหากคุณมีความคิดที่จะทำร้ายตัวเอง โปรดติดต่อสายด่วนช่วยเหลือวิกฤตในประเทศของคุณทันที — บริการฟรี เป็นความลับ และให้บริการตลอด 24 ชั่วโมง\n\nฉันได้แจ้งเรื่องนี้ไปยังทีมดูแลผู้เล่นของเราแล้ว และพวกเขาจะติดตามผลโดยเร็วที่สุด",
+  id:"Kami sangat menyesal mendengar bahwa Anda sedang melalui masa yang sangat sulit. Ketahuilah bahwa bantuan tersedia dan Anda tidak harus menghadapi ini sendiri.\n\nJika Anda memiliki pikiran untuk menyakiti diri sendiri, segera hubungi hotline krisis di negara Anda — layanan ini gratis, rahasia, dan tersedia 24 jam sehari.\n\nSaya telah meneruskan pesan Anda ke tim kesejahteraan pemain kami, dan mereka akan menghubungi Anda sesegera mungkin.",
+  vi:"Chúng tôi rất tiếc khi nghe bạn đang trải qua giai đoạn khó khăn như vậy. Hãy biết rằng luôn có sự hỗ trợ dành cho bạn và bạn không phải đối mặt với điều này một mình.\n\nNếu bạn đang có ý định tự làm hại bản thân, hãy liên hệ ngay với đường dây hỗ trợ khủng hoảng tại quốc gia của bạn — miễn phí, bảo mật và hoạt động 24 giờ mỗi ngày.\n\nTôi đã chuyển tin nhắn của bạn đến đội ngũ phúc lợi người chơi của chúng tôi, và họ sẽ liên hệ lại với bạn sớm nhất có thể.",
+  tl:"Labis kaming naaawa na marinig na nagdaranas ka ng napakahirap na panahon. Alamin na may tulong na available at hindi mo kailangang harapin ito nang mag-isa.\n\nKung mayroon kang mga naiisip na saktan ang iyong sarili, mangyaring makipag-ugnayan sa crisis helpline sa iyong bansa agad — libre, kumpidensyal, at available 24 oras sa isang araw.\n\nIpinaalam ko na ang iyong mensahe sa aming koponan ng kapakanan ng manlalaro, at makikipag-ugnayan sila sa iyo sa lalong madaling panahon.",
+  zh:"非常抱歉听到您正在经历如此困难的时刻。请知道，帮助是可以获得的，您不必独自面对这一切。\n\n如果您有伤害自己的念头，请立即联系您所在国家的危机热线——这是免费的、保密的，并且全天24小时提供服务。\n\n我已将您的信息转达给我们的玩家关怀团队，他们将尽快与您联系。",
+};
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function detectSignal(text) {
+  const lower = text.toLowerCase();
+  if (PHYSICAL_DANGER_KEYWORDS.some(k => lower.includes(k))) return "physical_danger";
+  if (DISTRESS_KEYWORDS.some(k => lower.includes(k))) return "distress";
+  if (RG_KEYWORDS.some(k => lower.includes(k))) return "rg";
+  return null;
+}
+
+const TIER_STYLE = {
+  diamond:  { bg:"linear-gradient(135deg,#a8edea,#fed6e3)", color:"#111" },
+  platinum: { bg:"linear-gradient(135deg,#c0c0c0,#e8e8e8)", color:"#111" },
+  gold:     { bg:"linear-gradient(135deg,#f6d365,#fda085)", color:"#111" },
+  standard: { bg:"#1e2235", color:"#888" },
+};
+const TIER_ICON   = { diamond:"💎", platinum:"🥈", gold:"🥇", standard:"🎰" };
+const STATUS_CLR  = { active:"#4ade80", restricted:"#fb923c", suspended:"#f87171", self_excluded:"#94a3b8" };
+const ACTION_KEYS = { "action:balance":"balance", "action:withdrawal":"withdrawal", "action:promotions":"promotions", "action:kyc":"kyc", "action:rules":"rules", "action:rg":"rg" };
+
+const sortedPlayers = Object.entries(PLAYERS).sort(([,a],[,b]) =>
+  a.country.localeCompare(b.country) || a.name.localeCompare(b.name));
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+function App({ onSwitchToOps }) {
+  const [loggedIn,    setLoggedIn]    = useState(false);
+  const [selectedId,  setSelectedId]  = useState("U1003");
+  const [uiLang,      setUiLang]      = useState("en");
+  const [messages,    setMessages]    = useState([]);
+  const [input,       setInput]       = useState("");
+  const [typing,      setTyping]      = useState(false);
+  const [sessionId,   setSessionId]   = useState(null);
+  const [apiStatus,   setApiStatus]   = useState("unknown"); // unknown | online | offline
+  const chatEndRef = useRef(null);
+
+  const t = UI[uiLang] || UI.en;
+  const p = PLAYERS[selectedId];
+
+  // Check API health when entering chat
+  useEffect(() => {
+    if (!loggedIn) return;
+    fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(4000) })
+      .then(r => r.ok ? setApiStatus("online") : setApiStatus("offline"))
+      .catch(() => setApiStatus("offline"));
+  }, [loggedIn]);
+
+  // Auto-scroll
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, typing]);
+
+  const sendMessage = async (rawMsg) => {
+    const msg = (rawMsg || input).trim();
+    if (!msg || typing) return;
+    setInput("");
+
+    // Client-side safety gate — bypass API for critical signals
+    const signal = detectSignal(msg);
+    const qaKey  = ACTION_KEYS[msg];
+    const displayLabel = qaKey
+      ? (t.qaLabels[["balance","withdrawal","promotions","kyc","rules","rg"].indexOf(qaKey)] || msg)
+      : msg;
+
+    if (signal === "physical_danger") {
+      setMessages(prev => [
+        ...prev,
+        { role:"user", content:displayLabel },
+        { role:"assistant", content:PHYSICAL_DANGER_RESPONSE, escalated:true, signal:"physical_danger" }
+      ]);
+      return;
+    }
+    if (signal === "distress") {
+      setMessages(prev => [
+        ...prev,
+        { role:"user", content:displayLabel },
+        { role:"assistant", content:DISTRESS_RESPONSES[uiLang] || DISTRESS_RESPONSES.en, escalated:true, signal:"distress" }
+      ]);
+      // Still POST to backend for audit logging (fire-and-forget)
+      fetch(`${API_BASE}/chat`, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ user_id:selectedId, message:msg, session_id:sessionId })
+      }).catch(()=>{});
+      return;
+    }
+
+    // Normal path — POST to backend
+    setMessages(prev => [...prev, { role:"user", content:displayLabel }]);
+    setTyping(true);
+
+    try {
+      const res = await fetch(`${API_BASE}/chat`, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ user_id:selectedId, message:msg, session_id:sessionId }),
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!sessionId && data.session_id) setSessionId(data.session_id);
+      setApiStatus("online");
+      setMessages(prev => [...prev, {
+        role:"assistant",
+        content:data.response,
+        escalated:data.escalated,
+        route:data.route_taken,
+        intent:data.intent,
+        riskLevel:data.risk_level,
+        signal: data.escalated ? "escalated" : null,
+      }]);
+    } catch (err) {
+      setApiStatus("offline");
+      setMessages(prev => [...prev, {
+        role:"assistant",
+        content:t.offline,
+        escalated:false,
+        isError:true,
+      }]);
+    } finally {
+      setTyping(false);
+    }
+  };
+
+  const switchPlayer = (pid) => {
+    setSelectedId(pid);
+    setUiLang(PLAYERS[pid].lang);
+  };
+
+  // ── LOGIN SCREEN ────────────────────────────────────────────────────────────
+  if (!loggedIn) {
+    const ts = TIER_STYLE[p.tier];
+    return (
+      <div style={{background:"#0d0f14",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+        <div className="login-appear" style={{background:"linear-gradient(135deg,#1a1d27,#12151e)",border:"1px solid #2a2d3a",borderRadius:20,padding:"36px 32px 28px",width:"100%",maxWidth:460}}>
+
+          {/* Logo */}
+          <div style={{textAlign:"center",marginBottom:24}}>
+            <div style={{fontSize:40,marginBottom:8}}>🎰</div>
+            <div style={{fontSize:"1.6em",fontWeight:800,color:"#e2e8f0",letterSpacing:"-0.02em"}}>SiDOBet</div>
+            <div style={{fontSize:"0.82em",color:"#64748b",marginTop:4}}>Player Support Centre</div>
+          </div>
+
+          {/* Account selector */}
+          <div style={{fontSize:"0.78em",color:"#94a3b8",marginBottom:8}}>{t.sel}</div>
+          <select value={selectedId} onChange={e => switchPlayer(e.target.value)}
+            style={{width:"100%",padding:"10px 12px",borderRadius:10,background:"#1e2235",color:"#c8cde0",border:"1px solid #2a2d3a",fontSize:"0.87em",marginBottom:14,cursor:"pointer",outline:"none",fontFamily:"inherit"}}>
+            {sortedPlayers.map(([id, pl]) => (
+              <option key={id} value={id}>{pl.flag} {pl.country} — {pl.name} ({id})</option>
+            ))}
+          </select>
+
+          {/* Player preview card */}
+          <div style={{background:"#12151e",border:"1px solid #2a2d3a",borderRadius:14,padding:"16px 18px",marginBottom:18}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+              <div>
+                <div style={{fontWeight:700,fontSize:"1.05em",color:"#e2e8f0"}}>{p.flag} {p.name}</div>
+                <div style={{fontSize:"0.75em",color:"#64748b",marginTop:3}}>{p.country} · Since {p.since}</div>
+              </div>
+              <span style={{background:ts.bg,color:ts.color,padding:"3px 10px",borderRadius:8,fontSize:"0.7em",fontWeight:700,textTransform:"uppercase",whiteSpace:"nowrap"}}>
+                {TIER_ICON[p.tier]} {p.tier.toUpperCase()}
+              </span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,textAlign:"center",fontSize:"0.78em"}}>
+              <div>
+                <div style={{fontWeight:700,color:STATUS_CLR[p.status]||"#94a3b8"}}>{t.statusVal[p.status]||p.status}</div>
+                <div style={{color:"#475569",marginTop:2}}>{t.statusLbl}</div>
+              </div>
+              <div>
+                <div style={{fontWeight:700,color:"#e2e8f0"}}>{t.kycVal[p.kyc]||p.kyc}</div>
+                <div style={{color:"#475569",marginTop:2}}>{t.kycLbl}</div>
+              </div>
+              <div>
+                <div style={{fontWeight:700,color:"#e2e8f0",fontSize:"0.92em"}}>{p.balance}</div>
+                <div style={{color:"#475569",marginTop:2}}>{t.balLbl}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Language label */}
+          <div style={{fontSize:"0.72em",color:"#64748b",marginBottom:10,textTransform:"uppercase",letterSpacing:"0.08em"}}>Language</div>
+
+          {/* Language grid — 2 rows of 3 */}
+          {[LANGS.slice(0,3), LANGS.slice(3,6)].map((row, ri) => (
+            <div key={ri} style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:8}}>
+              {row.map(lang => (
+                <button key={lang.code} className="lang-btn" onClick={() => setUiLang(lang.code)}
+                  style={{background:uiLang===lang.code?"linear-gradient(135deg,#6366f1,#4f46e5)":"#1e2235",color:uiLang===lang.code?"white":"#94a3b8",border:uiLang===lang.code?"1px solid #6366f1":"1px solid #2a2d3a",borderRadius:10,padding:"10px 6px",cursor:"pointer",fontWeight:uiLang===lang.code?700:400,fontSize:"0.8em",textAlign:"center",lineHeight:1.5,minHeight:70,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",transition:"all 0.15s",fontFamily:"inherit"}}>
+                  <div style={{fontSize:"1.5em"}}>{lang.flag}</div>
+                  <div style={{marginTop:3}}>{lang.label}</div>
+                </button>
+              ))}
+            </div>
+          ))}
+
+          {/* Enter button */}
+          <button className="enter-btn" onClick={() => { setLoggedIn(true); setMessages([]); setSessionId(null); }}
+            style={{width:"100%",padding:"13px",background:"linear-gradient(135deg,#6366f1,#4f46e5)",color:"white",border:"none",borderRadius:12,fontWeight:600,fontSize:"0.95em",cursor:"pointer",fontFamily:"inherit",marginTop:8,transition:"opacity 0.15s"}}>
+            {t.enter}
+          </button>
+
+          <div style={{textAlign:"center",marginTop:14,fontSize:"0.72em",color:"#374151"}}>{t.footer}</div>
+          <div style={{textAlign:"center",marginTop:10}}>
+            <button className="mode-toggle" onClick={onSwitchToOps}
+              style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"5px 14px",cursor:"pointer",color:"#475569",fontSize:"0.72em",fontFamily:"inherit",transition:"all 0.15s"}}>
+              📊 View Ops Console
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── CHAT SCREEN ─────────────────────────────────────────────────────────────
+  const ts = TIER_STYLE[p.tier];
+  const firstName = p.name.split(" ")[0];
+  const QUICK_ACTIONS = [
+    { label:t.qaLabels[0], action:"action:balance" },
+    { label:t.qaLabels[1], action:"action:withdrawal" },
+    { label:t.qaLabels[2], action:"action:promotions" },
+    { label:t.qaLabels[3], action:"action:kyc" },
+    { label:t.qaLabels[4], action:"action:rules" },
+    { label:t.qaLabels[5], action:"action:rg" },
+  ];
+
+  return (
+    <div style={{background:"#0d0f14",height:"100vh",display:"flex",flexDirection:"column",fontSize:"14px",overflow:"hidden"}}>
+
+      {/* Top bar */}
+      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"10px 18px",display:"flex",alignItems:"center",gap:14,flexShrink:0,zIndex:10}}>
+        <div style={{fontSize:"1.1em",fontWeight:800,color:"#e2e8f0",letterSpacing:"-0.01em"}}>🎰 SiDOBet</div>
+        <div style={{width:1,height:18,background:"#2a2d3a"}}/>
+        <div style={{fontSize:"0.78em",color:"#64748b",display:"flex",alignItems:"center",gap:8}}>
+          <span style={{width:7,height:7,borderRadius:"50%",background: apiStatus==="offline"?"#f87171":"#4ade80",display:"inline-block",flexShrink:0}}/>
+          <span style={{color:apiStatus==="offline"?"#f87171":"#4ade80"}}>{t.liveChat}</span>
+          <span style={{color:"#2a2d3a"}}>|</span>
+          <span>{p.flag} {p.name}</span>
+          <span style={{color:"#2a2d3a"}}>|</span>
+          <span style={{background:ts.bg,color:ts.color,padding:"2px 8px",borderRadius:6,fontSize:"0.85em",fontWeight:700,textTransform:"uppercase"}}>
+            {TIER_ICON[p.tier]} {p.tier.toUpperCase()}
+          </span>
+        </div>
+        <div style={{marginLeft:"auto",display:"flex",gap:5,alignItems:"center"}}>
+          {LANGS.map(lang => (
+            <button key={lang.code} onClick={() => setUiLang(lang.code)} title={lang.label}
+              style={{background:uiLang===lang.code?"rgba(99,102,241,0.2)":"transparent",border:`2px solid ${uiLang===lang.code?"#6366f1":"transparent"}`,borderRadius:8,padding:"3px 5px",cursor:"pointer",fontSize:"1.1em",lineHeight:1,transition:"all 0.15s"}}>
+              {lang.flag}
+            </button>
+          ))}
+          <div style={{width:1,height:18,background:"#2a2d3a",margin:"0 4px"}}/>
+          <button onClick={() => { setLoggedIn(false); setMessages([]); }}
+            style={{background:"#1e2235",border:"1px solid #2a2d3a",borderRadius:8,padding:"5px 12px",cursor:"pointer",color:"#94a3b8",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s"}}>
+            {t.switchBtn}
+          </button>
+          <button className="mode-toggle" onClick={onSwitchToOps}
+            style={{background:"transparent",border:"1px solid #312e81",borderRadius:8,padding:"5px 12px",cursor:"pointer",color:"#818cf8",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+            📊 Ops
+          </button>
+        </div>
+      </div>
+
+      {/* RG Banner */}
+      <div style={{background:"linear-gradient(90deg,#0f1e3d,#0d1829)",borderBottom:"1px solid #1a3060",padding:"7px 18px",fontSize:"0.78em",color:"#93c5fd",display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
+        <span>🛡️ <strong>{t.rgBanner}</strong></span>
+        <span style={{color:"#475569"}}>·</span>
+        <span style={{color:p.rg?"#fbbf24":"#64748b"}}>{p.rg ? t.rgActive : t.rgDefault}</span>
+        <button className="rg-manage" onClick={() => sendMessage("action:rg")}
+          style={{marginLeft:"auto",background:"transparent",border:"none",color:"#60a5fa",cursor:"pointer",fontSize:"0.9em",padding:0,fontFamily:"inherit",transition:"all 0.15s"}}>
+          {t.rgManage}
+        </button>
+      </div>
+
+      {/* Body */}
+      <div style={{flex:1,display:"flex",overflow:"hidden"}}>
+
+        {/* Left panel */}
+        <div style={{width:252,background:"#0a0c10",borderRight:"1px solid #1e2130",padding:14,overflowY:"auto",flexShrink:0,display:"flex",flexDirection:"column",gap:10}}>
+
+          {/* Account card */}
+          <div style={{background:"linear-gradient(135deg,#1a1d27,#12151e)",border:"1px solid #2a2d3a",borderRadius:14,padding:"14px 16px"}}>
+            <div style={{fontSize:"0.65em",color:"#475569",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8}}>{t.acct}</div>
+            <div style={{fontWeight:700,fontSize:"0.95em",color:"#e2e8f0"}}>{p.flag} {p.name}</div>
+            <div style={{fontSize:"0.72em",color:"#475569",marginBottom:14}}>{selectedId}</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+              {[
+                { lbl:t.balLbl,    val:p.balance,                              mono:true  },
+                { lbl:t.statusLbl, val:t.statusVal[p.status]||p.status,        clr:STATUS_CLR[p.status] },
+                { lbl:t.kycLbl,    val:t.kycVal[p.kyc]||p.kyc },
+                { lbl:t.tierLbl,   val:`${TIER_ICON[p.tier]} ${t.tierVal[p.tier]||p.tier}` },
+              ].map(item => (
+                <div key={item.lbl} style={{background:"#12151e",border:"1px solid #1e2235",borderRadius:8,padding:"9px 8px",textAlign:"center"}}>
+                  <div style={{fontWeight:700,fontSize:"0.82em",fontFamily:item.mono?"'JetBrains Mono',monospace":"inherit",color:item.clr||"#e2e8f0",wordBreak:"break-all",lineHeight:1.3}}>{item.val}</div>
+                  <div style={{fontSize:"0.62em",color:"#475569",marginTop:3,textTransform:"uppercase",letterSpacing:"0.06em"}}>{item.lbl}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pending withdrawal */}
+          {p.withdrawal && (
+            <div style={{background:"#1a1d27",border:"1px solid #2a2d3a",borderLeft:"3px solid #fb923c",borderRadius:10,padding:"10px 12px",fontSize:"0.78em"}}>
+              <div style={{color:"#fb923c",fontWeight:600,marginBottom:4}}>{t.pendingWith}</div>
+              <div style={{color:"#94a3b8",lineHeight:1.5}}>{p.withdrawal}</div>
+            </div>
+          )}
+
+          {/* Quick actions */}
+          <div style={{fontSize:"0.65em",color:"#475569",textTransform:"uppercase",letterSpacing:"0.08em"}}>{t.quick}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            {QUICK_ACTIONS.map(({ label, action }) => (
+              <button key={action} className="qa-btn" onClick={() => sendMessage(action)} disabled={typing}
+                style={{textAlign:"left",background:"#1a1d27",color:"#c8cde0",border:"1px solid #2a2d3a",borderRadius:8,padding:"8px 10px",cursor:typing?"not-allowed":"pointer",fontSize:"0.8em",fontFamily:"inherit",transition:"all 0.15s",opacity:typing?0.5:1}}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Chat area */}
+        <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+          <div style={{flex:1,overflowY:"auto",padding:"16px 20px"}}>
+
+            {/* Welcome card */}
+            {messages.length === 0 && (
+              <div style={{background:"linear-gradient(135deg,#1e2235,#151825)",border:"1px solid #2a2d3a",borderRadius:16,padding:"20px 24px",marginBottom:16}}>
+                <div style={{fontSize:"1.05em",fontWeight:600,color:"#e2e8f0",marginBottom:6}}>{t.welcome(firstName)}</div>
+                <div style={{fontSize:"0.85em",color:"#64748b",lineHeight:1.6,marginBottom:8}}>{t.welcomeBody}</div>
+                <div style={{fontSize:"0.82em",color:"#64748b",lineHeight:1.6}}>{t.welcomeSub}</div>
+                <div style={{marginTop:12,fontSize:"0.75em",color:"#374151"}}>
+                  🌐 {LANGS.map(l=>l.label).join(" · ")}
+                </div>
+              </div>
+            )}
+
+            {/* API offline banner */}
+            {apiStatus === "offline" && messages.length === 0 && (
+              <div style={{background:"#1a1000",border:"1px solid #78350f",borderLeft:"3px solid #f59e0b",borderRadius:10,padding:"10px 14px",marginBottom:12,fontSize:"0.82em",color:"#fcd34d"}}>
+                ⚠️ Could not connect to support server at <code style={{background:"#0d0f14",padding:"1px 5px",borderRadius:4}}>{API_BASE}</code>. Check that the backend is running.
+              </div>
+            )}
+
+            {/* Messages */}
+            {messages.map((msg, i) => (
+              <div key={i} className="msg-appear">
+                {msg.role === "user" ? (
+                  <div style={{display:"flex",justifyContent:"flex-end",margin:"8px 0"}}>
+                    <div style={{background:"linear-gradient(135deg,#6366f1,#4f46e5)",color:"white",borderRadius:"18px 18px 4px 18px",padding:"10px 14px",maxWidth:"75%",fontSize:"0.87em",lineHeight:1.6,whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
+                      {msg.content}
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{display:"flex",gap:10,margin:"8px 0",alignItems:"flex-start"}}>
+                    <div style={{width:32,height:32,borderRadius:"50%",background:"linear-gradient(135deg,#6366f1,#4f46e5)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.9em",flexShrink:0,marginTop:2}}>🤖</div>
+                    <div style={{flex:1,maxWidth:"85%"}}>
+                      <div style={{background:msg.isError?"#1a0e0e":msg.signal==="physical_danger"?"#1a0a0a":"#1a1d27",border:`1px solid ${msg.isError?"#7f1d1d":msg.signal==="physical_danger"?"#ef4444":"#2a2d3a"}`,borderRadius:"18px 18px 18px 4px",padding:"10px 14px",fontSize:"0.87em",lineHeight:1.7,color:msg.signal==="physical_danger"?"#fca5a5":"#e2e8f0",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
+                        {msg.content}
+                      </div>
+                      {msg.escalated && !msg.isError && (
+                        <div style={{background:"linear-gradient(135deg,#1e1a2e,#1a1d27)",borderLeft:"3px solid #f59e0b",borderRadius:8,padding:"8px 12px",marginTop:6,fontSize:"0.77em",color:"#fcd34d"}}>
+                          ⚡ A support agent has been notified and will follow up with you shortly.
+                        </div>
+                      )}
+                      {msg.route && (
+                        <div style={{marginTop:5,fontSize:"0.68em",color:"#374151",paddingLeft:4}}>
+                          route: {msg.route} · intent: {msg.intent} · risk: {msg.riskLevel}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Typing indicator */}
+            {typing && (
+              <div style={{display:"flex",gap:10,margin:"8px 0",alignItems:"center"}}>
+                <div style={{width:32,height:32,borderRadius:"50%",background:"linear-gradient(135deg,#6366f1,#4f46e5)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.9em",flexShrink:0}}>🤖</div>
+                <div style={{background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:"18px 18px 18px 4px",padding:"12px 16px",display:"flex",gap:5,alignItems:"center"}}>
+                  <div className="dot"/><div className="dot"/><div className="dot"/>
+                </div>
+              </div>
+            )}
+            <div ref={chatEndRef}/>
+          </div>
+
+          {/* Input bar */}
+          <div style={{padding:"12px 16px",borderTop:"1px solid #1e2130",background:"#0a0c10",display:"flex",gap:10,flexShrink:0}}>
+            <input value={input} onChange={e => setInput(e.target.value)}
+              onKeyDown={e => { if(e.key==="Enter" && !e.shiftKey && !typing){ e.preventDefault(); sendMessage(); }}}
+              placeholder={t.placeholder} disabled={typing}
+              style={{flex:1,background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:12,padding:"10px 16px",color:"#e2e8f0",fontSize:"0.87em",outline:"none",fontFamily:"inherit",transition:"border-color 0.15s",opacity:typing?0.7:1}}
+              onFocus={e => e.target.style.borderColor="#6366f1"}
+              onBlur={e => e.target.style.borderColor="#2a2d3a"}
+            />
+            <button className="send-btn" onClick={() => sendMessage()} disabled={typing || !input.trim()}
+              style={{background:"linear-gradient(135deg,#6366f1,#4f46e5)",border:"none",borderRadius:12,padding:"10px 18px",color:"white",cursor:typing||!input.trim()?"not-allowed":"pointer",fontSize:"0.9em",fontFamily:"inherit",fontWeight:600,transition:"opacity 0.15s",opacity:typing||!input.trim()?0.45:1,flexShrink:0}}>
+              ➤
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OPS CONSOLE
+// Read-only view of the backend governance layer.
+// Tabs: Audit · Escalations · Cost · Metrics
+// ─────────────────────────────────────────────────────────────────────────────
+
+const RISK_COLOR = { LOW:"#22c55e", MEDIUM:"#f59e0b", HIGH:"#ef4444", CRITICAL:"#dc2626" };
+const ROUTE_BADGE = {
+  distress_detector:       { bg:"#3b0a0a", color:"#fca5a5", label:"distress" },
+  rg_detector:             { bg:"#1e1a00", color:"#fcd34d", label:"resp. gaming" },
+  fraud_detector:          { bg:"#1a0a2e", color:"#c4b5fd", label:"fraud" },
+  policy_guardrail:        { bg:"#0a1e2e", color:"#93c5fd", label:"policy" },
+  account_service:         { bg:"#0a1e10", color:"#86efac", label:"account" },
+  payment_service:         { bg:"#0a1e10", color:"#86efac", label:"payment" },
+  promotions_service:      { bg:"#0a1e10", color:"#86efac", label:"promotions" },
+  game_rules_service:      { bg:"#0d1a1a", color:"#67e8f9", label:"game rules" },
+  faq_service:             { bg:"#0d1a1a", color:"#67e8f9", label:"faq" },
+  cache_service:           { bg:"#1a1a1a", color:"#94a3b8", label:"cache" },
+  similarity_service:      { bg:"#1a1020", color:"#d8b4fe", label:"semantic" },
+  llm_fallback:            { bg:"#1a1228", color:"#a78bfa", label:"llm" },
+};
+
+function RouteBadge({ route }) {
+  const b = ROUTE_BADGE[route] || { bg:"#1a1d27", color:"#94a3b8", label: route || "—" };
+  return (
+    <span style={{background:b.bg,color:b.color,padding:"2px 8px",borderRadius:20,fontSize:"0.72em",fontWeight:600,whiteSpace:"nowrap"}}>
+      {b.label}
+    </span>
+  );
+}
+
+function Spinner() {
+  return <div style={{width:18,height:18,border:"2px solid #2a2d3a",borderTop:"2px solid #6366f1",borderRadius:"50%",animation:"spin 0.7s linear infinite",display:"inline-block"}} />;
+}
+
+function StatCard({ label, value, sub, accent }) {
+  return (
+    <div style={{background:"#13161f",border:"1px solid #1e2130",borderRadius:12,padding:"16px 20px",minWidth:140,flex:1}}>
+      <div style={{fontSize:"0.72em",color:"#475569",marginBottom:4,textTransform:"uppercase",letterSpacing:"0.05em"}}>{label}</div>
+      <div style={{fontSize:"1.6em",fontWeight:700,color: accent || "#e2e8f0",lineHeight:1}}>{value ?? "—"}</div>
+      {sub && <div style={{fontSize:"0.72em",color:"#475569",marginTop:4}}>{sub}</div>}
+    </div>
+  );
+}
+
+function TabAudit({ data, loading }) {
+  if (loading) return <div style={{padding:32,textAlign:"center",color:"#475569"}}><Spinner /></div>;
+  if (!data || data.length === 0) return (
+    <div style={{padding:32,textAlign:"center",color:"#475569"}}>
+      No audit entries yet. Send some messages in the Player Chat to generate data.
+    </div>
+  );
+  return (
+    <div style={{overflowX:"auto"}}>
+      <table style={{width:"100%",borderCollapse:"collapse",fontSize:"0.8em"}}>
+        <thead>
+          <tr style={{borderBottom:"1px solid #1e2130",color:"#475569",textAlign:"left"}}>
+            {["Time","User","Route","Intent","Risk","Escalated","LLM","Audit ID"].map(h => (
+              <th key={h} style={{padding:"8px 12px",fontWeight:500,whiteSpace:"nowrap"}}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, i) => (
+            <tr key={i} className="ops-row" style={{borderBottom:"1px solid #0f111a",cursor:"default",transition:"background 0.1s"}}>
+              <td style={{padding:"8px 12px",color:"#64748b",whiteSpace:"nowrap",fontFamily:"'JetBrains Mono',monospace",fontSize:"0.9em"}}>
+                {row.timestamp ? new Date(row.timestamp).toLocaleTimeString() : "—"}
+              </td>
+              <td style={{padding:"8px 12px",color:"#c8cde0",whiteSpace:"nowrap"}}>{row.user_id || "—"}</td>
+              <td style={{padding:"8px 12px"}}><RouteBadge route={row.route_taken} /></td>
+              <td style={{padding:"8px 12px",color:"#94a3b8",maxWidth:160,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{row.intent || "—"}</td>
+              <td style={{padding:"8px 12px"}}>
+                <span style={{color: RISK_COLOR[row.risk_level] || "#94a3b8",fontWeight:600,fontSize:"0.85em"}}>{row.risk_level || "—"}</span>
+              </td>
+              <td style={{padding:"8px 12px",textAlign:"center"}}>
+                {row.escalated ? <span style={{color:"#f59e0b",fontSize:"0.9em"}}>⚡ yes</span> : <span style={{color:"#374151"}}>—</span>}
+              </td>
+              <td style={{padding:"8px 12px",textAlign:"center"}}>
+                {row.llm_called ? <span style={{color:"#a78bfa",fontSize:"0.9em"}}>✓</span> : <span style={{color:"#374151"}}>—</span>}
+              </td>
+              <td style={{padding:"8px 12px",color:"#374151",fontFamily:"'JetBrains Mono',monospace",fontSize:"0.8em",whiteSpace:"nowrap"}}>{row.audit_id || "—"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function TabEscalations({ data, loading }) {
+  if (loading) return <div style={{padding:32,textAlign:"center",color:"#475569"}}><Spinner /></div>;
+  if (!data || data.length === 0) return (
+    <div style={{padding:32,textAlign:"center"}}>
+      <div style={{fontSize:"1.8em",marginBottom:8}}>✅</div>
+      <div style={{color:"#475569"}}>No open escalations. Send a distress or RG message in Player Chat to trigger one.</div>
+    </div>
+  );
+  const SEV_COLOR = { CRITICAL:"#dc2626", HIGH:"#ef4444", MEDIUM:"#f59e0b", LOW:"#22c55e" };
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:10,padding:"4px 0"}}>
+      {data.map((esc, i) => (
+        <div key={i} style={{background:"#13161f",border:`1px solid ${SEV_COLOR[esc.severity] || "#2a2d3a"}22`,borderLeft:`3px solid ${SEV_COLOR[esc.severity] || "#6366f1"}`,borderRadius:10,padding:"14px 18px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:8}}>
+            <div style={{display:"flex",gap:10,alignItems:"center",flexWrap:"wrap"}}>
+              <span style={{color: SEV_COLOR[esc.severity] || "#e2e8f0",fontWeight:700,fontSize:"0.85em"}}>{esc.severity || "—"}</span>
+              <RouteBadge route={esc.route_taken || esc.escalation_type} />
+              <span style={{color:"#64748b",fontSize:"0.78em"}}>user: {esc.user_id || "—"}</span>
+            </div>
+            <span style={{color:"#374151",fontSize:"0.75em",whiteSpace:"nowrap",fontFamily:"'JetBrains Mono',monospace"}}>
+              {esc.created_at ? new Date(esc.created_at).toLocaleString() : "—"}
+            </span>
+          </div>
+          <div style={{color:"#c8cde0",fontSize:"0.85em",lineHeight:1.6,marginBottom:6}}>
+            <span style={{color:"#475569",fontSize:"0.9em"}}>Message: </span>"{esc.message || "—"}"
+          </div>
+          {esc.flags && esc.flags !== "[]" && (
+            <div style={{color:"#64748b",fontSize:"0.75em"}}>Flags: {esc.flags}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TabCost({ data, loading }) {
+  if (loading) return <div style={{padding:32,textAlign:"center",color:"#475569"}}><Spinner /></div>;
+  if (!data) return <div style={{padding:32,textAlign:"center",color:"#475569"}}>No cost data available.</div>;
+  const calls = data.total_llm_calls || 0;
+  const cost  = typeof data.total_cost_usd === "number" ? `$${data.total_cost_usd.toFixed(6)}` : "—";
+  const rate  = data.llm_call_rate || "—";
+  const avgLat = data.avg_latency_ms ? `${Math.round(data.avg_latency_ms)} ms` : "—";
+  const p95   = data.p95_latency_ms ? `${data.p95_latency_ms} ms` : "—";
+  const succ  = data.successful_calls ?? "—";
+  const fail  = data.failed_calls ?? 0;
+  const inTok = data.total_input_tokens ?? "—";
+  const outTok = data.total_output_tokens ?? "—";
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:16}}>
+      <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+        <StatCard label="LLM Calls" value={calls} sub={`rate: ${rate}`} />
+        <StatCard label="Total Cost" value={cost} sub="est. USD" accent="#a78bfa" />
+        <StatCard label="Avg Latency" value={avgLat} sub={`p95: ${p95}`} />
+        <StatCard label="Success" value={succ} sub={fail > 0 ? `${fail} failed` : "0 failed"} accent="#22c55e" />
+      </div>
+      <div style={{background:"#13161f",border:"1px solid #1e2130",borderRadius:12,padding:"16px 20px"}}>
+        <div style={{fontSize:"0.72em",color:"#475569",marginBottom:12,textTransform:"uppercase",letterSpacing:"0.05em"}}>Token Usage</div>
+        <div style={{display:"flex",gap:24,flexWrap:"wrap"}}>
+          <div><span style={{color:"#475569",fontSize:"0.82em"}}>Input tokens: </span><span style={{color:"#e2e8f0",fontWeight:600}}>{typeof inTok === "number" ? inTok.toLocaleString() : inTok}</span></div>
+          <div><span style={{color:"#475569",fontSize:"0.82em"}}>Output tokens: </span><span style={{color:"#e2e8f0",fontWeight:600}}>{typeof outTok === "number" ? outTok.toLocaleString() : outTok}</span></div>
+          <div><span style={{color:"#475569",fontSize:"0.82em"}}>Total tokens: </span><span style={{color:"#e2e8f0",fontWeight:600}}>{typeof data.total_tokens === "number" ? data.total_tokens.toLocaleString() : "—"}</span></div>
+        </div>
+      </div>
+      {data.model_breakdown && Object.keys(data.model_breakdown).length > 0 && (
+        <div style={{background:"#13161f",border:"1px solid #1e2130",borderRadius:12,padding:"16px 20px"}}>
+          <div style={{fontSize:"0.72em",color:"#475569",marginBottom:12,textTransform:"uppercase",letterSpacing:"0.05em"}}>Model Breakdown</div>
+          {Object.entries(data.model_breakdown).map(([model, stats]) => (
+            <div key={model} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid #0f111a",fontSize:"0.82em"}}>
+              <span style={{color:"#c8cde0",fontFamily:"'JetBrains Mono',monospace"}}>{model}</span>
+              <span style={{color:"#64748b"}}>{stats.calls} calls · ${(stats.cost||0).toFixed(6)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TabMetrics({ data, loading }) {
+  if (loading) return <div style={{padding:32,textAlign:"center",color:"#475569"}}><Spinner /></div>;
+  if (!data) return <div style={{padding:32,textAlign:"center",color:"#475569"}}>No metrics data available.</div>;
+  const total = data.total_queries || 0;
+  const routes = data.route_distribution || {};
+  const safetyRoutes = ["distress_detector","rg_detector","fraud_detector","policy_guardrail","circumvention_detector"];
+  const opRoutes = ["account_service","payment_service","promotions_service"];
+  const knowledgeRoutes = ["game_rules_service","faq_service","cache_service"];
+  const semanticRoutes = ["similarity_service"];
+  const grouped = [
+    { label:"Safety", routes: safetyRoutes, color:"#ef4444" },
+    { label:"Operational", routes: opRoutes, color:"#22c55e" },
+    { label:"Knowledge", routes: knowledgeRoutes, color:"#67e8f9" },
+    { label:"Semantic", routes: semanticRoutes, color:"#d8b4fe" },
+    { label:"LLM Fallback", routes: ["llm_fallback"], color:"#a78bfa" },
+  ];
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:16}}>
+      <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+        <StatCard label="Total Queries" value={total.toLocaleString()} />
+        <StatCard label="Safety Events" value={data.safety_events ?? "—"} sub={`rate: ${data.safety_event_rate || "—"}`} accent="#ef4444" />
+        <StatCard label="Open Escalations" value={data.open_escalations ?? "—"} sub={`total: ${data.total_escalations ?? "—"}`} accent="#f59e0b" />
+        <StatCard label="LLM Rate" value={data.llm_call_rate || "—"} sub={`health: ${data.llm_health || "—"}`} accent={data.llm_health === "degraded" ? "#ef4444" : "#22c55e"} />
+      </div>
+
+      {/* Route distribution */}
+      <div style={{background:"#13161f",border:"1px solid #1e2130",borderRadius:12,padding:"16px 20px"}}>
+        <div style={{fontSize:"0.72em",color:"#475569",marginBottom:14,textTransform:"uppercase",letterSpacing:"0.05em"}}>Route Distribution</div>
+        {grouped.map(({ label, routes: rList, color }) => {
+          const count = rList.reduce((s, r) => s + (routes[r] || 0), 0);
+          const pct = total > 0 ? Math.round(count / total * 100) : 0;
+          if (count === 0) return null;
+          return (
+            <div key={label} style={{marginBottom:10}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.8em",marginBottom:4}}>
+                <span style={{color:"#c8cde0"}}>{label}</span>
+                <span style={{color:"#64748b"}}>{count} · {pct}%</span>
+              </div>
+              <div style={{background:"#1a1d27",borderRadius:4,height:6,overflow:"hidden"}}>
+                <div style={{width:`${pct}%`,background:color,height:"100%",borderRadius:4,transition:"width 0.5s ease"}} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Individual routes */}
+      {Object.keys(routes).length > 0 && (
+        <div style={{background:"#13161f",border:"1px solid #1e2130",borderRadius:12,padding:"16px 20px"}}>
+          <div style={{fontSize:"0.72em",color:"#475569",marginBottom:12,textTransform:"uppercase",letterSpacing:"0.05em"}}>All Routes</div>
+          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+            {Object.entries(routes).sort((a,b)=>b[1]-a[1]).map(([route, count]) => {
+              const pct = total > 0 ? Math.round(count / total * 100) : 0;
+              return (
+                <div key={route} style={{display:"flex",alignItems:"center",gap:10,fontSize:"0.8em"}}>
+                  <div style={{width:120,flexShrink:0}}><RouteBadge route={route} /></div>
+                  <div style={{flex:1,background:"#1a1d27",borderRadius:4,height:4}}>
+                    <div style={{width:`${pct}%`,background: (ROUTE_BADGE[route]||{}).color || "#6366f1",height:"100%",borderRadius:4}} />
+                  </div>
+                  <div style={{width:60,textAlign:"right",color:"#64748b"}}>{count} · {pct}%</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Cache */}
+      <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+        <StatCard label="Cache Entries" value={data.cache_entries ?? "—"} />
+        <StatCard label="Cache Hits" value={data.cache_hits ?? "—"} />
+        <StatCard label="Avg LLM Latency" value={data.llm_avg_latency_ms ? `${data.llm_avg_latency_ms} ms` : "—"} sub={data.llm_p95_latency_ms ? `p95: ${data.llm_p95_latency_ms} ms` : undefined} />
+      </div>
+    </div>
+  );
+}
+
+function OpsConsole({ onSwitch }) {
+  const [tab, setTab] = useState("metrics");
+  const [loading, setLoading] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState(null);
+  const [auditData, setAuditData]     = useState(null);
+  const [escData, setEscData]         = useState(null);
+  const [costData, setCostData]       = useState(null);
+  const [metricsData, setMetricsData] = useState(null);
+  const [error, setError]             = useState(null);
+
+  const TABS = [
+    { id:"metrics",     label:"📊 Metrics" },
+    { id:"audit",       label:"📋 Audit Log" },
+    { id:"escalations", label:"⚡ Escalations" },
+    { id:"cost",        label:"💰 Cost" },
+  ];
+
+  async function fetchAll() {
+    setLoading(true);
+    setError(null);
+    try {
+      const [mRes, aRes, eRes, cRes] = await Promise.all([
+        fetch(`${API_BASE}/metrics`),
+        fetch(`${API_BASE}/audit/recent?limit=50`),
+        fetch(`${API_BASE}/escalations/open`),
+        fetch(`${API_BASE}/cost/summary`),
+      ]);
+      if (!mRes.ok || !aRes.ok || !eRes.ok || !cRes.ok) throw new Error("One or more API calls failed");
+      const [m, a, e, c] = await Promise.all([mRes.json(), aRes.json(), eRes.json(), cRes.json()]);
+      setMetricsData(m);
+      setAuditData(a);
+      setEscData(e);
+      setCostData(c);
+      setLastRefresh(new Date());
+    } catch (err) {
+      setError(`Could not reach backend at ${API_BASE}. Make sure it is running.`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { fetchAll(); }, []);
+
+  return (
+    <div style={{height:"100%",display:"flex",flexDirection:"column",background:"#0d0f14",overflow:"hidden"}}>
+
+      {/* Header */}
+      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"0 20px",flexShrink:0}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",height:52}}>
+          <div style={{display:"flex",alignItems:"center",gap:14}}>
+            <div style={{fontWeight:700,fontSize:"1em",color:"#e2e8f0",letterSpacing:"0.02em"}}>
+              <span style={{color:"#6366f1"}}>SiDO</span>Bet
+            </div>
+            <div style={{width:1,height:18,background:"#1e2130"}} />
+            <div style={{fontSize:"0.8em",color:"#475569",fontWeight:500}}>Ops Console</div>
+            <div style={{background:"#1a1a2e",border:"1px solid #312e81",color:"#818cf8",fontSize:"0.68em",padding:"2px 8px",borderRadius:20,fontWeight:600}}>READ ONLY</div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            {lastRefresh && (
+              <span style={{fontSize:"0.72em",color:"#374151"}}>
+                updated {lastRefresh.toLocaleTimeString()}
+              </span>
+            )}
+            <button className="ops-refresh" onClick={fetchAll} disabled={loading}
+              style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"5px 10px",color:"#64748b",cursor:loading?"not-allowed":"pointer",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s",display:"flex",alignItems:"center",gap:6}}>
+              {loading ? <Spinner /> : "↻"} Refresh
+            </button>
+            <button className="mode-toggle" onClick={onSwitch}
+              style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"5px 12px",color:"#64748b",cursor:"pointer",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+              🎮 Player Chat
+            </button>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div style={{display:"flex",gap:0,marginTop:0}}>
+          {TABS.map(t => (
+            <button key={t.id} className={`ops-tab-btn${tab===t.id?" active":""}`} onClick={() => setTab(t.id)}
+              style={{background:"transparent",border:"none",borderBottom:tab===t.id?"2px solid #6366f1":"2px solid transparent",padding:"8px 16px",color:tab===t.id?"#a5b4fc":"#475569",cursor:"pointer",fontSize:"0.82em",fontFamily:"inherit",fontWeight:tab===t.id?600:400,transition:"all 0.15s",whiteSpace:"nowrap"}}>
+              {t.label}
+              {t.id==="escalations" && escData && escData.length > 0 && (
+                <span style={{marginLeft:6,background:"#ef4444",color:"white",borderRadius:10,padding:"1px 6px",fontSize:"0.78em",fontWeight:700}}>{escData.length}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Error banner */}
+      {error && (
+        <div style={{background:"#1a0e0e",borderBottom:"1px solid #7f1d1d",padding:"10px 20px",color:"#fca5a5",fontSize:"0.82em",flexShrink:0}}>
+          ⚠️ {error}
+        </div>
+      )}
+
+      {/* Tab content */}
+      <div style={{flex:1,overflowY:"auto",padding:"20px"}}>
+        {tab === "audit"       && <TabAudit       data={auditData}   loading={loading && !auditData} />}
+        {tab === "escalations" && <TabEscalations data={escData}     loading={loading && !escData} />}
+        {tab === "cost"        && <TabCost        data={costData}    loading={loading && !costData} />}
+        {tab === "metrics"     && <TabMetrics     data={metricsData} loading={loading && !metricsData} />}
+      </div>
+
+      {/* Footer */}
+      <div style={{background:"#0a0c10",borderTop:"1px solid #0f111a",padding:"8px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
+        <span style={{fontSize:"0.7em",color:"#1e2130"}}>SiDOBet Ops Console · Read-only · Data from {API_BASE}</span>
+        <span style={{fontSize:"0.7em",color:"#1e2130"}}>SiDO Strategies © 2026</span>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ROOT — toggles between Player Chat and Ops Console
+// ─────────────────────────────────────────────────────────────────────────────
+function Root() {
+  const [mode, setMode] = useState("player");
+  if (mode === "ops") return <OpsConsole onSwitch={() => setMode("player")} />;
+  return <App onSwitchToOps={() => setMode("ops")} />;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Root />);
+</script>
+</body>
+</html>

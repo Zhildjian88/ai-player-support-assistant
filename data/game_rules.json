@@ -1,0 +1,136 @@
+{
+  "blackjack": {
+    "name": "Blackjack",
+    "category": "table",
+    "summary": "Blackjack is a card game where the goal is to get a hand value closer to 21 than the dealer without exceeding 21.",
+    "objective": "Beat the dealer by getting a hand total closer to 21, or by the dealer busting (exceeding 21).",
+    "card_values": {
+      "number_cards": "Face value (2 through 10)",
+      "face_cards": "Jack, Queen, King each count as 10",
+      "ace": "Counts as 1 or 11, whichever is more favourable"
+    },
+    "basic_rules": [
+      "Each player and the dealer receive two cards at the start",
+      "One dealer card is face up, one is face down",
+      "Players can Hit (take another card), Stand (keep current hand), Double Down (double bet, take one card), or Split (if holding a pair)",
+      "Dealer must hit on 16 or less and stand on 17 or more",
+      "Blackjack (Ace + 10-value card) typically pays 3:2",
+      "Going over 21 is a bust — the busting player loses"
+    ],
+    "house_edge": "Approximately 0.5% with basic strategy",
+    "rtp": "99.5% with optimal play"
+  },
+  "roulette": {
+    "name": "Roulette",
+    "category": "table",
+    "summary": "Roulette is a casino game where players bet on which numbered pocket a ball will land in on a spinning wheel.",
+    "objective": "Correctly predict where the ball will land on the roulette wheel.",
+    "variants": {
+      "european": "Single zero wheel (0–36). Lower house edge.",
+      "american": "Double zero wheel (0, 00, 1–36). Higher house edge.",
+      "french": "Single zero with La Partage rule, returning half your bet on even-money wagers when zero hits."
+    },
+    "bet_types": {
+      "straight_up": "Single number. Pays 35:1",
+      "split": "Two adjacent numbers. Pays 17:1",
+      "street": "Three numbers in a row. Pays 11:1",
+      "corner": "Four numbers in a square. Pays 8:1",
+      "red_black": "Colour bet. Pays 1:1",
+      "odd_even": "Odd or even number. Pays 1:1",
+      "high_low": "1–18 or 19–36. Pays 1:1",
+      "dozen": "First, second, or third dozen. Pays 2:1",
+      "column": "12 numbers in a column. Pays 2:1"
+    },
+    "house_edge": "European: 2.7%. American: 5.26%",
+    "rtp": "European: 97.3%. American: 94.74%"
+  },
+  "baccarat": {
+    "name": "Baccarat",
+    "category": "table",
+    "summary": "Baccarat is a comparing card game where players bet on whether the Player or Banker hand will have a value closest to 9.",
+    "objective": "Bet on the hand (Player or Banker) that gets closest to a total of 9.",
+    "card_values": {
+      "number_cards": "Face value (2 through 9)",
+      "tens_and_face_cards": "Count as 0",
+      "ace": "Counts as 1"
+    },
+    "basic_rules": [
+      "Two hands are dealt: Player and Banker",
+      "If the total exceeds 9, only the second digit counts (e.g. 15 = 5)",
+      "Natural win is an 8 or 9 on the initial two cards",
+      "Third card drawing rules are fixed and automatic",
+      "Player bet pays 1:1. Banker bet pays 1:1 minus 5% commission. Tie pays 8:1"
+    ],
+    "house_edge": "Banker: 1.06%. Player: 1.24%. Tie: 14.36%",
+    "rtp": "Banker: 98.94%. Player: 98.76%"
+  },
+  "slots": {
+    "name": "Slot Machines",
+    "category": "slots",
+    "summary": "Slots are electronic games where players spin reels to match symbols across paylines for prizes.",
+    "objective": "Match symbols across paylines to win prizes according to the paytable.",
+    "key_concepts": {
+      "reels": "Vertical columns that spin and display symbols",
+      "paylines": "Lines across the reels where winning combinations are counted",
+      "wild": "A symbol that substitutes for most other symbols",
+      "scatter": "A symbol that triggers bonus features regardless of position",
+      "bonus_round": "A special feature triggered by scatter symbols, often with free spins or a mini-game",
+      "rtp": "Return to Player percentage — the theoretical long-run payout rate",
+      "volatility": "High volatility means bigger but less frequent wins. Low volatility means smaller but more frequent wins."
+    },
+    "basic_rules": [
+      "Select your bet size and number of paylines (if adjustable)",
+      "Spin the reels",
+      "Wins are paid when matching symbols land on active paylines from left to right",
+      "Bonus features may be triggered by landing scatter symbols",
+      "Each spin is completely independent due to Random Number Generator (RNG) technology"
+    ],
+    "house_edge": "Typically 2–10% depending on the game",
+    "rtp": "Typically 90–98% depending on the game"
+  },
+  "poker": {
+    "name": "Casino Poker (Three Card Poker)",
+    "category": "table",
+    "summary": "Three Card Poker is a casino poker variant where players compete against the dealer using three-card hands.",
+    "objective": "Have a better three-card hand than the dealer, or place ante and play bets wisely.",
+    "hand_rankings": [
+      "Straight Flush (highest)",
+      "Three of a Kind",
+      "Straight",
+      "Flush",
+      "Pair",
+      "High Card (lowest)"
+    ],
+    "basic_rules": [
+      "Player places an Ante bet (and optional Pair Plus side bet)",
+      "Both player and dealer receive three cards face down",
+      "Player decides to Play (match Ante bet) or Fold (forfeit Ante)",
+      "Dealer must have Queen-high or better to qualify",
+      "If dealer does not qualify, player wins even money on Ante and Play bet pushes",
+      "If dealer qualifies and beats player, player loses both bets"
+    ],
+    "house_edge": "Approximately 3.37% on Ante+Play",
+    "rtp": "Approximately 96.63%"
+  },
+  "sports_betting": {
+    "name": "Sports Betting",
+    "category": "sports",
+    "summary": "Sports betting allows players to wager on the outcomes of sporting events at fixed or variable odds.",
+    "objective": "Predict sports outcomes correctly to win payouts based on the odds offered.",
+    "bet_types": {
+      "moneyline": "Bet on which team or player wins outright",
+      "point_spread": "Bet on the margin of victory. The favoured team must win by more than the spread",
+      "over_under": "Bet on whether the total combined score will be over or under a set number",
+      "parlay": "Combine multiple bets into one. All selections must win. Higher risk, higher reward",
+      "same_game_parlay": "Multiple bets within the same match combined",
+      "live_betting": "Place bets during the event as odds update in real time",
+      "asian_handicap": "Eliminates the draw outcome by giving one team a head start"
+    },
+    "key_concepts": {
+      "odds_formats": "Decimal (1.90), Fractional (9/10), American (-110)",
+      "vig_or_juice": "The bookmaker margin built into the odds",
+      "push": "When the result ties the spread — stake is returned"
+    },
+    "house_edge": "Typically 4–8% depending on market and sport"
+  }
+}

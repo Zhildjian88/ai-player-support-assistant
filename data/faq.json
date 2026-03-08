@@ -1,0 +1,182 @@
+[
+  {
+    "id": "F001",
+    "category": "payments",
+    "question": "why is my withdrawal pending",
+    "answer": "Withdrawals are reviewed for security before processing. Most withdrawals complete within 1\u20133 business days. If yours has been pending longer, please contact support with your payment ID."
+  },
+  {
+    "id": "F002",
+    "category": "payments",
+    "question": "how long does a withdrawal take",
+    "answer": "Withdrawal times depend on your chosen method. E-wallets typically take 24 hours. Bank transfers take 3\u20135 business days. Crypto withdrawals usually complete within a few hours."
+  },
+  {
+    "id": "F003",
+    "category": "payments",
+    "question": "my deposit did not go through",
+    "answer": "If your deposit has not been credited, please allow up to 30 minutes for processing. If still not received, contact your bank to confirm the transaction completed. If it did, send us the transaction reference and we will investigate."
+  },
+  {
+    "id": "F004",
+    "category": "payments",
+    "question": "what payment methods are accepted",
+    "answer": "We accept Visa, Mastercard, local bank transfers, and regional e-wallets including GoPay and OVO (Indonesia), GCash (Philippines), PromptPay (Thailand), and ViettelPay (Vietnam). Cryptocurrency deposits are also supported. Available methods depend on your country of registration."
+  },
+  {
+    "id": "F005",
+    "category": "payments",
+    "question": "what is the minimum withdrawal amount",
+    "answer": "The minimum withdrawal amount is the minimum amount for your currency for most payment methods. Crypto withdrawals may have different minimums depending on network fees."
+  },
+  {
+    "id": "F006",
+    "category": "payments",
+    "question": "why was my withdrawal rejected",
+    "answer": "Withdrawals may be declined if your account verification is incomplete, active bonus wagering requirements have not been met, or your payment method does not match your deposit method."
+  },
+  {
+    "id": "F007",
+    "category": "payments",
+    "question": "can I withdraw to a different method than I deposited with",
+    "answer": "For security and compliance reasons, withdrawals must be processed back to the same method used for your original deposit where possible. This is a standard anti-money laundering requirement."
+  },
+  {
+    "id": "F008",
+    "category": "kyc",
+    "question": "how long does KYC verification take",
+    "answer": "Identity verification typically takes between 24 and 48 hours. During busy periods it may take up to 72 hours. You will receive an email confirmation once your account has been verified."
+  },
+  {
+    "id": "F009",
+    "category": "kyc",
+    "question": "what documents are needed for verification",
+    "answer": "We require a valid government-issued photo ID such as a passport, national ID, or driving licence. A proof of address such as a recent utility bill or bank statement dated within 3 months is also required."
+  },
+  {
+    "id": "F010",
+    "category": "kyc",
+    "question": "my verification was rejected",
+    "answer": "Verification rejections are typically caused by blurry documents, expired ID, or documents where details do not match your registration information. Please resubmit clear, current documents."
+  },
+  {
+    "id": "F011",
+    "category": "kyc",
+    "question": "do I need to verify before I can withdraw",
+    "answer": "Yes. Full identity verification is required before your first withdrawal. This is a legal requirement under anti-money laundering regulations. Deposits are permitted before verification is complete."
+  },
+  {
+    "id": "F012",
+    "category": "account",
+    "question": "why is my account locked",
+    "answer": "Accounts may be locked due to multiple failed login attempts, suspicious activity detected on your account, or a compliance review. Please contact support to resolve this."
+  },
+  {
+    "id": "F013",
+    "category": "account",
+    "question": "how do I reset my password",
+    "answer": "Click Forgot Password on the login page and enter your registered email address. You will receive a reset link within a few minutes. Check your spam folder if you do not see it."
+  },
+  {
+    "id": "F014",
+    "category": "account",
+    "question": "how do I update my personal details",
+    "answer": "You can update your email address, phone number, and address in the Account Settings section. For legal name changes, please contact support with supporting documentation."
+  },
+  {
+    "id": "F015",
+    "category": "account",
+    "question": "how do I close my account",
+    "answer": "To permanently close your account, please contact our support team. Any remaining balance will be processed as a withdrawal before closure. Note that account closure is a responsible gaming option we take seriously."
+  },
+  {
+    "id": "F016",
+    "category": "promotions",
+    "question": "what is rollover or wagering requirement",
+    "answer": "A wagering requirement means you must bet the bonus amount a specified number of times before you can withdraw winnings. For example, a $100 bonus with a 20x requirement means you must wager $2,000 total."
+  },
+  {
+    "id": "F017",
+    "category": "promotions",
+    "question": "why did my bonus expire",
+    "answer": "Bonuses have an expiry period stated in the promotion terms. If the wagering requirement is not completed within this time, the bonus and any associated winnings are forfeited."
+  },
+  {
+    "id": "F018",
+    "category": "promotions",
+    "question": "can I use multiple bonuses at the same time",
+    "answer": "In most cases, only one bonus can be active at a time. Please check the specific promotion terms. Stacking bonuses is generally not permitted."
+  },
+  {
+    "id": "F019",
+    "category": "promotions",
+    "question": "why am I not eligible for the welcome bonus",
+    "answer": "The welcome bonus is available to new players on their first deposit only. If your account already had a previous deposit or bonus, you may no longer qualify. Eligibility also depends on your country of residence."
+  },
+  {
+    "id": "F020",
+    "category": "promotions",
+    "question": "do free spins have wagering requirements",
+    "answer": "Free spin winnings usually carry a wagering requirement, commonly between 20x and 40x. The specific terms are stated in each promotion. Some free spin offers are wager-free."
+  },
+  {
+    "id": "F021",
+    "category": "responsible_gaming",
+    "question": "how do I set a deposit limit",
+    "answer": "You can set daily, weekly, or monthly deposit limits in your Responsible Gaming settings under Account. Limits take effect immediately when reducing and may have a cooling-off period when increasing."
+  },
+  {
+    "id": "F022",
+    "category": "responsible_gaming",
+    "question": "how do I take a break from gambling",
+    "answer": "You can set a cooling-off period of 24 hours, 7 days, or 30 days in your Responsible Gaming settings. During this period you will not be able to log in or place bets."
+  },
+  {
+    "id": "F023",
+    "category": "responsible_gaming",
+    "question": "how do I self-exclude",
+    "answer": "Self-exclusion is available in your Responsible Gaming settings. You can choose a period of 6 months, 1 year, 3 years, or permanent. This cannot be reversed during the exclusion period."
+  },
+  {
+    "id": "F024",
+    "category": "responsible_gaming",
+    "question": "what responsible gaming tools are available",
+    "answer": "We offer deposit limits, loss limits, session time limits, cooling-off periods, and self-exclusion. You can also access your full gaming history to review your activity at any time."
+  },
+  {
+    "id": "F025",
+    "category": "security",
+    "question": "I think someone accessed my account",
+    "answer": "If you suspect unauthorised access, please change your password immediately and contact our security team. We will review recent login activity on your account and take appropriate action."
+  },
+  {
+    "id": "F026",
+    "category": "security",
+    "question": "how do I enable two-factor authentication",
+    "answer": "Two-factor authentication can be enabled in your Security Settings. We support authenticator apps and SMS verification. We strongly recommend enabling this for account protection."
+  },
+  {
+    "id": "F027",
+    "category": "general",
+    "question": "what currencies are supported",
+    "answer": "We support SGD, USD, EUR, GBP, AUD, and several other major currencies. Cryptocurrency accounts are denominated in the relevant coin. Currency conversion fees may apply."
+  },
+  {
+    "id": "F028",
+    "category": "general",
+    "question": "how do I contact customer support",
+    "answer": "Our support team is available 24/7 via live chat, email at support@playsafe.com, and phone during business hours. Live chat is the fastest option for urgent issues."
+  },
+  {
+    "id": "F029",
+    "category": "general",
+    "question": "is my personal data safe",
+    "answer": "We use industry-standard 256-bit SSL encryption to protect all data transmissions. Your personal data is handled in accordance with applicable local data protection regulations (PDPA, PDPB, and equivalent) regulations and is never sold to third parties."
+  },
+  {
+    "id": "F030",
+    "category": "general",
+    "question": "what age do I need to be to register",
+    "answer": "You must be at least 21 years old to register and play. We perform age verification as part of our KYC process. Underage gambling is prohibited and accounts found to be in violation will be closed."
+  }
+]

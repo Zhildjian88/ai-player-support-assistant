@@ -1,0 +1,24 @@
+# ── Dockerfile.render ────────────────────────────────────────────────────────
+# Lightweight FastAPI-only image for Render deployment.
+# Strips Streamlit, sentence-transformers, faiss, and notebook deps
+# so the image builds fast and stays within Render's free-tier limits.
+#
+# The player UI is served separately via GitHub Pages (docs/index.html).
+# The ops console (streamlit_app.py) is run locally when needed.
+# ──────────────────────────────────────────────────────────────────────────────
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install only what the API needs
+COPY requirements-api.txt .
+RUN pip install --no-cache-dir -r requirements-api.txt
+
+# Copy application code
+COPY . .
+
+EXPOSE $PORT
+
+# Initialise SQLite DB then start uvicorn on Render's dynamic $PORT
+CMD ["sh", "-c", "python -m app.db_init && uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

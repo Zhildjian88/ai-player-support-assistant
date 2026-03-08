@@ -1,0 +1,30 @@
+# ── render.yaml ───────────────────────────────────────────────────────────────
+# Render Infrastructure-as-Code config.
+# Defines the web service that runs the FastAPI backend.
+# Render auto-detects this file when you connect your GitHub repo.
+#
+# Full deployment instructions: see DEPLOY.md
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+  - type: web
+    name: ai-player-support-assistant
+    runtime: docker
+    dockerfilePath: Dockerfile.render
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false          # Set manually in Render dashboard — never commit this
+      - key: LLM_MODEL
+        value: llama-3.1-8b-instant
+      - key: ENABLE_LLM_FALLBACK
+        value: "true"
+      - key: USE_NEURAL_EMBEDDINGS
+        value: "false"       # Must be false on Render free tier (no model download)
+      - key: ENABLE_AUDIT_LOG
+        value: "true"
+      - key: ENABLE_ESCALATION
+        value: "true"
+      - key: PORT
+        value: "8000"

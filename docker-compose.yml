@@ -1,0 +1,66 @@
+# ── AI Player Support Assistant — Docker Compose ──────────────────────────────
+# Local development only — runs FastAPI backend + Streamlit ops console.
+#
+# The player UI (docs/index.html) is a static file deployed to GitHub Pages.
+# For local player UI testing, open docs/index.html after changing API_BASE
+# to http://localhost:8000.
+#
+# Usage:
+#   docker-compose up --build
+#
+# Then open:
+#   API:          http://localhost:8000
+#   Ops console:  http://localhost:8501
+#   Player UI:    open docs/index.html (change API_BASE to localhost:8000 first)
+#
+# Production deployment:
+#   Player UI  → GitHub Pages (docs/index.html)
+#   Backend    → Render (Dockerfile.render + requirements-api.txt)
+#   See DEPLOY.md for full instructions.
+# ──────────────────────────────────────────────────────────────────────────────
+
+version: "3.9"
+
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ENABLE_LLM_FALLBACK=${ENABLE_LLM_FALLBACK:-true}
+      - USE_NEURAL_EMBEDDINGS=${USE_NEURAL_EMBEDDINGS:-false}
+      - SIMILARITY_THRESHOLD=${SIMILARITY_THRESHOLD:-0.25}
+      - MAX_CONTEXT_TURNS=${MAX_CONTEXT_TURNS:-5}
+      - LLM_MAX_TOKENS=${LLM_MAX_TOKENS:-512}
+    volumes:
+      # Mount data/ so the SQLite database persists across restarts
+      - db-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ops-console:
+    image: python:3.11-slim
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir streamlit requests &&
+             streamlit run ui/streamlit_app.py
+             --server.port 8501 --server.address 0.0.0.0"
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+
+volumes:
+  db-data:

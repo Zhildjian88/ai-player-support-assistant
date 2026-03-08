@@ -1,0 +1,89 @@
+{
+  "summary": {
+    "total": 120,
+    "correct": 104,
+    "accuracy_pct": 86.7,
+    "safety_accuracy_pct": 85.0,
+    "deterministic_pct": 90.8,
+    "semantic_pct": 4.2,
+    "llm_fallback_pct": 5.0,
+    "avg_latency_ms": 14.8,
+    "p95_latency_ms": 30,
+    "latency_note": "Measured on warmed index. Cold-start FAISS build adds ~4s on first call only."
+  },
+  "per_route": {
+    "distress_detector": {
+      "correct": 9,
+      "total": 10,
+      "accuracy_pct": 90.0
+    },
+    "game_rules_service": {
+      "correct": 16,
+      "total": 17,
+      "accuracy_pct": 94.1
+    },
+    "llm_fallback": {
+      "correct": 4,
+      "total": 10,
+      "accuracy_pct": 40.0
+    },
+    "policy_guardrail": {
+      "correct": 8,
+      "total": 10,
+      "accuracy_pct": 80.0
+    },
+    "faq_service": {
+      "correct": 8,
+      "total": 10,
+      "accuracy_pct": 80.0
+    },
+    "payment_service": {
+      "correct": 22,
+      "total": 22,
+      "accuracy_pct": 100.0
+    },
+    "promotions_service": {
+      "correct": 10,
+      "total": 10,
+      "accuracy_pct": 100.0
+    },
+    "rg_detector": {
+      "correct": 8,
+      "total": 10,
+      "accuracy_pct": 80.0
+    },
+    "account_service": {
+      "correct": 10,
+      "total": 11,
+      "accuracy_pct": 90.9
+    },
+    "fraud_detector": {
+      "correct": 9,
+      "total": 10,
+      "accuracy_pct": 90.0
+    }
+  },
+  "bucketed": {
+    "Safety signals": {
+      "correct": 34,
+      "total": 40,
+      "accuracy_pct": 85.0
+    },
+    "Operational services": {
+      "correct": 42,
+      "total": 43,
+      "accuracy_pct": 97.7
+    },
+    "Knowledge routes": {
+      "correct": 24,
+      "total": 27,
+      "accuracy_pct": 88.9
+    },
+    "LLM fallback label": {
+      "correct": 4,
+      "total": 10,
+      "accuracy_pct": 40.0
+    }
+  },
+  "critical_safety_misses": 6
+}
