@@ -44,12 +44,29 @@ PREOCCUPATION = [
 # ── Chasing losses ────────────────────────────────────────────────────────────
 # DSM-5: "often returns another day to get even" / chasing criterion
 CHASING = [
-    "chasing losses", "chasing my losses",
+    "chasing losses", "chasing my losses", "chase my loss", "chase my loses",
+    "chase losses", "chase the loss",
     "trying to win back", "win back what i lost",
     "get my money back", "get back my losses",
     "need to win back", "have to win it back",
     "keep depositing to recover", "depositing more to chase",
     "doubling up to recover", "increasing bets to recover",
+    "win back my money", "recover my losses", "recover my money",
+]
+
+# ── Gambling as income delusion ───────────────────────────────────────────────
+# Signals player may believe gambling is a reliable income source — HIGH risk
+INCOME_DELUSION = [
+    "bet to make money", "betting to make money", "gamble to make money",
+    "gambling to make money", "gambling for income", "betting for income",
+    "make money from gambling", "make money from betting",
+    "make money from casino", "make a living from gambling",
+    "make a living from betting", "live off gambling",
+    "teach me how to make", "teach me to win",
+    "how to make million", "make millions gambling",
+    "get rich from gambling", "get rich from betting",
+    "make profit from gambling", "guaranteed win", "guaranteed profit",
+    "sure win", "sure bet", "can\'t lose", "cannot lose",
 ]
 
 # ── Gambling as escape ────────────────────────────────────────────────────────
@@ -105,9 +122,11 @@ TOOL_REQUESTS = [
     "self exclude", "self-exclude", "self exclusion", "self-exclusion",
     "close my account", "block my account", "freeze my account",
     "delete my account", "deactivate my account",
-    "deposit limit", "spending limit", "loss limit", "wager limit",
-    "session limit", "time limit on my account",
-    "cooling off", "cooling-off period", "take a break",
+    "set a deposit limit", "set my deposit limit", "set deposit limit",
+    "set a spending limit", "set a loss limit", "set a wager limit",
+    "set a session limit", "set a time limit",
+    "remove my deposit limit", "increase my deposit limit", "change my deposit limit",
+    "cooling off", "cooling-off period", "take a break from gambling",
     "pause my account", "temporary block",
     "need help with gambling", "help me stop gambling", "help me stop",
     "gamstop", "gamban", "gambling blocker",
@@ -139,6 +158,7 @@ RG_KEYWORDS = (
     LOSS_OF_CONTROL
     + PREOCCUPATION
     + CHASING
+    + INCOME_DELUSION
     + ESCAPISM
     + FINANCIAL_HARM
     + WITHDRAWAL
@@ -163,9 +183,96 @@ SAFE_RESPONSE = (
 )
 
 
+# Informational questions about RG tools — should go to FAQ, not trigger RG response
+# These are "how does it work" questions, not "I need help" signals
+RG_INFO_EXCLUSIONS = [
+    "how do i set a deposit limit", "how do i set a spending limit",
+    "how do i set a loss limit", "how do i set a session limit",
+    "how do i set a time limit", "how do i set a wager limit",
+    "how to set a deposit limit", "how to set a spending limit",
+    "how do i change my deposit limit", "how do i change my limit",
+    "how do i access responsible gaming", "where can i find responsible gaming",
+    "what is a deposit limit", "what are deposit limits",
+    "what is responsible gaming", "what is a cooling off",
+    "what is a session limit", "what is a time limit",
+    "tell me about responsible gaming", "explain responsible gaming",
+]
+
 def check(message: str) -> dict:
     normalised = message.lower()
+    # Informational "how do I..." questions belong in FAQ, not RG escalation
+    if any(excl in normalised for excl in RG_INFO_EXCLUSIONS):
+        return {"signal": False, "response": ""}
     for keyword in RG_KEYWORDS:
         if keyword in normalised:
             return {"signal": True, "response": SAFE_RESPONSE}
+    return {"signal": False, "response": ""}
+
+SAFE_RESPONSE_I18N = {
+    "id": (
+        "Terima kasih telah menghubungi kami. Menyadari bahwa perjudian mungkin memengaruhi Anda "
+        "adalah langkah yang penting.\n\n"
+        "Kami menawarkan berbagai alat permainan bertanggung jawab, termasuk:\n"
+        "• Batas setoran (harian, mingguan, bulanan)\n"
+        "• Batas waktu sesi\n"
+        "• Periode pendinginan (24 jam hingga 30 hari)\n"
+        "• Pengecualian diri (6 bulan hingga permanen)\n\n"
+        "Anda dapat mengaksesnya di bagian Permainan Bertanggung Jawab di Pengaturan Akun Anda, "
+        "atau tim dukungan kami dapat membantu Anda mengaturnya sekarang melalui live chat.\n\n"
+        "Jika Anda ingin berbicara dengan seseorang, dukungan rahasia gratis tersedia "
+        "melalui hotline perjudian di negara Anda."
+    ),
+    "th": (
+        "ขอบคุณที่ติดต่อเรา การรู้ว่าการพนันอาจส่งผลกระทบต่อคุณเป็นก้าวสำคัญ\n\n"
+        "เราเสนอเครื่องมือการเล่นอย่างรับผิดชอบ ได้แก่:\n"
+        "• วงเงินฝาก (รายวัน รายสัปดาห์ รายเดือน)\n"
+        "• จำกัดเวลาเล่น\n"
+        "• ช่วงพักการเล่น (24 ชั่วโมง ถึง 30 วัน)\n"
+        "• การยกเว้นตนเอง (6 เดือน ถึงถาวร)\n\n"
+        "คุณสามารถเข้าถึงได้ในส่วนการเล่นอย่างรับผิดชอบในการตั้งค่าบัญชีของคุณ "
+        "หรือทีมสนับสนุนของเราสามารถช่วยตั้งค่าผ่านแชทสดได้เลย\n\n"
+        "หากต้องการพูดคุยกับผู้เชี่ยวชาญ สายด่วนให้คำปรึกษาด้านการพนันในประเทศของคุณพร้อมให้บริการฟรี"
+    ),
+    "vi": (
+        "Cảm ơn bạn đã liên hệ. Nhận ra rằng cờ bạc có thể ảnh hưởng đến bạn là một bước quan trọng.\n\n"
+        "Chúng tôi cung cấp các công cụ chơi có trách nhiệm bao gồm:\n"
+        "• Giới hạn nạp tiền (hàng ngày, hàng tuần, hàng tháng)\n"
+        "• Giới hạn thời gian chơi\n"
+        "• Thời gian nghỉ (24 giờ đến 30 ngày)\n"
+        "• Tự loại trừ (6 tháng đến vĩnh viễn)\n\n"
+        "Bạn có thể truy cập trong phần Chơi Có Trách Nhiệm trong Cài đặt Tài khoản, "
+        "hoặc đội hỗ trợ có thể giúp bạn thiết lập ngay qua live chat.\n\n"
+        "Nếu muốn nói chuyện với ai đó, hỗ trợ bảo mật miễn phí có sẵn qua đường dây hỗ trợ tại quốc gia bạn."
+    ),
+    "tl": (
+        "Salamat sa pakikipag-ugnayan. Ang pagkilala na maaaring maapektuhan ka ng pagsusugal ay isang mahalagang hakbang.\n\n"
+        "Nag-aalok kami ng iba't ibang kasangkapan para sa responsableng paglalaro kabilang ang:\n"
+        "• Limitasyon sa deposito (araw-araw, lingguhan, buwanan)\n"
+        "• Limitasyon sa oras ng sesyon\n"
+        "• Panahon ng pahinga (24 oras hanggang 30 araw)\n"
+        "• Self-exclusion (6 buwan hanggang permanente)\n\n"
+        "Maaari mong ma-access ang mga ito sa seksyon ng Responsableng Paglalaro sa iyong Mga Setting ng Account, "
+        "o ang aming koponan ng suporta ay makakatulong sa iyo ngayon sa pamamagitan ng live chat.\n\n"
+        "Kung nais kang makipag-usap sa isang tao, ang libreng suporta ay available sa pamamagitan ng mga helpline sa iyong bansa."
+    ),
+    "zh": (
+        "感谢您的联系。意识到赌博可能正在影响您是重要的一步。\n\n"
+        "我们提供一系列负责任博彩工具，包括：\n"
+        "• 存款限额（每日、每周、每月）\n"
+        "• 会话时间限制\n"
+        "• 冷静期（24小时至30天）\n"
+        "• 自我排除（6个月至永久）\n\n"
+        "您可以在账户设置的负责任博彩部分访问这些工具，"
+        "或者我们的支持团队现在可以通过在线聊天帮助您设置。\n\n"
+        "如果您想与某人交谈，可通过您所在国家的赌博帮助热线获得免费保密支持。"
+    ),
+}
+
+
+def check_with_lang(message: str, lang: str = "en") -> dict:
+    normalised = message.lower()
+    for keyword in RG_KEYWORDS:
+        if keyword in normalised:
+            response = SAFE_RESPONSE_I18N.get(lang, SAFE_RESPONSE)
+            return {"signal": True, "response": response}
     return {"signal": False, "response": ""}

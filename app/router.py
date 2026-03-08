@@ -172,16 +172,26 @@ def process_message(
         "action:rules":       ("game_rules_service", "game_rules_inquiry"),
         "action:rg":          ("rg_detector",        "rg_support"),
     }
+    _ACTION_LABELS = {
+        "action:balance":    "Player checked account balance",
+        "action:withdrawal": "Player checked withdrawal status",
+        "action:promotions": "Player checked active promotions",
+        "action:kyc":        "Player checked KYC status",
+        "action:rules":      "Player checked game rules",
+        "action:rg":         "Player requested Responsible Gaming support",
+    }
     _msg_stripped = message.strip().lower()
     if _msg_stripped in _ACTION_MAP:
         _route, _intent = _ACTION_MAP[_msg_stripped]
+        _audit_message = _ACTION_LABELS.get(_msg_stripped, message)
         if _msg_stripped == "action:rg":
-            response   = _builder.build(_rg.SAFE_RESPONSE, lang, _route)
+            rg_i18n = _rg.SAFE_RESPONSE_I18N.get(lang, _rg.SAFE_RESPONSE) if hasattr(_rg, "SAFE_RESPONSE_I18N") else _rg.SAFE_RESPONSE
+            response   = _builder.build(rg_i18n, lang, _route)
             risk_level = "HIGH"
             escalated  = True
-            _escalation.create(session_id, user_id, message, "rg_quick_action", risk_level)
+            _escalation.create(session_id, user_id, "Player requested Responsible Gaming support", "rg_quick_action", risk_level)
         elif _msg_stripped == "action:balance":
-            acct     = _account.lookup("balance", user_id) if user_id else {}
+            acct     = _account.lookup("my balance", user_id) if user_id else {}
             response = _builder.build(acct.get("response", "Your balance is available in the account section."), lang, _route)
         elif _msg_stripped == "action:withdrawal":
             pay      = _payment.lookup("withdrawal", user_id) if user_id else {}
@@ -190,14 +200,23 @@ def process_message(
             promo    = _promo.lookup("promotions", user_id) if user_id else {}
             response = _builder.build(promo.get("response", "No active promotions available at this time."), lang, _route)
         elif _msg_stripped == "action:kyc":
-            acct     = _account.lookup("kyc", user_id) if user_id else {}
+            acct     = _account.lookup("my kyc status", user_id) if user_id else {}
             response = _builder.build(acct.get("response", "Your KYC status is available in your account settings."), lang, _route)
         elif _msg_stripped == "action:rules":
-            rules    = _game.lookup(message) if user_id else {}
-            response = _builder.build(rules.get("response", "Game rules and terms are available in the Help section."), lang, _route)
+            game_directory = (
+                "Here are the games available at SiDOBet. Ask me about any game to see its full rules:\n\n"
+                "\U0001f0cf **Blackjack** — Beat the dealer to 21 without going bust\n"
+                "\U0001f3b0 **Slots** — Spin to match symbols across paylines\n"
+                "\U0001f3a1 **Roulette** — Bet on where the ball lands on the wheel\n"
+                "\U0001f004 **Baccarat** — Back Player, Banker, or Tie\n"
+                "\u2660\ufe0f **Poker** — Three Card Poker and more\n"
+                "\u26bd **Sports Betting** — Pre-match and live betting markets\n\n"
+                "Just type the name of a game (e.g. \"How do I play Blackjack?\") and I\'ll show you the rules."
+            )
+            response = _builder.build(game_directory, lang, _route)
         else:
             response = _builder.build("I can help you with that. Please contact support for details.", lang, _route)
-        _log(audit_id, session_id, user_id, message, _route, risk_level,
+        _log(audit_id, session_id, user_id, _audit_message, _route, risk_level,
              False, _msg_stripped == "action:rg", False, escalated, response)
         return _pack(response, lang, _route, _intent, confidence, risk_level,
                      ROUTE_TO_FLAGS.get(_route, []), escalated, llm_called,
@@ -230,7 +249,7 @@ def process_message(
                      escalated, llm_called, audit_id, session_id)
 
     # ── 3. Responsible gaming detection ──────────────────────────────────────
-    rg_result = _rg.check(message)
+    rg_result = _rg.check_with_lang(message, lang) if hasattr(_rg, "check_with_lang") else _rg.check(message)
     if rg_result["signal"]:
         route      = "rg_detector"
         risk_level = "HIGH"
