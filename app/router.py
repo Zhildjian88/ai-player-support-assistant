@@ -176,7 +176,7 @@ def process_message(
     if _msg_stripped in _ACTION_MAP:
         _route, _intent = _ACTION_MAP[_msg_stripped]
         if _msg_stripped == "action:rg":
-            response   = _builder.build(_rg_m.RESPONSE, lang, _route)
+            response   = _builder.build(_rg.SAFE_RESPONSE, lang, _route)
             risk_level = "HIGH"
             escalated  = True
             _escalation.create(session_id, user_id, message, "rg_quick_action", risk_level)
