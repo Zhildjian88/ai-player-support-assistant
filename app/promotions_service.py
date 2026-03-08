@@ -7,9 +7,20 @@ Filters by active status and optionally by user country/segment.
 import json
 
 PROMO_TRIGGERS = [
-    "promotion", "promo", "bonus", "offer", "free spins",
-    "cashback", "reload", "welcome bonus", "what promotions",
+    "promotion", "promo", "free spins", "reload bonus",
+    "welcome bonus", "what promotions", "active promotions",
     "available offers", "current offers", "deals",
+    "what bonus", "show me bonus", "check my bonus",
+    "my cashback", "cashback offer",
+]
+
+# These indicate the player is asking a question ABOUT a bonus, not requesting the list
+PROMO_EXCLUSIONS = [
+    "what happens to my bonus",
+    "if i change", "if i cancel", "if i withdraw",
+    "bonus expire", "bonus lost", "lose my bonus",
+    "bonus terms", "bonus conditions", "wagering requirement",
+    "how does the bonus work", "how do bonuses work",
 ]
 
 
@@ -17,6 +28,8 @@ def lookup(message: str, user_id: str | None = None) -> dict:
     from app.db_init import get_connection
     normalised = message.lower()
 
+    if any(e in normalised for e in PROMO_EXCLUSIONS):
+        return {"matched": False, "response": ""}
     if not any(t in normalised for t in PROMO_TRIGGERS):
         return {"matched": False, "response": ""}
 
