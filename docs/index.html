@@ -334,7 +334,7 @@ function App({ onSwitchToOps }) {
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({ user_id:selectedId, message:msg, session_id:sessionId }),
-        signal: AbortSignal.timeout(15000),
+        signal: AbortSignal.timeout(60000),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -350,15 +350,40 @@ function App({ onSwitchToOps }) {
         signal: data.escalated ? "escalated" : null,
       }]);
     } catch (err) {
-      setApiStatus("offline");
-      const retryMsg = msg;
-      setMessages(prev => [...prev, {
-        role:"assistant",
-        content:t.offline + "\n\nThe server may be waking up (cold start). Please wait 30 seconds and try again.",
-        escalated:false,
-        isError:true,
-        retryMsg,
-      }]);
+      // Try once more before giving up — Render cold starts can take 30-60s
+      try {
+        setApiStatus("connecting");
+        await new Promise(r => setTimeout(r, 8000)); // wait 8s then retry
+        const res2 = await fetch(`${API_BASE}/chat`, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({ user_id:selectedId, message:msg, session_id:sessionId }),
+          signal: AbortSignal.timeout(60000),
+        });
+        if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
+        const data2 = await res2.json();
+        if (!sessionId && data2.session_id) setSessionId(data2.session_id);
+        setApiStatus("online");
+        setMessages(prev => [...prev, {
+          role:"assistant",
+          content:data2.response,
+          escalated:data2.escalated,
+          route:data2.route_taken,
+          intent:data2.intent,
+          riskLevel:data2.risk_level,
+          signal: data2.escalated ? "escalated" : null,
+        }]);
+      } catch (err2) {
+        setApiStatus("offline");
+        const retryMsg = msg;
+        setMessages(prev => [...prev, {
+          role:"assistant",
+          content:t.offline + "\n\nThe server may be waking up. Please click Retry in ~30 seconds.",
+          escalated:false,
+          isError:true,
+          retryMsg,
+        }]);
+      }
     } finally {
       setTyping(false);
     }
