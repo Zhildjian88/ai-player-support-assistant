@@ -313,14 +313,53 @@ function App({ onSwitchToOps }) {
       return;
     }
 
-    // Client-side abusive / gibberish message handler
-    const ABUSE_WORDS = ["fuck","shit","cunt","bastard","asshole","dickhead","bitch","motherfucker","wanker","idiot","stupid bot","useless bot","hate you","fuck you","screw you"];
+    // ── Client-side abuse / frustration handler ─────────────────────────────
+    // Catches profanity in all supported languages before hitting the backend.
+    // Responds with a de-escalation message in the player's UI language.
+    const ABUSE_WORDS = [
+      // English
+      "fuck","fucking","fucked","fucker","fucks","wtf","stfu","ffs",
+      "shit","bullshit","piece of shit","shitty",
+      "cunt","twat","wanker","tosser","prick","dickhead","cock","bastard",
+      "asshole","arsehole","douchebag","scumbag","dipshit","motherfucker",
+      "son of a bitch","you whore","you slut","go to hell","kiss my ass",
+      "eat shit","go fuck yourself","shut the fuck up","what the fuck",
+      "stupid bot","useless bot","hate you","fuck you","screw you","fuck off",
+      "i hate this","this is crap","this is garbage","you suck","you are useless",
+      // Tagalog / Filipino
+      "putang ina","potang ina","puta","pakyu","pakshet","gago","gaga",
+      "ulol","loko","tanga","bobo","boba","inutil","letse","letche",
+      "bwisit","kupal","tarantado","hayop ka","hinayupak","siraulo",
+      "engot","yawa","punyeta","lintik","diyablo","pti","ggk",
+      "putang","tangina","leche","bwiset","hudas",
+      // Indonesian / Bahasa
+      "anjing","anjir","babi","bangsat","keparat","bajingan","sialan",
+      "kampret","goblok","goblog","tolol","brengsek","kurang ajar",
+      "asu","celaka","bedebah","tai lu","tai kau",
+      // Thai
+      "ee sat","ai sat","hia","maeng","ee dok","ai ba","ee ba","rayam",
+      "chart chua","ควาย","เหี้ย","แม่ง","ระยำ","อีสัตว์","ไอ้สัตว์",
+      // Vietnamese
+      "du ma","đụ má","địt mẹ","đồ chó","đồ ngu","thằng khốn","con khốn",
+      "mẹ kiếp","đéo","cút xéo","đồ điên","chó đẻ","vô học","đồ súc vật",
+      // Chinese
+      "他妈的","操你","去你的","王八蛋","傻逼","混蛋","废物","滚开","死开",
+      "狗东西","臭货","tmd","cnm",
+    ];
+    const ABUSE_RESPONSES = {
+      en: "I understand you may be frustrated, and that's okay. I'm here to help — please let me know what you need and I'll do my best to resolve it for you.",
+      tl: "Naiintindihan namin na maaari kayong nainis. Nandito kami para tumulong — sabihin lang sa amin kung ano ang kailangan ninyo at gagawin namin ang lahat para maayos ito.",
+      id: "Kami memahami bahwa Anda mungkin merasa frustrasi, dan itu tidak apa-apa. Kami di sini untuk membantu — tolong beritahu kami apa yang Anda butuhkan dan kami akan melakukan yang terbaik untuk menyelesaikannya.",
+      th: "เราเข้าใจว่าคุณอาจรู้สึกหงุดหงิด และนั่นไม่เป็นไร เราอยู่ที่นี่เพื่อช่วยเหลือ — โปรดบอกเราว่าคุณต้องการอะไร และเราจะพยายามอย่างเต็มที่เพื่อแก้ไขให้คุณ",
+      vi: "Chúng tôi hiểu rằng bạn có thể đang cảm thấy thất vọng, và điều đó hoàn toàn bình thường. Chúng tôi ở đây để giúp đỡ — hãy cho chúng tôi biết bạn cần gì và chúng tôi sẽ cố gắng hết sức để giải quyết cho bạn.",
+      zh: "我们理解您可能感到沮丧，这完全没问题。我们在这里为您提供帮助 — 请告诉我们您需要什么，我们会尽力为您解决。",
+    };
     const msgLower = msg.toLowerCase();
     if (ABUSE_WORDS.some(w => msgLower.includes(w))) {
       setMessages(prev => [
         ...prev,
         { role:"user", content:displayLabel },
-        { role:"assistant", content:"I understand you may be frustrated. I'm here to help — please let me know what you need assistance with and I'll do my best to resolve it for you." }
+        { role:"assistant", content: ABUSE_RESPONSES[uiLang] || ABUSE_RESPONSES.en }
       ]);
       return;
     }
