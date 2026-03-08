@@ -181,19 +181,19 @@ def process_message(
             escalated  = True
             _escalation.create(session_id, user_id, message, "rg_quick_action", risk_level)
         elif _msg_stripped == "action:balance":
-            acct     = _account.get(user_id) if user_id else {}
+            acct     = _account.lookup("balance", user_id) if user_id else {}
             response = _builder.build(acct.get("response", "Your balance is available in the account section."), lang, _route)
         elif _msg_stripped == "action:withdrawal":
-            pay      = _payment.get(user_id) if user_id else {}
+            pay      = _payment.lookup("withdrawal", user_id) if user_id else {}
             response = _builder.build(pay.get("response", "No pending withdrawals found on your account."), lang, _route)
         elif _msg_stripped == "action:promotions":
-            promo    = _promo.get(user_id) if user_id else {}
+            promo    = _promo.lookup("promotions", user_id) if user_id else {}
             response = _builder.build(promo.get("response", "No active promotions available at this time."), lang, _route)
         elif _msg_stripped == "action:kyc":
-            acct     = _account.get(user_id) if user_id else {}
-            response = _builder.build(acct.get("kyc_response", acct.get("response", "Your KYC status is available in your account settings.")), lang, _route)
+            acct     = _account.lookup("kyc", user_id) if user_id else {}
+            response = _builder.build(acct.get("response", "Your KYC status is available in your account settings."), lang, _route)
         elif _msg_stripped == "action:rules":
-            rules    = _game.get(message) if hasattr(_game, "get") else {}
+            rules    = _game.lookup(message) if user_id else {}
             response = _builder.build(rules.get("response", "Game rules and terms are available in the Help section."), lang, _route)
         else:
             response = _builder.build("I can help you with that. Please contact support for details.", lang, _route)
