@@ -54,7 +54,7 @@ const { useState, useEffect, useRef } = React;
 // After deploying to Render, replace the URL below with your Render URL.
 // Example: "https://ai-player-support-assistant.onrender.com"
 // Leave as localhost for local development only.
-const API_BASE = window.SIDOBET_API_URL || "https://ai-player-support-assistant.onrender.com/";
+const API_BASE = (window.SIDOBET_API_URL || "https://ai-player-support-assistant.onrender.com").replace(/\/$/, "");
 
 // ─── PLAYER DATA ──────────────────────────────────────────────────────────────
 const PLAYERS = {
@@ -247,12 +247,28 @@ function App({ onSwitchToOps }) {
   const t = UI[uiLang] || UI.en;
   const p = PLAYERS[selectedId];
 
-  // Check API health when entering chat
+  // Check API health when entering chat — with retry for Render cold starts
   useEffect(() => {
     if (!loggedIn) return;
-    fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(4000) })
-      .then(r => r.ok ? setApiStatus("online") : setApiStatus("offline"))
-      .catch(() => setApiStatus("offline"));
+    let cancelled = false;
+    setApiStatus("connecting");
+
+    async function checkHealth(attemptsLeft = 2) {
+      try {
+        const r = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(15000) });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const data = await r.json();
+        if (!cancelled) setApiStatus(data.status === "ok" ? "online" : "offline");
+      } catch (e) {
+        if (attemptsLeft > 0 && !cancelled) {
+          setTimeout(() => checkHealth(attemptsLeft - 1), 3000);
+        } else if (!cancelled) {
+          setApiStatus("offline");
+        }
+      }
+    }
+    checkHealth();
+    return () => { cancelled = true; };
   }, [loggedIn]);
 
   // Auto-scroll
@@ -345,8 +361,9 @@ function App({ onSwitchToOps }) {
 
           {/* Logo */}
           <div style={{textAlign:"center",marginBottom:24}}>
-            <div style={{fontSize:40,marginBottom:8}}>🎰</div>
-            <div style={{fontSize:"1.6em",fontWeight:800,color:"#e2e8f0",letterSpacing:"-0.02em"}}>SiDOBet</div>
+            <div style={{fontSize:"1.6em",fontWeight:800,letterSpacing:"-0.02em"}}>
+              <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
+            </div>
             <div style={{fontSize:"0.82em",color:"#64748b",marginTop:4}}>Player Support Centre</div>
           </div>
 
@@ -394,8 +411,8 @@ function App({ onSwitchToOps }) {
             <div key={ri} style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:8}}>
               {row.map(lang => (
                 <button key={lang.code} className="lang-btn" onClick={() => setUiLang(lang.code)}
-                  style={{background:uiLang===lang.code?"linear-gradient(135deg,#6366f1,#4f46e5)":"#1e2235",color:uiLang===lang.code?"white":"#94a3b8",border:uiLang===lang.code?"1px solid #6366f1":"1px solid #2a2d3a",borderRadius:10,padding:"10px 6px",cursor:"pointer",fontWeight:uiLang===lang.code?700:400,fontSize:"0.8em",textAlign:"center",lineHeight:1.5,minHeight:70,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",transition:"all 0.15s",fontFamily:"inherit"}}>
-                  <div style={{fontSize:"1.5em"}}>{lang.flag}</div>
+                  style={{background:uiLang===lang.code?"linear-gradient(135deg,#6366f1,#4f46e5)":"#1e2235",color:uiLang===lang.code?"white":"#94a3b8",border:uiLang===lang.code?"1px solid #6366f1":"1px solid #2a2d3a",borderRadius:10,padding:"8px 6px",cursor:"pointer",fontWeight:uiLang===lang.code?700:400,fontSize:"0.72em",textAlign:"center",lineHeight:1.5,height:62,width:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",transition:"all 0.15s",fontFamily:"inherit"}}>
+                  <div style={{fontSize:"1.4em"}}>{lang.flag}</div>
                   <div style={{marginTop:3}}>{lang.label}</div>
                 </button>
               ))}
@@ -437,11 +454,13 @@ function App({ onSwitchToOps }) {
 
       {/* Top bar */}
       <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"10px 18px",display:"flex",alignItems:"center",gap:14,flexShrink:0,zIndex:10}}>
-        <div style={{fontSize:"1.1em",fontWeight:800,color:"#e2e8f0",letterSpacing:"-0.01em"}}>🎰 SiDOBet</div>
+        <div style={{fontSize:"1.1em",fontWeight:800,letterSpacing:"-0.01em"}}>
+          <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
+        </div>
         <div style={{width:1,height:18,background:"#2a2d3a"}}/>
         <div style={{fontSize:"0.78em",color:"#64748b",display:"flex",alignItems:"center",gap:8}}>
-          <span style={{width:7,height:7,borderRadius:"50%",background: apiStatus==="offline"?"#f87171":"#4ade80",display:"inline-block",flexShrink:0}}/>
-          <span style={{color:apiStatus==="offline"?"#f87171":"#4ade80"}}>{t.liveChat}</span>
+          <span style={{width:7,height:7,borderRadius:"50%",background: apiStatus==="offline"?"#f87171":apiStatus==="connecting"?"#f59e0b":"#4ade80",display:"inline-block",flexShrink:0}}/>
+          <span style={{color:apiStatus==="offline"?"#f87171":apiStatus==="connecting"?"#f59e0b":"#4ade80"}}>{apiStatus==="connecting"?"Connecting…":t.liveChat}</span>
           <span style={{color:"#2a2d3a"}}>|</span>
           <span>{p.flag} {p.name}</span>
           <span style={{color:"#2a2d3a"}}>|</span>
@@ -541,10 +560,15 @@ function App({ onSwitchToOps }) {
               </div>
             )}
 
-            {/* API offline banner */}
+            {/* API status banners */}
+            {apiStatus === "connecting" && messages.length === 0 && (
+              <div style={{background:"#0d1117",border:"1px solid #1e2130",borderLeft:"3px solid #f59e0b",borderRadius:10,padding:"10px 14px",marginBottom:12,fontSize:"0.82em",color:"#94a3b8"}}>
+                ⏳ Connecting to support server… (first load may take up to 30 seconds)
+              </div>
+            )}
             {apiStatus === "offline" && messages.length === 0 && (
               <div style={{background:"#1a1000",border:"1px solid #78350f",borderLeft:"3px solid #f59e0b",borderRadius:10,padding:"10px 14px",marginBottom:12,fontSize:"0.82em",color:"#fcd34d"}}>
-                ⚠️ Could not connect to support server at <code style={{background:"#0d0f14",padding:"1px 5px",borderRadius:4}}>{API_BASE}</code>. Check that the backend is running.
+                ⚠️ Could not reach the support server. Please wait a moment and try sending a message — the server may still be starting up.
               </div>
             )}
 
