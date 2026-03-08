@@ -45,7 +45,7 @@ from pathlib import Path
 USE_NEURAL       = os.getenv("USE_NEURAL_EMBEDDINGS", "false").lower() == "true"
 MODEL_NAME       = "paraphrase-multilingual-MiniLM-L12-v2"
 NEURAL_THRESHOLD = 0.78
-TFIDF_THRESHOLD  = 0.25
+TFIDF_THRESHOLD  = 0.65
 
 # Game-specific keyword aliases added as extra retrieval anchors
 GAME_ALIASES = {
