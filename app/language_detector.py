@@ -24,19 +24,34 @@ SUPPORTED_SEA_LANGUAGES = {
     "vi": "Vietnamese",
     "ms": "Malay",
     "tl": "Filipino",
+    "zh-cn": "Simplified Chinese",
+    "zh": "Simplified Chinese",
 }
 
-# langdetect uses 'tl' for Tagalog/Filipino
+# langdetect uses 'tl' for Tagalog/Filipino and 'zh-cn' for Simplified Chinese
 LANGUAGE_DISPLAY_NAMES = {
     "th": "Thai",
     "id": "Indonesian",
     "vi": "Vietnamese",
     "ms": "Malay",
     "tl": "Filipino",
+    "zh-cn": "Simplified Chinese",
+    "zh": "Simplified Chinese",
     "en": "English",
 }
 
 DEFAULT_LANGUAGE = "en"
+
+
+def _contains_cjk(text: str) -> bool:
+    """Returns True if the text contains Simplified Chinese characters."""
+    for char in text:
+        cp = ord(char)
+        if 0x4E00 <= cp <= 0x9FFF:   # CJK Unified Ideographs
+            return True
+        if 0x3400 <= cp <= 0x4DBF:   # CJK Extension A
+            return True
+    return False
 
 
 def detect_language(text: str) -> str:
@@ -55,11 +70,20 @@ def detect_language(text: str) -> str:
     if not text or len(text.strip()) < 5:
         return DEFAULT_LANGUAGE
 
+    # CJK script pre-check — langdetect misclassifies short Chinese strings.
+    # Any message containing CJK ideographs is treated as Simplified Chinese.
+    if _contains_cjk(text):
+        return "zh"
+
     if not _LANGDETECT_AVAILABLE:
         return DEFAULT_LANGUAGE
 
     try:
         detected = detect(text.strip())
+
+        # Normalise zh-cn / zh-tw → zh (we only support Simplified)
+        if detected in ("zh-cn", "zh-tw", "zh"):
+            return "zh"
 
         if detected in SUPPORTED_SEA_LANGUAGES:
             return detected
@@ -107,7 +131,7 @@ def get_translation_instruction(lang_code: str) -> str:
         f"You MUST respond entirely in {lang_name}. "
         f"Do not mix languages or scripts under any circumstances — "
         f"every word in your response must be in {lang_name} only. "
-        f"Do not include English, Thai, Vietnamese, Indonesian, Malay, or Filipino "
+        f"Do not include English, Thai, Vietnamese, Indonesian, Malay, Filipino, or Chinese "
         f"words unless they are universally understood technical terms (e.g. KYC, SMS). "
         f"Keep the tone helpful, clear, and professional."
     )

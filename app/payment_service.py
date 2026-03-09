@@ -18,8 +18,9 @@ PAYMENT_TRIGGERS = [
     # Tagalog
     "withdrawal ko", "mag-withdraw", "deposito ko", "pera ko",
     "kailan darating", "status ng withdrawal",
-    # Thai
-    "ถอนเงิน", "ฝากเงิน", "สถานะการชำระเงิน", "เงินของฉัน",
+    # Chinese Simplified
+    "提款", "取款", "存款状态", "支付状态",
+    "我的钱", "钱在哪里", "提款状态",
 ]
 
 # These indicate a question ABOUT deposits/payments, not a status lookup
@@ -88,6 +89,15 @@ STATUS_TEMPLATES = {
         "FAILED":     "Ang iyong {ptype} na {ccy} {amount} sa pamamagitan ng {method} ay nabigo. {notes} Pakisubukan muli o makipag-ugnayan sa suporta.",
         "UNKNOWN":    "Ang iyong {ptype} na {ccy} {amount} ay may status na: {status}. Makipag-ugnayan sa suporta para sa mga detalye.",
     },
+    "zh": {
+        "PENDING":    "您的{ptype} {ccy} {amount}（通过{method}）目前正在等待处理。{notes}",
+        "PROCESSING": "您的{ptype} {ccy} {amount}（通过{method}）正在处理中。{notes}",
+        "COMPLETED":  "您的{ptype} {ccy} {amount}（通过{method}）已成功完成。",
+        "REJECTED":   "您的{ptype} {ccy} {amount}（通过{method}）未能处理。原因：{notes}",
+        "BLOCKED":    "您的{ptype} {ccy} {amount}（通过{method}）已被冻结。原因：{notes}",
+        "FAILED":     "您的{ptype} {ccy} {amount}（通过{method}）失败。{notes} 请重试或联系客服。",
+        "UNKNOWN":    "您的{ptype} {ccy} {amount}状态为：{status}。请联系客服了解详情。",
+    },
 }
 
 # Localised payment type labels
@@ -98,6 +108,7 @@ PTYPE_I18N = {
     "ms": {"withdrawal": "pengeluaran", "deposit": "deposit"},
     "vi": {"withdrawal": "rút tiền",    "deposit": "nạp tiền"},
     "tl": {"withdrawal": "withdrawal",  "deposit": "deposito"},
+    "zh": {"withdrawal": "提款",         "deposit": "存款"},
 }
 
 
@@ -126,9 +137,11 @@ def lookup(message: str, user_id: str, lang: str = "en") -> dict:
     # Filter to most relevant based on message keywords (EN + multilingual)
     withdrawal_words = ["withdrawal", "withdraw", "payout", "cashout",
                         "penarikan", "tarik", "rút tiền", "mag-withdraw",
-                        "ถอนเงิน", "pengeluaran", "kailan darating"]
+                        "ถอนเงิน", "pengeluaran", "kailan darating",
+                        "提款", "取款"]
     deposit_words    = ["deposit", "top up", "topup", "add funds",
-                        "setoran", "nạp tiền", "deposito", "ฝากเงิน"]
+                        "setoran", "nạp tiền", "deposito", "ฝากเงิน",
+                        "存款"]
 
     if any(w in normalised for w in withdrawal_words):
         relevant = [p for p in payments if p["type"] == "withdrawal"]

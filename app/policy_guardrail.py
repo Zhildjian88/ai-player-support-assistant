@@ -231,6 +231,21 @@ INJECTION_PATTERNS = [
     "read back my transactions",
     "full card details", "confirm my card details",
     "last 10 transactions with", "transactions with full",
+    # Card detail / transaction extraction — Indonesian / Malay
+    "detail kartu yang tersimpan", "detail kartu tersimpan",
+    "riwayat 10 transaksi", "riwayat transaksi lengkap",
+    "konfirmasi detail kartu", "tunjukkan detail kartu",
+    "maklumat kad yang disimpan", "sejarah transaksi lengkap",
+    "konfirmasi nombor kad", "tunjukkan nombor kad",
+    # Vietnamese
+    "chi tiết thẻ đã lưu", "lịch sử 10 giao dịch",
+    "xác nhận chi tiết thẻ", "lịch sử giao dịch đầy đủ",
+    # Tagalog
+    "detalye ng card na naka-save", "buong kasaysayan ng transaksyon",
+    "kumpirmahin ang detalye ng card",
+    # Thai
+    "รายละเอียดบัตรที่บันทึกไว้", "ประวัติธุรกรรม 10 รายการ",
+    "ยืนยันรายละเอียดบัตร",
     # RG compliance framing — card/transaction data extraction
     "read them back to confirm",                        # EN: verify stored correctly
     "verify that my full transaction",                  # EN
@@ -321,6 +336,10 @@ INJECTION_RESPONSE_I18N = {
         "Nandito ako para tumulong sa iyong account, mga pagbabayad, mga panuntunan ng laro, mga promosyon, "
         "at responsableng pagsusugal ng SiDOBet. May mayroon ba akong maitutulong sa iyo ngayon?"
     ),
+    "zh": (
+        "我是一个自动化客服助手，无权修改系统过滤器、授予管理员访问权限或输出内部配置信息。\n\n"
+        "我在这里为您提供有关SiDOBet账户、支付、游戏规则、促销活动和负责任博彩的帮助。今天有什么我可以帮助您的吗？"
+    ),
 }
 
 HARMFUL_RESPONSE_I18N = {
@@ -355,6 +374,11 @@ HARMFUL_RESPONSE_I18N = {
         "mga pagbabayad, mga panuntunan ng laro, mga promosyon, at responsableng pagsusugal.\n\n"
         "Kung mayroon kang tanong sa suporta, mangyaring itanong at ikukulong kong tumulong."
     ),
+    "zh": (
+        "很抱歉，我无法协助处理该请求。"
+        "此助手旨在支持您处理SiDOBet账户、支付、游戏规则、促销活动和负责任博彩相关事宜。\n\n"
+        "如果您有支持方面的问题，请随时提问，我将很乐意为您提供帮助。"
+    ),
 }
 
 OUT_OF_SCOPE_RESPONSE_I18N = {
@@ -384,6 +408,10 @@ OUT_OF_SCOPE_RESPONSE_I18N = {
         "mga katanungan tungkol sa account, mga pagbabayad, mga panuntunan ng laro, mga promosyon, at responsableng pagsusugal.\n\n"
         "Mayroon bang may kaugnayan sa iyong account sa SiDOBet na maitutulong ko sa iyo?"
     ),
+    "zh": (
+        "我是SiDOBet的客服助手，因此我只能协助处理账户查询、支付、游戏规则、促销活动和负责任博彩相关事宜。\n\n"
+        "有什么与您的SiDOBet账户相关的问题我可以帮助您吗？"
+    ),
 }
 
 SAFE_RESPONSE_I18N = {
@@ -412,6 +440,11 @@ SAFE_RESPONSE_I18N = {
         "Paumanhin, hindi ako makapagbibigay ng payo sa pagtatalo o pagsasamantala sa sistema. "
         "Lahat ng laro ay independyenteng na-audit at gumagamit ng mga sertipikadong random number generator.\n\n"
         "Kung gusto mo, maaari kong ipaliwanag kung paano gumagana ang isang partikular na laro o magbahagi ng impormasyon tungkol sa mga responsableng kasangkapan sa pagsusugal."
+    ),
+    "zh": (
+        "很抱歉，我无法提供关于击败或利用系统漏洞的建议。"
+        "所有游戏均经过独立审计，并使用经过认证的随机数生成器，以确保每位玩家的公平结果。\n\n"
+        "如果您愿意，我可以解释某款游戏的运作方式，或分享有关负责任博彩工具的信息，例如存款限额和游戏时间限制。"
     ),
 }
 

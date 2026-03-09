@@ -26,6 +26,29 @@ UNAUTHORISED_ACCESS = [
     "password changed without", "password was changed without",
     "email changed without", "details changed without",
     "someone changed my password", "someone changed my email",
+    # Indonesian / Malay
+    "mengakses akun saya tanpa izin", "akses tanpa izin",
+    "seseorang masuk ke akun saya", "seseorang mengakses akun",
+    "akun saya diretas", "akun diretas",
+    "akun saya diakses", "seseorang menggunakan akun saya",
+    "login mencurigakan", "aktivitas mencurigakan di akun",
+    "mengakses akaun saya tanpa", "akaun saya digodam",
+    "seseorang masuk ke akaun", "akaun diakses tanpa kebenaran",
+    # Vietnamese
+    "ai đó đã truy cập tài khoản", "truy cập trái phép",
+    "tài khoản bị hack", "tài khoản của tôi bị xâm nhập",
+    "ai đó đăng nhập vào tài khoản", "đăng nhập đáng ngờ",
+    "tài khoản bị truy cập", "ai đó dùng tài khoản của tôi",
+    # Tagalog
+    "nakapasok sa aking account nang walang pahintulot",
+    "na-access ang aking account nang walang pahintulot",
+    "may nanghack ng aking account", "na-hack ang aking account",
+    "may gumagamit ng aking account", "walang pahintulot na pag-access",
+    # Chinese Simplified
+    "有人未经我的许可访问了我的账户", "未经授权访问",
+    "账户被黑客入侵", "有人使用我的账户",
+    "可疑登录", "账户被盗",
+    "未经许可登录", "有人更改了我的密码",
 ]
 
 # ── Unrecognised transactions ─────────────────────────────────────────────────
@@ -40,6 +63,26 @@ UNRECOGNISED_TRANSACTIONS = [
     "funds missing", "missing funds",
     "transaction i don't recognise", "transaction i don't recognize",
     "withdrawal i didn't make", "deposit i didn't make",
+    # Indonesian / Malay
+    "penarikan tanpa izin", "penarikan yang tidak saya lakukan",
+    "transaksi yang tidak saya kenal", "transaksi mencurigakan",
+    "uang hilang dari akun", "saldo tidak sesuai",
+    "pengeluaran tanpa izin", "seseorang melakukan penarikan",
+    "wang hilang", "transaksi yang saya tidak kenal",
+    # Vietnamese
+    "rút tiền trái phép", "giao dịch tôi không thực hiện",
+    "tiền bị mất", "số dư không đúng",
+    "ai đó rút tiền", "giao dịch không rõ",
+    "rút tiền mà tôi không làm", "mất tiền trong tài khoản",
+    # Tagalog
+    "nagnakaw ng pera ko", "nag-withdraw nang walang pahintulot",
+    "may nagnanakaw sa account ko", "nawawala ang pera ko",
+    "hindi ko ginawang withdrawal", "transaksyon na hindi ko ginawa",
+    # Chinese Simplified
+    "未经授权提款", "我没有进行此次提款",
+    "账户余额不对", "钱不见了",
+    "有人从我的账户提款", "不明交易",
+    "我没有做这笔交易", "账户里的钱丢失了",
 ]
 
 # ── Payment fraud & identity theft ───────────────────────────────────────────

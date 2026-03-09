@@ -29,6 +29,23 @@ LIMIT_REMOVAL = [
     "remove my session limit", "remove my time limit",
     "increase my session limit", "increase my time limit",
     "override my limit",
+    # Indonesian / Malay
+    "hapus batas deposit", "hapus limit saya", "batalkan batas deposit",
+    "tingkatkan batas deposit", "naikkan limit saya",
+    "buang had deposit", "buang limit saya", "batalkan had deposit",
+    "tingkatkan had deposit", "naikkan had saya",
+    "hủy giới hạn tiền gửi", "tăng giới hạn tiền gửi",
+    "xóa giới hạn", "nâng giới hạn",
+    # Vietnamese
+    "hủy giới hạn", "tăng giới hạn", "xóa giới hạn tiền gửi",
+    "nâng giới hạn tiền gửi", "bỏ giới hạn",
+    # Tagalog
+    "alisin ang aking limit", "palakihin ang aking limit",
+    "kanselahin ang aking deposit limit", "tanggalin ang limit ko",
+    # Chinese Simplified
+    "取消存款限额", "删除我的限额", "提高存款限额",
+    "取消限额", "我想取消我的存款限额", "提高我的限额",
+    "取消我的存款限额并立即提高限额",
 ]
 
 # ── Self-exclusion / cooling-off circumvention ────────────────────────────────

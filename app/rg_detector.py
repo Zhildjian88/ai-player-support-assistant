@@ -39,9 +39,10 @@ LOSS_OF_CONTROL = [
     # Tagalog
     "hindi ako makatigil sa pagsusugal", "hindi ko mapigilan ang pagsusugal",
     "sugal na sugal ako", "adik sa sugal",
-    # Thai
-    "ไม่สามารถหยุดพนันได้", "หยุดพนันไม่ได้", "ติดการพนัน",
-    "เล่นพนันทุกวัน", "ควบคุมการพนันไม่ได้",
+    # Chinese Simplified
+    "无法停止赌博", "不能停止赌博", "停不下来",
+    "每天都在赌博", "沉迷赌博", "赌博成瘾",
+    "戒不掉赌博", "无法控制赌博", "忍不住赌博",
 ]
 
 # ── Preoccupation & time distortion ──────────────────────────────────────────
@@ -162,10 +163,10 @@ TOOL_REQUESTS = [
     "tulungan mo akong tumigil sa pagsusugal",
     "gusto kong huminto sa pagsusugal",
     "i-block ang aking account", "mag-self exclude",
-    # Thai
-    "ช่วยให้ฉันหยุดพนัน", "ต้องการหยุดพนัน",
-    "ระงับบัญชีชั่วคราว", "ต้องการความช่วยเหลือเรื่องการพนัน",
-    "ตั้งวงเงินฝาก",
+    # Chinese Simplified
+    "帮我停止赌博", "我想停止赌博", "设置存款限额",
+    "暂停我的账户", "自我排除", "需要赌博帮助",
+    "冻结我的账户", "关闭我的账户",
 ]
 
 # ── Relationship & social harm ────────────────────────────────────────────────
@@ -189,10 +190,10 @@ SOCIAL_HARM = [
     # Tagalog
     "sugal ang dahilan ng away namin", "iniwan ako ng pamilya dahil sa sugal",
     "apektado ang pamilya ko sa sugal",
-    # Thai
-    "ครอบครัวกำลังจะทิ้งฉัน", "ครอบครัวจะทิ้งฉัน",
-    "ติดการพนันและต้องการความช่วยเหลือ",
-    "การพนันทำลายครอบครัว", "ปัญหาการพนัน",
+    # Chinese Simplified
+    "家人要离开我了", "家人快要离开我", "因为赌博家人要离开",
+    "赌博影响家庭", "赌博成瘾", "有赌博问题",
+    "因赌博妻子要离婚", "赌博毁了我的家庭",
 ]
 
 # ── General / catch-all ───────────────────────────────────────────────────────
