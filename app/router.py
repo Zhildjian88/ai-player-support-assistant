@@ -464,6 +464,7 @@ def process_message(
         user_id          = user_id,
         lang_instruction = lang_instruction,
         session_context  = session_context,
+        lang             = lang,
     )
 
     route      = "llm_fallback"

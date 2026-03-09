@@ -114,6 +114,16 @@ SAFE_FALLBACK = (
     "Please contact our support team directly via live chat for immediate assistance."
 )
 
+SAFE_FALLBACK_I18N = {
+    "en": SAFE_FALLBACK,
+    "th": "ขออภัย ขณะนี้ฉันไม่สามารถประมวลผลคำขอของคุณได้ กรุณาติดต่อทีมสนับสนุนของเราโดยตรงผ่านการแชทสดเพื่อรับความช่วยเหลือทันที",
+    "id": "Maaf, saya tidak dapat memproses permintaan Anda saat ini. Silakan hubungi tim dukungan kami langsung melalui live chat untuk bantuan segera.",
+    "ms": "Maaf, saya tidak dapat memproses permintaan anda buat masa ini. Sila hubungi pasukan sokongan kami terus melalui live chat untuk bantuan segera.",
+    "vi": "Xin lỗi, tôi không thể xử lý yêu cầu của bạn ngay bây giờ. Vui lòng liên hệ trực tiếp với nhóm hỗ trợ của chúng tôi qua live chat để được hỗ trợ ngay.",
+    "tl": "Paumanhin, hindi ko maproseso ang iyong kahilingan ngayon. Mangyaring makipag-ugnayan sa aming koponan ng suporta nang direkta sa pamamagitan ng live chat para sa agarang tulong.",
+    "zh": "抱歉，我目前无法处理您的请求。请直接通过在线聊天联系我们的客服团队以获得即时帮助。",
+}
+
 # Default model — can be overridden via LLM_MODEL in .env
 # llama-3.3-70b-versatile chosen for better SEA multilingual quality.
 # Switch to llama-3.1-8b-instant for faster/cheaper responses if needed.
@@ -157,6 +167,7 @@ def call(
     user_id:          str | None = None,
     lang_instruction: str = "",
     session_context:  list[dict] | None = None,
+    lang:             str = "en",
 ) -> dict:
     """
     Calls the Groq API to generate a response for novel queries.
@@ -176,7 +187,7 @@ def call(
     # ── Check API key ─────────────────────────────────────────────────────────
     api_key = os.getenv("GROQ_API_KEY", "")
     if not api_key:
-        return _failure("No GROQ_API_KEY configured in .env", start)
+        return _failure("No GROQ_API_KEY configured in .env", start, lang)
 
     # ── Build system prompt ───────────────────────────────────────────────────
     system = SYSTEM_PROMPT
@@ -230,14 +241,14 @@ def call(
 
     except Exception as e:
         print(f"[llm_service] Groq API error: {type(e).__name__}: {e}")
-        return _failure(str(e), start)
+        return _failure(str(e), start, lang)
 
 
-def _failure(reason: str, start: float) -> dict:
+def _failure(reason: str, start: float, lang: str = "en") -> dict:
     """Returns a safe fallback dict when the API call fails or key is missing."""
     latency_ms = int((time.monotonic() - start) * 1000)
     return {
-        "response":      SAFE_FALLBACK,
+        "response":      SAFE_FALLBACK_I18N.get(lang, SAFE_FALLBACK),
         "model":         "none",
         "input_tokens":  0,
         "output_tokens": 0,

@@ -286,6 +286,21 @@ OUT_OF_SCOPE_PATTERNS = [
     "tell me a joke", "write me a poem", "write a story",
     "translate this", "what language is",
     "who invented ", "when was ", "history of ",
+    # Chinese OOS patterns
+    "天气怎么样", "今天天气", "明天天气", "天气预报",
+    "股票价格", "比特币", "加密货币",
+    "食谱", "怎么做饭", "怎么烹饪",
+    "医疗建议", "法律建议", "讲个笑话",
+    "写首诗", "写个故事", "翻译",
+    # Thai OOS
+    "สภาพอากาศ", "อากาศวันนี้", "ราคาหุ้น",
+    # Indonesian/Malay OOS
+    "cuaca hari ini", "ramalan cuaca", "harga saham",
+    "resep masakan", "cara memasak",
+    # Vietnamese OOS
+    "thời tiết hôm nay", "dự báo thời tiết", "giá cổ phiếu",
+    # Tagalog OOS
+    "panahon ngayon", "lagay ng panahon",
 ]
 
 OUT_OF_SCOPE_RESPONSE = (
