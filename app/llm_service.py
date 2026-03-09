@@ -20,12 +20,11 @@ Rate limits:
     at https://console.groq.com/settings/limits
 
 Model choice:
-    Default: llama-3.1-8b-instant
-      — Fast, low cost, good for routine support queries
-      — Weaker on nuanced or safety-sensitive responses than premium models
-    Alternative: llama-3.3-70b-versatile (change LLM_MODEL in .env)
-      — Slower, smarter, still free on Groq's free tier
-      — Better for complex or ambiguous queries
+    Default: llama-3.3-70b-versatile
+      — Stronger multilingual quality, better SEA language separation
+      — Still free on Groq's free tier
+    Alternative: llama-3.1-8b-instant (change LLM_MODEL in .env)
+      — Faster, lower cost, weaker on SEA languages
 
     Note: The LLM is only called for ~5% of queries (novel/ambiguous
     messages that no deterministic route can answer). Model quality
@@ -112,7 +111,9 @@ SAFE_FALLBACK = (
 )
 
 # Default model — can be overridden via LLM_MODEL in .env
-DEFAULT_MODEL = "llama-3.1-8b-instant"
+# llama-3.3-70b-versatile chosen for better SEA multilingual quality.
+# Switch to llama-3.1-8b-instant for faster/cheaper responses if needed.
+DEFAULT_MODEL = "llama-3.3-70b-versatile"
 
 
 def _load_env():

@@ -105,7 +105,11 @@ def get_translation_instruction(lang_code: str) -> str:
     return (
         f"The player is communicating in {lang_name}. "
         f"You MUST respond entirely in {lang_name}. "
-        f"Do not mix languages. Keep the tone helpful, clear, and professional."
+        f"Do not mix languages or scripts under any circumstances — "
+        f"every word in your response must be in {lang_name} only. "
+        f"Do not include English, Thai, Vietnamese, Indonesian, Malay, or Filipino "
+        f"words unless they are universally understood technical terms (e.g. KYC, SMS). "
+        f"Keep the tone helpful, clear, and professional."
     )
 
 
