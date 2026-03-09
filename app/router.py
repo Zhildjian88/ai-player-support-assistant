@@ -228,7 +228,7 @@ def process_message(
     # Out-of-scope check is intentionally deferred until after distress/RG
     # so mixed messages like "I'm depressed, capital of France?" still trigger
     # the distress handler rather than being dismissed as off-topic.
-    policy_result = _policy.check_hard_stops(message)
+    policy_result = _policy.check_hard_stops(message, lang)
     if policy_result["blocked"]:
         route      = "policy_guardrail"
         risk_level = "MEDIUM"
@@ -250,8 +250,8 @@ def process_message(
     if clf_intent == "injection":
         route      = "policy_guardrail"
         risk_level = "MEDIUM"
-        from app.policy_guardrail import INJECTION_RESPONSE
-        response   = _builder.build(INJECTION_RESPONSE, lang, route)
+        from app.policy_guardrail import INJECTION_RESPONSE_I18N, INJECTION_RESPONSE
+        response   = _builder.build(INJECTION_RESPONSE_I18N.get(lang, INJECTION_RESPONSE), lang, route)
         _log(audit_id, session_id, user_id, message, route, risk_level,
              False, False, False, False, response)
         return _pack(response, lang, route, ROUTE_TO_INTENT[route],
@@ -278,10 +278,10 @@ def process_message(
                      audit_id, session_id)
 
     if clf_intent == "out_of_scope":
-        from app.policy_guardrail import OUT_OF_SCOPE_RESPONSE
+        from app.policy_guardrail import OUT_OF_SCOPE_RESPONSE_I18N, OUT_OF_SCOPE_RESPONSE
         route      = "policy_guardrail"
         risk_level = "LOW"
-        response   = _builder.build(OUT_OF_SCOPE_RESPONSE, lang, route)
+        response   = _builder.build(OUT_OF_SCOPE_RESPONSE_I18N.get(lang, OUT_OF_SCOPE_RESPONSE), lang, route)
         _log(audit_id, session_id, user_id, message, route, risk_level,
              False, False, False, False, response)
         return _pack(response, lang, route, ROUTE_TO_INTENT[route],
@@ -319,7 +319,7 @@ def process_message(
                      escalated, llm_called, audit_id, session_id)
 
     # ── 4. Fraud / security detection ────────────────────────────────────────
-    fraud_result = _fraud.check(message)
+    fraud_result = _fraud.check(message, lang)
     if fraud_result["signal"]:
         route      = "fraud_detector"
         risk_level = "HIGH"
@@ -333,7 +333,7 @@ def process_message(
                      escalated, llm_called, audit_id, session_id)
 
     # ── 5. Circumvention detection ────────────────────────────────────────────
-    cv_result = _circumvention.check(message)
+    cv_result = _circumvention.check(message, lang)
     if cv_result["signal"]:
         route      = "circumvention_detector"
         risk_level = "HIGH"
@@ -351,7 +351,7 @@ def process_message(
     # Runs here — AFTER distress/RG/fraud — so safety signals always fire first.
     # A message like "I'm depressed, capital of France?" will have already been
     # caught by distress above; only genuinely off-topic messages reach this point.
-    oos_result = _policy.check_out_of_scope(message)
+    oos_result = _policy.check_out_of_scope(message, lang)
     if oos_result["blocked"]:
         route      = "policy_guardrail"
         risk_level = "LOW"

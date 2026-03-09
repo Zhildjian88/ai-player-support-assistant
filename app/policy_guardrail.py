@@ -288,8 +288,135 @@ SAFE_RESPONSE = (
     "such as deposit limits and session timers."
 )
 
+# ── i18n response dictionaries ────────────────────────────────────────────────
+INJECTION_RESPONSE_I18N = {
+    "en": INJECTION_RESPONSE,
+    "th": (
+        "ฉันเป็นผู้ช่วยสนับสนุนอัตโนมัติและไม่มีอำนาจในการแก้ไขตัวกรองระบบ "
+        "ให้สิทธิ์การเข้าถึงระดับผู้ดูแลระบบ หรือแสดงการกำหนดค่าภายใน\n\n"
+        "ฉันอยู่ที่นี่เพื่อช่วยเหลือเกี่ยวกับบัญชี การชำระเงิน กฎของเกม โปรโมชั่น "
+        "และการเล่นพนันอย่างรับผิดชอบของ SiDOBet มีอะไรที่ฉันสามารถช่วยคุณได้ไหม?"
+    ),
+    "id": (
+        "Saya adalah asisten dukungan otomatis dan tidak memiliki wewenang untuk "
+        "memodifikasi filter sistem, memberikan akses administratif, atau menampilkan konfigurasi internal.\n\n"
+        "Saya di sini untuk membantu dengan akun, pembayaran, aturan permainan, promosi, "
+        "dan perjudian bertanggung jawab SiDOBet. Ada yang bisa saya bantu hari ini?"
+    ),
+    "ms": (
+        "Saya adalah pembantu sokongan automatik dan tidak mempunyai kuasa untuk "
+        "mengubah suai penapis sistem, memberikan akses pentadbiran, atau mengeluarkan konfigurasi dalaman.\n\n"
+        "Saya di sini untuk membantu dengan akaun, pembayaran, peraturan permainan, promosi, "
+        "dan perjudian bertanggungjawab SiDOBet. Ada yang boleh saya bantu hari ini?"
+    ),
+    "vi": (
+        "Tôi là trợ lý hỗ trợ tự động và không có thẩm quyền sửa đổi bộ lọc hệ thống, "
+        "cấp quyền truy cập quản trị hoặc xuất cấu hình nội bộ.\n\n"
+        "Tôi ở đây để giúp bạn với tài khoản, thanh toán, quy tắc trò chơi, khuyến mãi "
+        "và cờ bạc có trách nhiệm của SiDOBet. Có điều gì tôi có thể giúp bạn hôm nay không?"
+    ),
+    "tl": (
+        "Ako ay isang automated support assistant at wala akong awtoridad na baguhin ang mga filter ng sistema, "
+        "magbigay ng access sa administrasyon, o mag-output ng panloob na configuration.\n\n"
+        "Nandito ako para tumulong sa iyong account, mga pagbabayad, mga panuntunan ng laro, mga promosyon, "
+        "at responsableng pagsusugal ng SiDOBet. May mayroon ba akong maitutulong sa iyo ngayon?"
+    ),
+}
 
-def check_hard_stops(message: str) -> dict:
+HARMFUL_RESPONSE_I18N = {
+    "en": HARMFUL_RESPONSE,
+    "th": (
+        "ขออภัย ฉันไม่สามารถช่วยเหลือในคำขอนั้นได้ "
+        "ผู้ช่วยนี้มีไว้เพื่อช่วยเหลือคุณเกี่ยวกับบัญชี SiDOBet "
+        "การชำระเงิน กฎของเกม โปรโมชั่น และการเล่นพนันอย่างรับผิดชอบ\n\n"
+        "หากคุณมีคำถามเกี่ยวกับการสนับสนุน โปรดถามและฉันยินดีช่วยเหลือ"
+    ),
+    "id": (
+        "Maaf, saya tidak dapat membantu dengan permintaan itu. "
+        "Asisten ini ada untuk mendukung Anda dengan akun SiDOBet, "
+        "pembayaran, aturan permainan, promosi, dan perjudian bertanggung jawab.\n\n"
+        "Jika Anda memiliki pertanyaan dukungan, silakan tanyakan dan saya akan dengan senang hati membantu."
+    ),
+    "ms": (
+        "Maaf, saya tidak dapat membantu dengan permintaan itu. "
+        "Pembantu ini ada untuk menyokong anda dengan akaun SiDOBet, "
+        "pembayaran, peraturan permainan, promosi, dan perjudian bertanggungjawab.\n\n"
+        "Jika anda mempunyai soalan sokongan, sila tanya dan saya akan dengan senang hati membantu."
+    ),
+    "vi": (
+        "Xin lỗi, tôi không thể giúp với yêu cầu đó. "
+        "Trợ lý này được tạo ra để hỗ trợ bạn với tài khoản SiDOBet, "
+        "thanh toán, quy tắc trò chơi, khuyến mãi và cờ bạc có trách nhiệm.\n\n"
+        "Nếu bạn có câu hỏi hỗ trợ, vui lòng hỏi và tôi sẽ vui lòng giúp đỡ."
+    ),
+    "tl": (
+        "Paumanhin, hindi ako makakatulong sa kahilingang iyon. "
+        "Ang assistant na ito ay narito para suportahan ka sa iyong account sa SiDOBet, "
+        "mga pagbabayad, mga panuntunan ng laro, mga promosyon, at responsableng pagsusugal.\n\n"
+        "Kung mayroon kang tanong sa suporta, mangyaring itanong at ikukulong kong tumulong."
+    ),
+}
+
+OUT_OF_SCOPE_RESPONSE_I18N = {
+    "en": OUT_OF_SCOPE_RESPONSE,
+    "th": (
+        "ฉันเป็นผู้ช่วยสนับสนุน SiDOBet ดังนั้นฉันจึงสามารถช่วยได้เฉพาะเรื่อง "
+        "การสอบถามบัญชี การชำระเงิน กฎของเกม โปรโมชั่น และการเล่นพนันอย่างรับผิดชอบ\n\n"
+        "มีอะไรที่เกี่ยวข้องกับบัญชี SiDOBet ของคุณที่ฉันสามารถช่วยได้ไหม?"
+    ),
+    "id": (
+        "Saya adalah asisten dukungan SiDOBet, jadi saya hanya dapat membantu dengan "
+        "pertanyaan akun, pembayaran, aturan permainan, promosi, dan perjudian bertanggung jawab.\n\n"
+        "Apakah ada yang terkait dengan akun SiDOBet Anda yang bisa saya bantu?"
+    ),
+    "ms": (
+        "Saya adalah pembantu sokongan SiDOBet, jadi saya hanya dapat membantu dengan "
+        "pertanyaan akaun, pembayaran, peraturan permainan, promosi, dan perjudian bertanggungjawab.\n\n"
+        "Adakah ada yang berkaitan dengan akaun SiDOBet anda yang boleh saya bantu?"
+    ),
+    "vi": (
+        "Tôi là trợ lý hỗ trợ SiDOBet, vì vậy tôi chỉ có thể giúp với "
+        "các câu hỏi về tài khoản, thanh toán, quy tắc trò chơi, khuyến mãi và cờ bạc có trách nhiệm.\n\n"
+        "Có điều gì liên quan đến tài khoản SiDOBet của bạn mà tôi có thể giúp không?"
+    ),
+    "tl": (
+        "Ako ay ang support assistant ng SiDOBet, kaya ako ay makakatulong lamang sa "
+        "mga katanungan tungkol sa account, mga pagbabayad, mga panuntunan ng laro, mga promosyon, at responsableng pagsusugal.\n\n"
+        "Mayroon bang may kaugnayan sa iyong account sa SiDOBet na maitutulong ko sa iyo?"
+    ),
+}
+
+SAFE_RESPONSE_I18N = {
+    "en": SAFE_RESPONSE,
+    "th": (
+        "ขออภัย ฉันไม่สามารถให้คำแนะนำในการเอาชนะหรือหาช่องโหว่ระบบได้ "
+        "เกมทั้งหมดได้รับการตรวจสอบอย่างอิสระและใช้เครื่องกำเนิดตัวเลขสุ่มที่ผ่านการรับรอง\n\n"
+        "หากต้องการ ฉันสามารถอธิบายวิธีการเล่นเกมหรือแบ่งปันข้อมูลเกี่ยวกับเครื่องมือการเล่นพนันอย่างรับผิดชอบ"
+    ),
+    "id": (
+        "Maaf, saya tidak dapat memberikan saran tentang cara mengalahkan atau mengeksploitasi sistem. "
+        "Semua permainan diaudit secara independen dan menggunakan generator angka acak bersertifikat.\n\n"
+        "Jika mau, saya dapat menjelaskan cara kerja permainan tertentu atau berbagi informasi tentang alat perjudian bertanggung jawab."
+    ),
+    "ms": (
+        "Maaf, saya tidak dapat memberikan nasihat tentang cara mengalahkan atau mengeksploitasi sistem. "
+        "Semua permainan diaudit secara bebas dan menggunakan penjana nombor rawak yang diperakui.\n\n"
+        "Jika mahu, saya boleh menerangkan cara permainan tertentu berfungsi atau berkongsi maklumat tentang alat perjudian bertanggungjawab."
+    ),
+    "vi": (
+        "Xin lỗi, tôi không thể cung cấp lời khuyên về cách đánh bại hoặc khai thác hệ thống. "
+        "Tất cả các trò chơi được kiểm toán độc lập và sử dụng bộ tạo số ngẫu nhiên được chứng nhận.\n\n"
+        "Nếu muốn, tôi có thể giải thích cách một trò chơi cụ thể hoạt động hoặc chia sẻ thông tin về các công cụ cờ bạc có trách nhiệm."
+    ),
+    "tl": (
+        "Paumanhin, hindi ako makapagbibigay ng payo sa pagtatalo o pagsasamantala sa sistema. "
+        "Lahat ng laro ay independyenteng na-audit at gumagamit ng mga sertipikadong random number generator.\n\n"
+        "Kung gusto mo, maaari kong ipaliwanag kung paano gumagana ang isang partikular na laro o magbahagi ng impormasyon tungkol sa mga responsableng kasangkapan sa pagsusugal."
+    ),
+}
+
+
+def check_hard_stops(message: str, lang: str = "en") -> dict:
     """
     Checks injection, harmful content, and prohibited gambling only.
     Does NOT check out-of-scope — that runs after distress/RG in the router
@@ -303,22 +430,22 @@ def check_hard_stops(message: str) -> dict:
     # 1. Prompt injection / jailbreak — must be first, cannot be bypassed
     for pattern in INJECTION_PATTERNS:
         if pattern in normalised:
-            return {"blocked": True, "response": INJECTION_RESPONSE}
+            return {"blocked": True, "response": INJECTION_RESPONSE_I18N.get(lang, INJECTION_RESPONSE)}
 
     # 2. Harmful / dangerous content — hard block
     for pattern in HARMFUL_PATTERNS:
         if pattern in normalised:
-            return {"blocked": True, "response": HARMFUL_RESPONSE}
+            return {"blocked": True, "response": HARMFUL_RESPONSE_I18N.get(lang, HARMFUL_RESPONSE)}
 
     # 3. Prohibited gambling patterns
     for pattern in PROHIBITED_PATTERNS:
         if pattern in normalised:
-            return {"blocked": True, "response": SAFE_RESPONSE}
+            return {"blocked": True, "response": SAFE_RESPONSE_I18N.get(lang, SAFE_RESPONSE)}
 
     return {"blocked": False, "response": ""}
 
 
-def check_out_of_scope(message: str) -> dict:
+def check_out_of_scope(message: str, lang: str = "en") -> dict:
     """
     Checks out-of-scope topics only.
     Called AFTER distress and RG detection in the router pipeline.
@@ -328,7 +455,7 @@ def check_out_of_scope(message: str) -> dict:
     normalised = message.lower()
     for pattern in OUT_OF_SCOPE_PATTERNS:
         if pattern in normalised:
-            return {"blocked": True, "response": OUT_OF_SCOPE_RESPONSE}
+            return {"blocked": True, "response": OUT_OF_SCOPE_RESPONSE_I18N.get(lang, OUT_OF_SCOPE_RESPONSE)}
     return {"blocked": False, "response": ""}
 
 
