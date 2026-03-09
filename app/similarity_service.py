@@ -45,7 +45,7 @@ from pathlib import Path
 USE_NEURAL       = os.getenv("USE_NEURAL_EMBEDDINGS", "false").lower() == "true"
 MODEL_NAME       = "paraphrase-multilingual-MiniLM-L12-v2"
 NEURAL_THRESHOLD = 0.78
-TFIDF_THRESHOLD  = 0.65
+TFIDF_THRESHOLD  = 0.45
 
 # Game-specific keyword aliases added as extra retrieval anchors
 GAME_ALIASES = {
@@ -248,6 +248,53 @@ def _resolve_response(entry: dict, lang: str) -> str:
 
 # ── Public API ─────────────────────────────────────────────────────────────────
 
+# ── Domain gatekeeper ────────────────────────────────────────────────────────
+# If the query contains NONE of these domain words, it is almost certainly
+# out of scope (geography, jokes, science, etc.) and should not be matched
+# against the support corpus. Route directly to LLM/policy instead.
+# This is the lightweight "intent classification" layer before similarity search.
+DOMAIN_WORDS = {
+    # Account / identity
+    "account","login","password","username","register","registration","profile",
+    "kyc","verification","verify","verified","identity","document","passport",
+    "id","selfie","proof","address","email","phone","2fa","two factor",
+    # Payments
+    "withdrawal","withdraw","deposit","payment","transfer","transaction","balance",
+    "wallet","cashout","cash out","payout","refund","pending","processing",
+    "bank","card","crypto","bitcoin","usdt","ewallet","skrill","neteller",
+    "minimum","maximum","limit","fee","currency","exchange",
+    # Promotions / bonuses
+    "bonus","promotion","promo","free spins","cashback","reload","welcome",
+    "wagering","rollover","playthrough","eligible","expire","terms",
+    # Games
+    "blackjack","roulette","baccarat","slot","slots","poker","sports","bet",
+    "betting","odds","parlay","accumulator","rtp","payline","scatter","wild",
+    "jackpot","spin","hand","card","dealer","banker","player","house edge",
+    # Responsible gaming
+    "self exclude","self-exclude","exclusion","cooling off","gamble","gambling",
+    "addiction","problem","limit","session","break","pause","freeze","block",
+    # Support
+    "support","help","contact","complaint","dispute","escalate","agent","chat",
+    "sidobet","sido","ticket","issue","problem","question","status","update",
+    # Common query words in support context
+    "why","when","how","what","can","does","do","is","are","my","your",
+}
+
+def _has_domain_word(message: str) -> bool:
+    """Returns True if the message contains at least one support domain word."""
+    words = set(message.lower().split())
+    # Check single words
+    if words & DOMAIN_WORDS:
+        return True
+    # Check two-word phrases
+    tokens = message.lower().split()
+    for i in range(len(tokens) - 1):
+        phrase = tokens[i] + " " + tokens[i+1]
+        if phrase in DOMAIN_WORDS:
+            return True
+    return False
+
+
 def search(message: str, lang: str = "en") -> dict:
     """
     Searches the FAISS index for the nearest knowledge corpus entry.
@@ -271,6 +318,14 @@ def search(message: str, lang: str = "en") -> dict:
         }
     """
     _ensure_index()
+
+    # Domain gatekeeper — skip similarity entirely for out-of-scope queries
+    if not _has_domain_word(message):
+        return {
+            "matched": False, "response": "", "score": 0.0,
+            "source_id": "", "source_type": "", "backend": "tfidf",
+            "threshold": TFIDF_THRESHOLD,
+        }
 
     backend   = "neural" if USE_NEURAL else "tfidf"
     threshold = NEURAL_THRESHOLD if USE_NEURAL else TFIDF_THRESHOLD
