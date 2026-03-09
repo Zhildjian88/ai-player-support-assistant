@@ -27,6 +27,21 @@ LOSS_OF_CONTROL = [
     "can't resist gambling", "cannot resist gambling",
     "urge to gamble", "urge to bet", "craving to gamble",
     "can't help myself gambling",
+    # Indonesian / Malay
+    "tidak boleh berhenti berjudi", "tidak bisa berhenti berjudi",
+    "tidak dapat berhenti berjudi", "sudah rugi banyak",
+    "tidak boleh berhenti", "kecanduan judi", "kecanduan berjudi",
+    "ketagihan berjudi", "tidak boleh kawal perjudian",
+    "tidak dapat berhenti", "susah berhenti berjudi",
+    # Vietnamese
+    "không thể dừng cờ bạc", "không dừng được", "nghiện cờ bạc",
+    "không kiểm soát được việc cờ bạc", "cứ tiếp tục đánh bạc",
+    # Tagalog
+    "hindi ako makatigil sa pagsusugal", "hindi ko mapigilan ang pagsusugal",
+    "sugal na sugal ako", "adik sa sugal",
+    # Thai
+    "ไม่สามารถหยุดพนันได้", "หยุดพนันไม่ได้", "ติดการพนัน",
+    "เล่นพนันทุกวัน", "ควบคุมการพนันไม่ได้",
 ]
 
 # ── Preoccupation & time distortion ──────────────────────────────────────────
@@ -132,6 +147,25 @@ TOOL_REQUESTS = [
     "gamstop", "gamban", "gambling blocker",
     "self-assessment", "gambling quiz", "am i a problem gambler",
     "responsible gaming tools", "safer gambling tools",
+    # Indonesian / Malay
+    "bantu saya berhenti berjudi", "tolong bantu saya berhenti",
+    "ingin berhenti berjudi", "mau berhenti berjudi",
+    "tetapkan batas deposit", "batasi deposit saya",
+    "kecualikan diri saya", "pengecualian diri",
+    "blokir akaun saya", "tangguhkan akaun saya",
+    "bantuan masalah judi", "tolong saya berhenti berjudi",
+    # Vietnamese
+    "giúp tôi dừng cờ bạc", "tôi muốn dừng cờ bạc",
+    "tự loại trừ", "đặt giới hạn tiền gửi",
+    "khóa tài khoản tạm thời", "cần giúp đỡ về cờ bạc",
+    # Tagalog
+    "tulungan mo akong tumigil sa pagsusugal",
+    "gusto kong huminto sa pagsusugal",
+    "i-block ang aking account", "mag-self exclude",
+    # Thai
+    "ช่วยให้ฉันหยุดพนัน", "ต้องการหยุดพนัน",
+    "ระงับบัญชีชั่วคราว", "ต้องการความช่วยเหลือเรื่องการพนัน",
+    "ตั้งวงเงินฝาก",
 ]
 
 # ── Relationship & social harm ────────────────────────────────────────────────
@@ -144,6 +178,21 @@ SOCIAL_HARM = [
     "family intervention about gambling",
     "addicted to gambling", "gambling addiction", "gambling problem",
     "problem gambler", "compulsive gambler", "compulsive gambling",
+    # Indonesian / Malay
+    "keluarga akan meninggalkan saya", "keluarga mau meninggalkan",
+    "istri mau cerai karena judi", "masalah perjudian",
+    "keluarga saya akan tinggalkan", "keluarga nak tinggalkan saya",
+    "keluarga akan pergi", "rumahtangga terjejas kerana judi",
+    # Vietnamese
+    "gia đình sắp rời bỏ tôi", "vợ sắp bỏ tôi vì cờ bạc",
+    "cờ bạc ảnh hưởng gia đình", "nghiện cờ bạc",
+    # Tagalog
+    "sugal ang dahilan ng away namin", "iniwan ako ng pamilya dahil sa sugal",
+    "apektado ang pamilya ko sa sugal",
+    # Thai
+    "ครอบครัวกำลังจะทิ้งฉัน", "ครอบครัวจะทิ้งฉัน",
+    "ติดการพนันและต้องการความช่วยเหลือ",
+    "การพนันทำลายครอบครัว", "ปัญหาการพนัน",
 ]
 
 # ── General / catch-all ───────────────────────────────────────────────────────

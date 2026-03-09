@@ -376,7 +376,7 @@ def process_message(
 
     # ── 7. Payment service ────────────────────────────────────────────────────
     if user_id:
-        payment_result = _payment.lookup(message, user_id)
+        payment_result = _payment.lookup(message, user_id, lang)
         if payment_result["matched"]:
             route    = "payment_service"
             response = _builder.build(payment_result["response"], lang, route)
