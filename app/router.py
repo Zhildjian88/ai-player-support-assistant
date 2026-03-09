@@ -37,7 +37,7 @@ _policy = _distress = _rg = _fraud = _circumvention = None
 _account = _payment = _promo = None
 _game = _faq = _cache = _similarity = None
 _llm = _builder = _audit = _escalation = None
-_cost = _context = None
+_cost = _context = _intent_clf = None
 
 
 def _load():
@@ -46,7 +46,7 @@ def _load():
     global _account, _payment, _promo
     global _game, _faq, _cache, _similarity
     global _llm, _builder, _audit, _escalation
-    global _cost, _context
+    global _cost, _context, _intent_clf
 
     if _modules_loaded:
         return
@@ -70,6 +70,7 @@ def _load():
         escalation_service as _es,
         cost_service       as _cs,
         context_service    as _ctx,
+        intent_classifier  as _ic,
     )
     _policy         = _p
     _distress       = _d
@@ -89,6 +90,7 @@ def _load():
     _escalation = _es
     _cost       = _cs
     _context    = _ctx
+    _intent_clf = _ic
     _modules_loaded = True
 
 
@@ -237,7 +239,58 @@ def process_message(
                      confidence, risk_level, ROUTE_TO_FLAGS[route],
                      escalated, llm_called, audit_id, session_id)
 
-    # ── 2. Distress detection ─────────────────────────────────────────────────
+    # ── 2. Intent classifier (LLM-based, language-agnostic) ──────────────────
+    # Runs only when keyword guardrail did NOT fire — catches novel phrasings,
+    # unsupported languages, and mixed-language attacks that keywords miss.
+    # Fails open (returns support_query) on API error so players are never
+    # blocked by a classifier outage — keyword guardrails remain the safety net.
+    clf_result = _intent_clf.classify(message, lang)
+    clf_intent = clf_result.get("intent", "support_query")
+
+    if clf_intent == "injection":
+        route      = "policy_guardrail"
+        risk_level = "MEDIUM"
+        from app.policy_guardrail import INJECTION_RESPONSE
+        response   = _builder.build(INJECTION_RESPONSE, lang, route)
+        _log(audit_id, session_id, user_id, message, route, risk_level,
+             False, False, False, False, response)
+        return _pack(response, lang, route, ROUTE_TO_INTENT[route],
+                     clf_result.get("confidence", 0.9), risk_level,
+                     ROUTE_TO_FLAGS[route], escalated, llm_called,
+                     audit_id, session_id)
+
+    if clf_intent == "distress":
+        # Hand off to distress detector for proper i18n response + escalation
+        distress_result = _distress.check(message, lang)
+        if not distress_result["signal"]:
+            # Classifier caught it but keyword distress missed — use safe fallback
+            distress_result = _distress.check("I want to hurt myself", lang)
+        route      = "distress_detector"
+        risk_level = "CRITICAL"
+        escalated  = True
+        response   = _builder.build(distress_result["response"], lang, route)
+        _escalation.create(session_id, user_id, message, "distress_signal", risk_level)
+        _log(audit_id, session_id, user_id, message, route, risk_level,
+             True, False, False, True, response)
+        return _pack(response, lang, route, ROUTE_TO_INTENT[route],
+                     clf_result.get("confidence", 0.9), risk_level,
+                     ROUTE_TO_FLAGS[route], escalated, llm_called,
+                     audit_id, session_id)
+
+    if clf_intent == "out_of_scope":
+        from app.policy_guardrail import OUT_OF_SCOPE_RESPONSE
+        route      = "policy_guardrail"
+        risk_level = "LOW"
+        response   = _builder.build(OUT_OF_SCOPE_RESPONSE, lang, route)
+        _log(audit_id, session_id, user_id, message, route, risk_level,
+             False, False, False, False, response)
+        return _pack(response, lang, route, ROUTE_TO_INTENT[route],
+                     clf_result.get("confidence", 0.9), risk_level,
+                     ROUTE_TO_FLAGS[route], escalated, llm_called,
+                     audit_id, session_id)
+
+    # clf_intent == "support_query" — continue through normal pipeline
+    # ── 3. Distress detection (keyword-based, fast path) ─────────────────────
     distress_result = _distress.check(message, lang)
     if distress_result["signal"]:
         route      = "distress_detector"
@@ -251,7 +304,7 @@ def process_message(
                      confidence, risk_level, ROUTE_TO_FLAGS[route],
                      escalated, llm_called, audit_id, session_id)
 
-    # ── 3. Responsible gaming detection ──────────────────────────────────────
+    # ── 4. Responsible gaming detection ──────────────────────────────────────
     rg_result = _rg.check_with_lang(message, lang) if hasattr(_rg, "check_with_lang") else _rg.check(message)
     if rg_result["signal"]:
         route      = "rg_detector"
