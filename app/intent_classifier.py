@@ -119,28 +119,57 @@ def classify(message: str, lang_code: str = "en") -> dict:
 
     # ── Load env ──────────────────────────────────────────────────────────────
     load_dotenv()
-    api_key = os.getenv("GROQ_API_KEY", "")
 
-    if not api_key:
-        return _fallback("no_api_key", start)
+    clf_messages = [
+        {"role": "system", "content": CLASSIFIER_SYSTEM_PROMPT},
+        {"role": "user",   "content": message},
+    ]
 
-    # ── Call Groq ─────────────────────────────────────────────────────────────
+    raw = None
+
+    # ── 1. Try Gemini (primary) ───────────────────────────────────────────────
+    gemini_key = os.getenv("GEMINI_API_KEY", "")
+    if gemini_key:
+        try:
+            import google.generativeai as genai
+            genai.configure(api_key=gemini_key)
+            model = genai.GenerativeModel(
+                model_name         = "gemini-2.0-flash",
+                system_instruction = CLASSIFIER_SYSTEM_PROMPT,
+                generation_config  = genai.GenerationConfig(
+                    max_output_tokens = 120,
+                    temperature       = 0.0,
+                ),
+            )
+            response = model.generate_content(message)
+            raw = response.text.strip()
+        except Exception as e:
+            print(f"[intent_classifier] Gemini error: {type(e).__name__}: {e}")
+            raw = None
+
+    # ── 2. Try Groq (fallback) ────────────────────────────────────────────────
+    if raw is None:
+        groq_key = os.getenv("GROQ_API_KEY", "")
+        if groq_key:
+            try:
+                from groq import Groq
+                client = Groq(api_key=groq_key)
+                response = client.chat.completions.create(
+                    model       = "llama-3.3-70b-versatile",
+                    max_tokens  = 120,
+                    temperature = 0.0,
+                    messages    = clf_messages,
+                )
+                raw = response.choices[0].message.content.strip()
+            except Exception as e:
+                print(f"[intent_classifier] Error: {type(e).__name__}: {e}")
+                raw = None
+
+    if raw is None:
+        return _fallback("all_providers_failed", start)
+
+    # ── Parse JSON response ───────────────────────────────────────────────────
     try:
-        from groq import Groq
-        client = Groq(api_key=api_key)
-
-        response = client.chat.completions.create(
-            model      = "llama-3.3-70b-versatile",
-            max_tokens = 120,
-            temperature = 0.0,   # deterministic — we want consistent classification
-            messages   = [
-                {"role": "system", "content": CLASSIFIER_SYSTEM_PROMPT},
-                {"role": "user",   "content": message},
-            ],
-        )
-
-        raw = response.choices[0].message.content.strip()
-
         # Strip markdown fences if model adds them despite instructions
         if raw.startswith("```"):
             raw = raw.split("```")[1]
@@ -175,7 +204,7 @@ def classify(message: str, lang_code: str = "en") -> dict:
         return result
 
     except Exception as e:
-        print(f"[intent_classifier] Error: {type(e).__name__}: {e}")
+        print(f"[intent_classifier] Parse error: {type(e).__name__}: {e}")
         return _fallback(str(e), start)
 
 
