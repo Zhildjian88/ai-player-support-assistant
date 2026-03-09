@@ -92,7 +92,14 @@ def get_translation_instruction(lang_code: str) -> str:
         Instruction string to include in LLM system prompt.
     """
     if not is_sea_language(lang_code):
-        return ""
+        # Explicit English override — prevents prior Malay/Thai/etc context
+        # in session history from bleeding into the current English response.
+        return (
+            "The player's current message is in English. "
+            "You MUST respond in English regardless of the language used "
+            "in any previous messages in this conversation. "
+            "Do not continue in any other language from prior turns."
+        )
 
     lang_name = get_language_name(lang_code)
     return (
