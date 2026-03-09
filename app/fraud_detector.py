@@ -176,6 +176,15 @@ SAFE_RESPONSE_I18N = {
         "3. Huwag ibahagi ang iyong mga detalye sa pag-login sa sinuman\n\n"
         "Minarkahan ko ang iyong account para sa agarang pagsusuri ng seguridad. Ang aming koponan ng seguridad ay magsisiyasat sa kamakailang aktibidad sa pag-login at makikipag-ugnayan sa iyo."
     ),
+    "zh": (
+        "感谢您的举报。我们非常重视账户安全。\n\n"
+        "请立即采取以下步骤：\n"
+        "1. 使用【忘记密码】链接更改您的密码\n"
+        "2. 在安全设置中启用双重身份验证\n"
+        "3. 不要与任何人分享您的登录信息\n\n"
+        "我已将您的账户标记为紧急安全审查。我们的安全团队将调查近期登录活动并与您联系。"
+        "如果您认为某笔交易是未经授权的，请通过在线聊天联系我们并提供付款详情。"
+    ),
 }
 
 

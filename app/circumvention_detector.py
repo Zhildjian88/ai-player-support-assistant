@@ -168,6 +168,12 @@ WELFARE_RESPONSE_I18N = {
         "Kung humiling ka ng self-exclusion, hindi ito maaaring bawiin hanggang matapos ang panahon ng exclusion.\n\n"
         "Ang miyembro ng aming koponan ng kapakanan ng manlalaro ay susuriin ang iyong kahilingan at makikipag-ugnayan sa iyo."
     ),
+    "zh": (
+        "感谢您的联系。我们非常重视负责任博彩。\n\n"
+        "如果您设置了存款限额或冷静期，在任何更改生效之前，有一个强制等待期——这是我们许可法规的要求，旨在保护玩家权益。\n\n"
+        "如果您申请了自我排除，在排除期结束之前无法撤销。这是为保护您而设计的坚定保障措施。\n\n"
+        "我们的玩家关怀团队成员将审核您的请求并与您联系。"
+    ),
 }
 
 FRAUD_RESPONSE_I18N = {
@@ -196,6 +202,11 @@ FRAUD_RESPONSE_I18N = {
         "Salamat sa pakikipag-ugnayan. Para sa mga katanungan tungkol sa access ng account, mangyaring i-verify ang iyong pagkakakilanlan sa pamamagitan ng aming secure na proseso ng pag-verify.\n\n"
         "Pakitandaan na ang paglikha ng maraming account o paggamit ng mga teknikal na paraan upang maiwasan ang mga paghihigpit sa account ay isang paglabag sa aming Mga Tuntunin ng Serbisyo.\n\n"
         "Minarkahan ko ang query na ito para sa pagsusuri ng aming koponan ng Panganib at Pagsunod."
+    ),
+    "zh": (
+        "感谢您的联系。对于有关账户访问和限制的查询，请通过我们的安全验证流程验证您的身份。\n\n"
+        "请注意，创建多个账户或使用技术手段绕过账户限制违反了我们的服务条款。\n\n"
+        "我已将此查询标记给我们的风险与合规团队进行审查。"
     ),
 }
 
