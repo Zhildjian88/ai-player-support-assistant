@@ -222,8 +222,11 @@ def process_message(
                      ROUTE_TO_FLAGS.get(_route, []), escalated, llm_called,
                      audit_id, session_id)
 
-    # ── 1. Policy guardrail ───────────────────────────────────────────────────
-    policy_result = _policy.check(message)
+    # ── 1. Policy hard stops (injection / harmful / prohibited gambling) ──────
+    # Out-of-scope check is intentionally deferred until after distress/RG
+    # so mixed messages like "I'm depressed, capital of France?" still trigger
+    # the distress handler rather than being dismissed as off-topic.
+    policy_result = _policy.check_hard_stops(message)
     if policy_result["blocked"]:
         route      = "policy_guardrail"
         risk_level = "MEDIUM"
@@ -287,6 +290,21 @@ def process_message(
                            f"circumvention_{cv_result['subtype']}", risk_level)
         _log(audit_id, session_id, user_id, message, route, risk_level,
              False, False, True, True, response)
+        return _pack(response, lang, route, ROUTE_TO_INTENT[route],
+                     confidence, risk_level, ROUTE_TO_FLAGS[route],
+                     escalated, llm_called, audit_id, session_id)
+
+    # ── 5b. Out-of-scope check ────────────────────────────────────────────────
+    # Runs here — AFTER distress/RG/fraud — so safety signals always fire first.
+    # A message like "I'm depressed, capital of France?" will have already been
+    # caught by distress above; only genuinely off-topic messages reach this point.
+    oos_result = _policy.check_out_of_scope(message)
+    if oos_result["blocked"]:
+        route      = "policy_guardrail"
+        risk_level = "LOW"
+        response   = _builder.build(oos_result["response"], lang, route)
+        _log(audit_id, session_id, user_id, message, route, risk_level,
+             False, False, False, False, response)
         return _pack(response, lang, route, ROUTE_TO_INTENT[route],
                      confidence, risk_level, ROUTE_TO_FLAGS[route],
                      escalated, llm_called, audit_id, session_id)
