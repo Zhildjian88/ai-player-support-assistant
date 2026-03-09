@@ -118,11 +118,75 @@ FRAUD_RESPONSE = (
     "I have flagged this query for review by our Risk and Compliance team."
 )
 
+# ── i18n responses ────────────────────────────────────────────────────────────
+WELFARE_RESPONSE_I18N = {
+    "en": WELFARE_RESPONSE,
+    "th": (
+        "ขอบคุณที่ติดต่อเรา เราให้ความสำคัญกับการเล่นพนันอย่างรับผิดชอบอย่างจริงจัง\n\n"
+        "หากคุณตั้งค่าขีดจำกัดการฝากเงินหรือช่วงพักเย็น จะมีระยะเวลารอที่บังคับก่อนที่การเปลี่ยนแปลงใดๆ จะมีผล\n\n"
+        "หากคุณร้องขอการยกเว้นตนเอง จะไม่สามารถยกเลิกได้จนกว่าระยะเวลาจะสิ้นสุด\n\n"
+        "สมาชิกทีมสวัสดิภาพผู้เล่นของเราจะตรวจสอบคำขอของคุณและติดต่อกลับ"
+    ),
+    "id": (
+        "Terima kasih telah menghubungi kami. Kami sangat serius dalam hal perjudian yang bertanggung jawab.\n\n"
+        "Jika Anda menetapkan batas setoran atau periode pendinginan, ada periode tunggu wajib sebelum perubahan apa pun berlaku.\n\n"
+        "Jika Anda meminta pengecualian diri, ini tidak dapat dibatalkan hingga periode pengecualian berakhir.\n\n"
+        "Anggota tim kesejahteraan pemain kami akan meninjau permintaan Anda dan menghubungi Anda."
+    ),
+    "ms": (
+        "Terima kasih kerana menghubungi kami. Kami mengambil perjudian bertanggungjawab dengan serius.\n\n"
+        "Jika anda menetapkan had deposit atau tempoh penyejukan, terdapat tempoh menunggu wajib sebelum sebarang perubahan berkuat kuasa.\n\n"
+        "Jika anda memohon pengecualian diri, ini tidak boleh dibatalkan sehingga tempoh pengecualian tamat.\n\n"
+        "Ahli pasukan kebajikan pemain kami akan menyemak permintaan anda dan menghubungi anda."
+    ),
+    "vi": (
+        "Cảm ơn bạn đã liên hệ. Chúng tôi rất coi trọng việc cờ bạc có trách nhiệm.\n\n"
+        "Nếu bạn đặt giới hạn tiền gửi hoặc thời gian làm nguội, có một khoảng thời gian chờ bắt buộc trước khi bất kỳ thay đổi nào có hiệu lực.\n\n"
+        "Nếu bạn yêu cầu tự loại trừ, điều này không thể đảo ngược cho đến khi thời gian loại trừ kết thúc.\n\n"
+        "Thành viên nhóm phúc lợi người chơi của chúng tôi sẽ xem xét yêu cầu của bạn và liên hệ lại."
+    ),
+    "tl": (
+        "Salamat sa pakikipag-ugnayan. Sineseryoso namin ang responsableng pagsusugal.\n\n"
+        "Kung nagtakda ka ng limitasyon sa deposito o panahon ng pagpapalamig, may mandatoryong panahon ng paghihintay bago magkabisa ang anumang pagbabago.\n\n"
+        "Kung humiling ka ng self-exclusion, hindi ito maaaring bawiin hanggang matapos ang panahon ng exclusion.\n\n"
+        "Ang miyembro ng aming koponan ng kapakanan ng manlalaro ay susuriin ang iyong kahilingan at makikipag-ugnayan sa iyo."
+    ),
+}
+
+FRAUD_RESPONSE_I18N = {
+    "en": FRAUD_RESPONSE,
+    "th": (
+        "ขอบคุณที่ติดต่อเรา สำหรับคำถามเกี่ยวกับการเข้าถึงบัญชีและข้อจำกัด กรุณายืนยันตัวตนของคุณผ่านกระบวนการยืนยันที่ปลอดภัยของเรา\n\n"
+        "โปรดทราบว่าการสร้างหลายบัญชีหรือการใช้วิธีทางเทคนิคเพื่อหลีกเลี่ยงข้อจำกัดบัญชีถือเป็นการละเมิดข้อกำหนดการให้บริการของเรา\n\n"
+        "ฉันได้ทำเครื่องหมายคำถามนี้เพื่อให้ทีมความเสี่ยงและการปฏิบัติตามกฎระเบียบตรวจสอบ"
+    ),
+    "id": (
+        "Terima kasih telah menghubungi kami. Untuk pertanyaan akses dan pembatasan akun, harap verifikasi identitas Anda melalui proses verifikasi aman kami.\n\n"
+        "Harap dicatat bahwa membuat beberapa akun atau menggunakan cara teknis untuk melewati pembatasan akun melanggar Ketentuan Layanan kami.\n\n"
+        "Saya telah menandai pertanyaan ini untuk ditinjau oleh tim Risiko dan Kepatuhan kami."
+    ),
+    "ms": (
+        "Terima kasih kerana menghubungi kami. Untuk pertanyaan akses dan sekatan akaun, sila sahkan identiti anda melalui proses pengesahan selamat kami.\n\n"
+        "Sila ambil perhatian bahawa mewujudkan berbilang akaun atau menggunakan cara teknikal untuk memintas sekatan akaun melanggar Syarat Perkhidmatan kami.\n\n"
+        "Saya telah menandakan pertanyaan ini untuk disemak oleh pasukan Risiko dan Pematuhan kami."
+    ),
+    "vi": (
+        "Cảm ơn bạn đã liên hệ. Để giải quyết các câu hỏi về quyền truy cập tài khoản, vui lòng xác minh danh tính của bạn qua quy trình xác minh an toàn của chúng tôi.\n\n"
+        "Lưu ý rằng việc tạo nhiều tài khoản hoặc sử dụng các biện pháp kỹ thuật để vượt qua các hạn chế tài khoản là vi phạm Điều khoản Dịch vụ của chúng tôi.\n\n"
+        "Tôi đã gắn cờ truy vấn này để nhóm Rủi ro và Tuân thủ của chúng tôi xem xét."
+    ),
+    "tl": (
+        "Salamat sa pakikipag-ugnayan. Para sa mga katanungan tungkol sa access ng account, mangyaring i-verify ang iyong pagkakakilanlan sa pamamagitan ng aming secure na proseso ng pag-verify.\n\n"
+        "Pakitandaan na ang paglikha ng maraming account o paggamit ng mga teknikal na paraan upang maiwasan ang mga paghihigpit sa account ay isang paglabag sa aming Mga Tuntunin ng Serbisyo.\n\n"
+        "Minarkahan ko ang query na ito para sa pagsusuri ng aming koponan ng Panganib at Pagsunod."
+    ),
+}
+
 _WELFARE_SIGNALS = set(LIMIT_REMOVAL + EXCLUSION_CIRCUMVENTION)
 _FRAUD_SIGNALS = set(MULTI_ACCOUNTING + VPN_CIRCUMVENTION + GENERAL_BYPASS)
 
 
-def check(message: str) -> dict:
+def check(message: str, lang: str = "en") -> dict:
     """
     Returns {"signal": bool, "subtype": str, "response": str}
     subtype: "welfare" | "fraud" | None
@@ -132,8 +196,8 @@ def check(message: str) -> dict:
         if keyword in normalised:
             if keyword in _WELFARE_SIGNALS:
                 return {"signal": True, "subtype": "welfare",
-                        "response": WELFARE_RESPONSE}
+                        "response": WELFARE_RESPONSE_I18N.get(lang, WELFARE_RESPONSE)}
             else:
                 return {"signal": True, "subtype": "fraud",
-                        "response": FRAUD_RESPONSE}
+                        "response": FRAUD_RESPONSE_I18N.get(lang, FRAUD_RESPONSE)}
     return {"signal": False, "subtype": None, "response": ""}

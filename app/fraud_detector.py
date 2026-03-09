@@ -91,10 +91,54 @@ SAFE_RESPONSE = (
     "please contact us via live chat with the payment details."
 )
 
+SAFE_RESPONSE_I18N = {
+    "en": SAFE_RESPONSE,
+    "th": (
+        "ขอบคุณที่แจ้งเรื่องนี้ เราให้ความสำคัญกับความปลอดภัยของบัญชีอย่างจริงจัง\n\n"
+        "กรุณาดำเนินการตามขั้นตอนเหล่านี้ทันที:\n"
+        "1. เปลี่ยนรหัสผ่านของคุณโดยใช้ลิงก์ลืมรหัสผ่าน\n"
+        "2. เปิดใช้การยืนยันตัวตนสองขั้นตอนในการตั้งค่าความปลอดภัย\n"
+        "3. อย่าแบ่งปันข้อมูลเข้าสู่ระบบของคุณกับใคร\n\n"
+        "ฉันได้ทำเครื่องหมายบัญชีของคุณเพื่อการตรวจสอบความปลอดภัยเร่งด่วน ทีมความปลอดภัยของเราจะตรวจสอบกิจกรรมการเข้าสู่ระบบล่าสุดและติดต่อคุณ"
+    ),
+    "id": (
+        "Terima kasih telah melaporkan ini. Kami sangat serius dalam hal keamanan akun.\n\n"
+        "Harap segera lakukan langkah-langkah berikut:\n"
+        "1. Ubah kata sandi Anda menggunakan tautan Lupa Kata Sandi\n"
+        "2. Aktifkan autentikasi dua faktor di Pengaturan Keamanan\n"
+        "3. Jangan bagikan detail login Anda kepada siapapun\n\n"
+        "Saya telah menandai akun Anda untuk tinjauan keamanan mendesak. Tim keamanan kami akan menyelidiki aktivitas login terbaru dan menghubungi Anda."
+    ),
+    "ms": (
+        "Terima kasih kerana melaporkan perkara ini. Kami mengambil keselamatan akaun dengan serius.\n\n"
+        "Sila ambil langkah-langkah ini dengan segera:\n"
+        "1. Tukar kata laluan anda menggunakan pautan Lupa Kata Laluan\n"
+        "2. Aktifkan pengesahan dua faktor dalam Tetapan Keselamatan\n"
+        "3. Jangan kongsi butiran log masuk anda dengan sesiapa\n\n"
+        "Saya telah menandakan akaun anda untuk semakan keselamatan segera. Pasukan keselamatan kami akan menyiasat aktiviti log masuk terkini dan menghubungi anda."
+    ),
+    "vi": (
+        "Cảm ơn bạn đã báo cáo điều này. Chúng tôi rất coi trọng bảo mật tài khoản.\n\n"
+        "Vui lòng thực hiện các bước sau ngay lập tức:\n"
+        "1. Thay đổi mật khẩu của bạn bằng liên kết Quên mật khẩu\n"
+        "2. Bật xác thực hai yếu tố trong Cài đặt bảo mật\n"
+        "3. Không chia sẻ thông tin đăng nhập của bạn với bất kỳ ai\n\n"
+        "Tôi đã gắn cờ tài khoản của bạn để xem xét bảo mật khẩn cấp. Nhóm bảo mật của chúng tôi sẽ điều tra hoạt động đăng nhập gần đây và liên hệ với bạn."
+    ),
+    "tl": (
+        "Salamat sa pag-uulat nito. Sineseryoso namin ang seguridad ng account.\n\n"
+        "Mangyaring gawin ang mga hakbang na ito kaagad:\n"
+        "1. Baguhin ang iyong password gamit ang link na Nakalimutan ang Password\n"
+        "2. I-enable ang two-factor authentication sa iyong Mga Setting ng Seguridad\n"
+        "3. Huwag ibahagi ang iyong mga detalye sa pag-login sa sinuman\n\n"
+        "Minarkahan ko ang iyong account para sa agarang pagsusuri ng seguridad. Ang aming koponan ng seguridad ay magsisiyasat sa kamakailang aktibidad sa pag-login at makikipag-ugnayan sa iyo."
+    ),
+}
 
-def check(message: str) -> dict:
+
+def check(message: str, lang: str = "en") -> dict:
     normalised = message.lower()
     for keyword in FRAUD_KEYWORDS:
         if keyword in normalised:
-            return {"signal": True, "response": SAFE_RESPONSE}
+            return {"signal": True, "response": SAFE_RESPONSE_I18N.get(lang, SAFE_RESPONSE)}
     return {"signal": False, "response": ""}
