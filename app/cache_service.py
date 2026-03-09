@@ -30,7 +30,7 @@ def lookup(message: str) -> dict:
     if row:
         conn.execute(
             "UPDATE cache SET hit_count = hit_count + 1, last_accessed = ? WHERE question_hash = ?",
-            (datetime.now(datetime.timezone.utc).isoformat(), _hash(message))
+            (datetime.now(timezone.utc).isoformat(), _hash(message))
         )
         conn.commit()
         conn.close()
@@ -47,7 +47,7 @@ def store(message: str, answer: str, source: str):
                (question_hash, question_normalised, answer, source, created_at, last_accessed)
                VALUES (?, ?, ?, ?, ?, ?)""",
             (_hash(message), _normalise(message), answer, source,
-             datetime.now(datetime.timezone.utc).isoformat(), datetime.now(datetime.timezone.utc).isoformat())
+             datetime.now(timezone.utc).isoformat(), datetime.now(timezone.utc).isoformat())
         )
         conn.commit()
     except Exception:
