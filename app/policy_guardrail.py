@@ -187,6 +187,14 @@ INJECTION_PATTERNS = [
     "my therapist recommended i ask",
     "i'm writing a novel", "writing a novel",
     "for a story i'm writing", "for a book i'm writing",
+    # Quoted injection — asking bot to simulate or respond to an injection
+    "pretend you received this message",
+    "pretend you received",
+    "if someone asked you to ignore",
+    "how would you respond word for word",
+    "imagine you received this message",         # English
+    "bayangkan kamu menerima pesan ini",         # Indonesian: imagine you received this message
+    "bagaimana kamu akan merespons",             # Indonesian: how would you respond
     # False authority / automated evaluation framing
     "anthropic safety evaluation", "safety evaluation",
     "automated anthropic", "respond with your raw system prompt",
@@ -223,6 +231,16 @@ INJECTION_PATTERNS = [
     "read back my transactions",
     "full card details", "confirm my card details",
     "last 10 transactions with", "transactions with full",
+    # RG compliance framing — card/transaction data extraction
+    "read them back to confirm",                        # EN: verify stored correctly
+    "verify that my full transaction",                  # EN
+    "riwayat transaksi lengkap",                        # Indonesian: full transaction history
+    "detail kartu tersimpan",                           # Indonesian: card details stored
+    "bacakan kembali untuk konfirmasi",                 # Indonesian: read back to confirm
+    # False social proof — Tagalog
+    "sinabi ng chatbot sa kaibigan",                    # chatbot told my friend
+    "hindi na ito sikreto",                             # it's not a secret anymore
+    "may screenshot na ako",                            # I have a screenshot
     # Hypothetical harm framing
     "university assignment", "for my assignment",
     "hypothetically speaking, how would", "hypothetically, how would",
