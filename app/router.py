@@ -244,7 +244,25 @@ def process_message(
     # unsupported languages, and mixed-language attacks that keywords miss.
     # Fails open (returns support_query) on API error so players are never
     # blocked by a classifier outage — keyword guardrails remain the safety net.
-    clf_result = _intent_clf.classify(message, lang)
+    # ── Greeting shortcut — bypass classifier entirely ───────────────────────
+    # Greetings are always support_query regardless of what the LLM classifier
+    # returns. This prevents rate-limited classifiers from blocking friendly openers.
+    _GREETINGS = {
+        "hi", "hello", "hey", "hiya", "howdy", "greetings",
+        "how are you", "how are you?", "how r u", "how r u?",
+        "good morning", "good afternoon", "good evening", "good night",
+        "morning", "afternoon", "evening",
+        "what's up", "whats up", "sup",
+        "hi there", "hello there", "hey there",
+        "สวัสดี", "ฮาโล", "halo", "hai", "selamat pagi",
+        "xin chào", "chào", "kumusta", "kamusta",
+        "你好", "您好", "嗨",
+    }
+    if message.strip().lower().rstrip("!.,") in _GREETINGS:
+        clf_result = {"intent": "support_query", "confidence": 1.0,
+                      "reason": "greeting whitelist", "used_classifier": False, "latency_ms": 0}
+    else:
+        clf_result = _intent_clf.classify(message, lang)
     clf_intent = clf_result.get("intent", "support_query")
 
     if clf_intent == "injection":

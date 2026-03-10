@@ -37,6 +37,9 @@ import time
 
 from dotenv import load_dotenv
 
+# Gemini RPM backoff — skip Gemini for 60s after a 429
+_gemini_backoff_until: float = 0.0
+
 # In-process cache — avoids re-classifying identical messages within a session
 _cache: dict[str, dict] = {}
 
@@ -109,6 +112,31 @@ def classify(message: str, lang_code: str = "en") -> dict:
     """
     start = time.monotonic()
 
+    # ── Greeting whitelist — always support_query, never out_of_scope ─────────
+    # Short social openers should reach the LLM for a friendly response,
+    # not be blocked as out-of-scope by the classifier.
+    _GREETINGS = {
+        "hi", "hello", "hey", "hiya", "howdy", "greetings",
+        "how are you", "how are you?", "how r u", "how r u?",
+        "good morning", "good afternoon", "good evening", "good night",
+        "morning", "afternoon", "evening",
+        "what's up", "whats up", "sup",
+        "hi there", "hello there", "hey there",
+        "สวัสดี", "ฮาโล",                    # Thai
+        "halo", "hai", "selamat pagi",        # Indonesian/Malay
+        "xin chào", "chào",                   # Vietnamese
+        "kumusta", "kamusta",                 # Filipino
+        "你好", "您好", "嗨",                  # Chinese
+    }
+    if message.strip().lower().rstrip("!.,") in _GREETINGS:
+        return {
+            "intent":          "support_query",
+            "confidence":      1.0,
+            "reason":          "greeting — routed to LLM for friendly response",
+            "used_classifier": False,
+            "latency_ms":      0,
+        }
+
     # ── In-process cache check ────────────────────────────────────────────────
     key = _hash(message)
     if key in _cache:
@@ -129,7 +157,7 @@ def classify(message: str, lang_code: str = "en") -> dict:
 
     # ── 1. Try Gemini (primary) ───────────────────────────────────────────────
     gemini_key = os.getenv("GEMINI_API_KEY", "")
-    if gemini_key:
+    if gemini_key and not _gemini_backoff_until or (gemini_key and time.monotonic() > _gemini_backoff_until):
         try:
             import requests as _requests
             payload = {
@@ -147,6 +175,9 @@ def classify(message: str, lang_code: str = "en") -> dict:
             raw  = data["candidates"][0]["content"]["parts"][0]["text"].strip()
         except Exception as e:
             print(f"[intent_classifier] Gemini error: {type(e).__name__}: {e}")
+            if "429" in str(e):
+                _gemini_backoff_until = time.monotonic() + 60
+                print(f"[intent_classifier] Gemini 429 — backing off for 60s")
             raw = None
 
     # ── 2. Try Groq (fallback) ────────────────────────────────────────────────
