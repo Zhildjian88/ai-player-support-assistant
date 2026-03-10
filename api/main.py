@@ -100,7 +100,18 @@ def root():
 
 @app.get("/health", tags=["health"])
 def health():
-    return {"status": "ok"}
+    from app.language_detector import detect_language
+    from app.distress_detector import check as distress_check
+    msg = "我再也无法忍受了，我想结束我的生命。"
+    lang = detect_language(msg)
+    result = distress_check(msg, lang)
+    return {
+        "status": "ok",
+        "debug_lang": lang,
+        "debug_signal": result["signal"],
+        "debug_subtype": result["subtype"],
+        "debug_response": result["response"][:80],
+    }
 
 
 @app.post("/chat", response_model=ChatResponse, tags=["chat"])
