@@ -26,3 +26,4 @@ requests>=2.31.0
 # faiss-cpu is excluded; similarity_service.py falls back to TF-IDF automatically
 scikit-learn>=1.3.0
 numpy>=1.26.0
+google-generativeai>=0.8.0
