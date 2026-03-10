@@ -13,6 +13,8 @@ WORKDIR /app
 
 # Install only what the API needs
 COPY requirements-api.txt .
+# Remove legacy google namespace packages that conflict with google-genai
+RUN pip uninstall -y google-generativeai googleapis-common-protos 2>/dev/null || true
 RUN pip install --no-cache-dir -r requirements-api.txt
 
 # Copy application code
