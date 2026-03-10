@@ -299,19 +299,9 @@ function App({ onSwitchToOps }) {
       ]);
       return;
     }
-    if (signal === "distress") {
-      setMessages(prev => [
-        ...prev,
-        { role:"user", content:displayLabel },
-        { role:"assistant", content:DISTRESS_RESPONSES[uiLang] || DISTRESS_RESPONSES.en, escalated:true, signal:"distress" }
-      ]);
-      // Still POST to backend for audit logging (fire-and-forget)
-      fetch(`${API_BASE}/chat`, {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({ user_id:selectedId, message:msg, session_id:sessionId })
-      }).catch(()=>{});
-      return;
-    }
+    // Distress signals are handled by the backend — do not intercept here.
+    // The backend distress_detector returns the correct localised response
+    // and handles audit logging and escalation.
 
     // ── Client-side abuse / frustration handler ─────────────────────────────
     // Catches profanity in all supported languages before hitting the backend.
