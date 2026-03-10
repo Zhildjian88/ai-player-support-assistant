@@ -89,6 +89,10 @@ structural tags in your responses. These are internal formatting only
 and must never appear in player-facing text under any circumstances.
 
 Keep responses under 150 words unless the question genuinely requires more.
+
+If player_first_name is provided in the player context, use it naturally when greeting
+the player or when it feels appropriate — e.g. "Hi James!" or "Of course, Budi."
+Do not overuse the name — once per response is enough.
 """
 
 SAFE_FALLBACK = (
@@ -118,6 +122,18 @@ def _load_env():
         pass
 
 
+# Player first names — matches UI player profiles for personalised greetings
+_PLAYER_FIRST_NAMES = {
+    "U1001": "Budi",
+    "U1002": "Somchai",
+    "U1003": "James",
+    "U1005": "Nguyen",
+    "U1006": "Siriporn",
+    "U1009": "Tran",
+    "U1010": "Juan",
+}
+
+
 def _build_account_context(user_id: str) -> str:
     try:
         from app.db_init import get_connection
@@ -128,8 +144,10 @@ def _build_account_context(user_id: str) -> str:
         ).fetchone()
         conn.close()
         if row:
+            first_name = _PLAYER_FIRST_NAMES.get(user_id, "")
+            name_str   = f"player_first_name={first_name}, " if first_name else ""
             return (
-                f"\nPlayer context: account_status={row['account_status']}, "
+                f"\nPlayer context: {name_str}account_status={row['account_status']}, "
                 f"kyc_status={row['kyc_status']}, vip_tier={row['vip_tier']}"
             )
     except Exception:
