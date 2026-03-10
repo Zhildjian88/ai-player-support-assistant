@@ -39,6 +39,10 @@ LOSS_OF_CONTROL = [
     # Tagalog
     "hindi ako makatigil sa pagsusugal", "hindi ko mapigilan ang pagsusugal",
     "sugal na sugal ako", "adik sa sugal",
+    # Thai
+    "หยุดเล่นการพนันไม่ได้", "เลิกพนันไม่ได้", "หยุดไม่ได้",
+    "ติดการพนัน", "เล่นการพนันมากเกินไป", "ควบคุมการพนันไม่ได้",
+    "อยากเลิกแต่ทำไม่ได้", "เล่นไม่หยุด",
     # Chinese Simplified
     "无法停止赌博", "不能停止赌博", "停不下来",
     "每天都在赌博", "沉迷赌博", "赌博成瘾",
@@ -202,6 +206,10 @@ GENERAL = [
     "losing control", "lost control of gambling",
     "spend too much", "spending too much",
     "cannot control my spending",
+    # Thai general
+    "เล่นมากเกินไป", "แพ้มากเกินไป", "ใช้เงินมากเกินไป",
+    "ควบคุมตัวเองไม่ได้", "เล่นการพนันทุกวัน", "ติดพนัน",
+    "เสียเงินมากเกินไป", "หมดเงินเพราะพนัน",
 ]
 
 RG_KEYWORDS = (
