@@ -81,21 +81,19 @@ def root():
 
 @app.get("/health", tags=["health"])
 def health():
-    from app.language_detector import detect_language
-    from app.distress_detector import check as distress_check
-    msg = "我再也无法忍受了，我想结束我的生命。"
-    lang = detect_language(msg)
-    distress = distress_check(msg, lang)
-    route_result = process_message(msg, user_id="U1001")
+    """Lightweight health check — no pipeline calls, no DB writes, no LLM usage."""
+    import importlib
+    checks = {}
+    for mod in ["app.router", "app.intent_classifier", "app.distress_detector",
+                "app.language_detector", "app.llm_service"]:
+        try:
+            importlib.import_module(mod)
+            checks[mod.split(".")[-1]] = "ok"
+        except Exception as e:
+            checks[mod.split(".")[-1]] = f"error: {e}"
     return {
         "status": "ok",
-        "debug_lang": lang,
-        "debug_signal": distress["signal"],
-        "debug_subtype": distress["subtype"],
-        "debug_distress_response": distress["response"][:60],
-        "pipeline_route": route_result["route_taken"],
-        "pipeline_lang": route_result["language"],
-        "pipeline_response": route_result["response"][:80],
+        "modules": checks,
     }
 
 
