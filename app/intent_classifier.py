@@ -153,11 +153,12 @@ def classify(message: str, lang_code: str = "en") -> dict:
         {"role": "user",   "content": message},
     ]
 
+    global _gemini_backoff_until
     raw = None
 
     # ── 1. Try Gemini (primary) ───────────────────────────────────────────────
     gemini_key = os.getenv("GEMINI_API_KEY", "")
-    if gemini_key and not _gemini_backoff_until or (gemini_key and time.monotonic() > _gemini_backoff_until):
+    if gemini_key and (not _gemini_backoff_until or time.monotonic() > _gemini_backoff_until):
         try:
             import requests as _requests
             payload = {
