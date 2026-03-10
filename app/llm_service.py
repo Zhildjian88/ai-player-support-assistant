@@ -154,8 +154,9 @@ def _call_gemini(messages: list, start: float, lang: str) -> dict | None:
         return None
 
     try:
-        from google import genai
-        from google.genai import types as genai_types
+        import importlib
+        genai = importlib.import_module("google.genai")
+        genai_types = importlib.import_module("google.genai.types")
 
         client     = genai.Client(api_key=api_key)
         model_name = os.getenv("LLM_MODEL", DEFAULT_GEMINI_MODEL)

@@ -131,8 +131,9 @@ def classify(message: str, lang_code: str = "en") -> dict:
     gemini_key = os.getenv("GEMINI_API_KEY", "")
     if gemini_key:
         try:
-            from google import genai
-            from google.genai import types as genai_types
+            import importlib
+            genai = importlib.import_module("google.genai")
+            genai_types = importlib.import_module("google.genai.types")
             client   = genai.Client(api_key=gemini_key)
             config   = genai_types.GenerateContentConfig(
                 system_instruction = CLASSIFIER_SYSTEM_PROMPT,
