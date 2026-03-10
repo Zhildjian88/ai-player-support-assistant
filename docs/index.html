@@ -38,6 +38,44 @@
     .ops-row:hover { background: #141722 !important; }
     .mode-toggle:hover { background: #1e2235 !important; color: #a5b4fc !important; }
     .ops-refresh:hover { background: #1e2235 !important; }
+
+    /* ── Responsive layout ── */
+
+    /* Sidebar always visible on desktop */
+    .sidebar-panel {
+      position: relative;
+      transform: none;
+      z-index: auto;
+      width: 252px;
+      transition: transform 0.25s ease;
+    }
+
+    @media (max-width: 768px) {
+      /* Sidebar — fixed overlay, slides in on open */
+      .sidebar-panel {
+        position: fixed !important;
+        left: 0 !important; top: 0 !important; bottom: 0 !important;
+        z-index: 25 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.25s ease !important;
+        width: 280px !important;
+      }
+      .sidebar-panel.sidebar-open {
+        transform: translateX(0) !important;
+      }
+
+      /* Input — 16px prevents iOS auto-zoom */
+      .chat-input {
+        font-size: 13px !important;
+        padding: 10px 12px !important;
+      }
+      .chat-input::placeholder {
+        font-size: 12px !important;
+      }
+
+      /* Send button thumb-friendly */
+      .send-btn { padding: 12px 14px !important; min-width: 46px !important; }
+    }
   </style>
 </head>
 <body>
@@ -78,7 +116,7 @@ const LANGS = [
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 const UI = {
-  en: { sel:"Select your account to continue", enter:"Enter Support Chat →", footer:"🔒 Secure · 🌐 Multilingual · 🛡️ Responsible Gaming", liveChat:"Live Chat", switchBtn:"← Switch", rgBanner:"Responsible Gaming", rgDefault:"Set deposit limits | Track your spend | Stay in control", rgActive:"⚠️ RG tools active on your account", rgManage:"Manage →", acct:"Account Summary", pendingWith:"⏳ Pending Withdrawal", quick:"Quick Actions", welcome:n=>`Welcome back, ${n} 👋`, welcomeBody:"I'm your SiDOBet Support assistant. I can help you with withdrawals, account queries, game rules, promotions, and responsible gaming tools.", welcomeSub:"Type your question below or use the Quick Actions panel.", placeholder:"Type your message here… (any language supported)", offline:"⚠️ Support server is offline. Please try again later or contact support@sidobet.com", statusLbl:"Status", kycLbl:"KYC", balLbl:"Balance", tierLbl:"Tier", statusVal:{active:"Active",restricted:"Restricted",suspended:"Suspended",self_excluded:"Self-Excluded"}, kycVal:{verified:"Verified",pending:"Pending",failed:"Failed"}, tierVal:{diamond:"Diamond",platinum:"Platinum",gold:"Gold",standard:"Standard"}, qaLabels:["💳 Check Balance","⏳ Withdrawal Status","🎁 Active Promotions","🔐 KYC Status","🎮 Game Rules & T&C","🛡️ Responsible Gaming"] },
+  en: { sel:"Select your account to continue", enter:"Enter Support Chat →", footer:"🔒 Secure · 🌐 Multilingual · 🛡️ Responsible Gaming", liveChat:"Live Chat", switchBtn:"← Switch", rgBanner:"Responsible Gaming", rgDefault:"Set deposit limits | Track your spend | Stay in control", rgActive:"⚠️ RG tools active on your account", rgManage:"Manage →", acct:"Account Summary", pendingWith:"⏳ Pending Withdrawal", quick:"Quick Actions", welcome:n=>`Welcome back, ${n} 👋`, welcomeBody:"I'm your SiDOBet Support assistant. I can help you with withdrawals, account queries, game rules, promotions, and responsible gaming tools.", welcomeSub:"Type your question below or use the Quick Actions panel.", placeholder:"Type your message… (any language)", offline:"⚠️ Support server is offline. Please try again later or contact support@sidobet.com", statusLbl:"Status", kycLbl:"KYC", balLbl:"Balance", tierLbl:"Tier", statusVal:{active:"Active",restricted:"Restricted",suspended:"Suspended",self_excluded:"Self-Excluded"}, kycVal:{verified:"Verified",pending:"Pending",failed:"Failed"}, tierVal:{diamond:"Diamond",platinum:"Platinum",gold:"Gold",standard:"Standard"}, qaLabels:["💳 Check Balance","⏳ Withdrawal Status","🎁 Active Promotions","🔐 KYC Status","🎮 Game Rules & T&C","🛡️ Responsible Gaming"] },
   th: { sel:"เลือกบัญชีของคุณเพื่อดำเนินการต่อ", enter:"เข้าสู่แชทสนับสนุน →", footer:"🔒 ปลอดภัย · 🌐 หลายภาษา · 🛡️ การเล่นที่รับผิดชอบ", liveChat:"แชทสด", switchBtn:"← เปลี่ยน", rgBanner:"การเล่นเกมอย่างรับผิดชอบ", rgDefault:"ตั้งวงเงินฝาก | ติดตามการใช้จ่าย | ควบคุมตัวเอง", rgActive:"⚠️ เครื่องมือ RG เปิดใช้งานในบัญชีของคุณ", rgManage:"จัดการ →", acct:"สรุปบัญชี", pendingWith:"⏳ การถอนเงินที่รอดำเนินการ", quick:"การดำเนินการด่วน", welcome:n=>`ยินดีต้อนรับกลับมา, ${n} 👋`, welcomeBody:"ฉันคือผู้ช่วยสนับสนุน SiDOBet ฉันสามารถช่วยคุณเกี่ยวกับการถอนเงิน การสอบถามบัญชี กฎของเกม โปรโมชัน และเครื่องมือการเล่นเกมอย่างรับผิดชอบ", welcomeSub:"พิมพ์คำถามของคุณด้านล่าง หรือใช้แผงการดำเนินการด่วน", placeholder:"พิมพ์ข้อความของคุณที่นี่…", offline:"⚠️ เซิร์ฟเวอร์ออฟไลน์ กรุณาลองใหม่ภายหลัง", statusLbl:"สถานะ", kycLbl:"KYC", balLbl:"ยอดเงิน", tierLbl:"ระดับ", statusVal:{active:"ใช้งานอยู่",restricted:"ถูกจำกัด",suspended:"ถูกระงับ",self_excluded:"ยกเว้นตนเอง"}, kycVal:{verified:"ยืนยันแล้ว",pending:"รอดำเนินการ",failed:"ไม่ผ่าน"}, tierVal:{diamond:"ไดมอนด์",platinum:"แพลทินัม",gold:"ทอง",standard:"มาตรฐาน"}, qaLabels:["💳 ตรวจสอบยอดเงิน","⏳ สถานะการถอนเงิน","🎁 โปรโมชันที่ใช้งานอยู่","🔐 สถานะ KYC","🎮 กฎเกม & ข้อตกลง","🛡️ การเล่นเกมอย่างรับผิดชอบ"] },
   id: { sel:"Pilih akun Anda untuk melanjutkan", enter:"Masuk ke Obrolan Dukungan →", footer:"🔒 Aman · 🌐 Multibahasa · 🛡️ Permainan Bertanggung Jawab", liveChat:"Live Chat", switchBtn:"← Ganti", rgBanner:"Permainan Bertanggung Jawab", rgDefault:"Atur batas setoran | Lacak pengeluaran | Tetap terkendali", rgActive:"⚠️ Alat RG aktif di akun Anda", rgManage:"Kelola →", acct:"Ringkasan Akun", pendingWith:"⏳ Penarikan Tertunda", quick:"Tindakan Cepat", welcome:n=>`Selamat datang kembali, ${n} 👋`, welcomeBody:"Saya adalah asisten Dukungan SiDOBet. Saya dapat membantu Anda dengan penarikan, pertanyaan akun, aturan permainan, promosi, dan alat permainan bertanggung jawab.", welcomeSub:"Ketik pertanyaan Anda di bawah atau gunakan panel Tindakan Cepat.", placeholder:"Ketik pesan Anda di sini…", offline:"⚠️ Server sedang offline. Silakan coba lagi nanti.", statusLbl:"Status", kycLbl:"KYC", balLbl:"Saldo", tierLbl:"Tingkat", statusVal:{active:"Aktif",restricted:"Dibatasi",suspended:"Ditangguhkan",self_excluded:"Pengecualian Diri"}, kycVal:{verified:"Terverifikasi",pending:"Tertunda",failed:"Gagal"}, tierVal:{diamond:"Diamond",platinum:"Platinum",gold:"Emas",standard:"Standar"}, qaLabels:["💳 Cek Saldo","⏳ Status Penarikan","🎁 Promosi Aktif","🔐 Status KYC","🎮 Aturan Game & S&K","🛡️ Permainan Bertanggung Jawab"] },
   vi: { sel:"Chọn tài khoản của bạn để tiếp tục", enter:"Vào Chat Hỗ Trợ →", footer:"🔒 Bảo mật · 🌐 Đa ngôn ngữ · 🛡️ Chơi game có trách nhiệm", liveChat:"Chat Trực Tiếp", switchBtn:"← Chuyển", rgBanner:"Chơi Game Có Trách Nhiệm", rgDefault:"Đặt giới hạn nạp | Theo dõi chi tiêu | Kiểm soát bản thân", rgActive:"⚠️ Công cụ RG đang hoạt động trên tài khoản của bạn", rgManage:"Quản lý →", acct:"Tóm Tắt Tài Khoản", pendingWith:"⏳ Rút Tiền Đang Chờ", quick:"Thao Tác Nhanh", welcome:n=>`Chào mừng trở lại, ${n} 👋`, welcomeBody:"Tôi là trợ lý Hỗ trợ SiDOBet của bạn. Tôi có thể giúp bạn về rút tiền, truy vấn tài khoản, quy tắc trò chơi, khuyến mãi và các công cụ chơi game có trách nhiệm.", welcomeSub:"Nhập câu hỏi của bạn bên dưới hoặc sử dụng bảng Thao Tác Nhanh.", placeholder:"Nhập tin nhắn của bạn tại đây…", offline:"⚠️ Máy chủ đang offline. Vui lòng thử lại sau.", statusLbl:"Trạng thái", kycLbl:"KYC", balLbl:"Số dư", tierLbl:"Hạng", statusVal:{active:"Hoạt động",restricted:"Bị hạn chế",suspended:"Bị tạm ngừng",self_excluded:"Tự loại trừ"}, kycVal:{verified:"Đã xác minh",pending:"Đang chờ",failed:"Thất bại"}, tierVal:{diamond:"Kim Cương",platinum:"Bạch Kim",gold:"Vàng",standard:"Tiêu Chuẩn"}, qaLabels:["💳 Kiểm Tra Số Dư","⏳ Trạng Thái Rút Tiền","🎁 Khuyến Mãi Đang Hoạt Động","🔐 Trạng Thái KYC","🎮 Luật Chơi & Điều Khoản","🛡️ Chơi Game Có Trách Nhiệm"] },
@@ -241,6 +279,13 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
   const [input,       setInput]       = useState("");
   const [typing,      setTyping]      = useState(false);
   const [apiStatus,   setApiStatus]   = useState("unknown"); // unknown | online | offline
+  const [sidebarOpen,  setSidebarOpen]  = useState(false);
+  const [isMobile,     setIsMobile]     = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
   const chatEndRef = useRef(null);
 
   const t = UI[uiLang] || UI.en;
@@ -520,38 +565,82 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
     <div style={{background:"#0d0f14",height:"100vh",display:"flex",flexDirection:"column",fontSize:"14px",overflow:"hidden"}}>
 
       {/* Top bar */}
-      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"10px 18px",display:"flex",alignItems:"center",gap:14,flexShrink:0,zIndex:10}}>
-        <div style={{fontSize:"1.1em",fontWeight:800,letterSpacing:"-0.01em"}}>
-          <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
-        </div>
-        <div style={{width:1,height:18,background:"#2a2d3a"}}/>
-        <div style={{fontSize:"0.78em",color:"#64748b",display:"flex",alignItems:"center",gap:8}}>
-          <span style={{width:7,height:7,borderRadius:"50%",background: apiStatus==="offline"?"#f87171":apiStatus==="connecting"?"#f59e0b":"#4ade80",display:"inline-block",flexShrink:0}}/>
-          <span style={{color:apiStatus==="offline"?"#f87171":apiStatus==="connecting"?"#f59e0b":"#4ade80"}}>{apiStatus==="connecting"?"Connecting…":t.liveChat}</span>
-          <span style={{color:"#2a2d3a"}}>|</span>
-          <span>{p.flag} {p.name}</span>
-          <span style={{color:"#2a2d3a"}}>|</span>
-          <span style={{background:ts.bg,color:ts.color,padding:"2px 8px",borderRadius:6,fontSize:"0.85em",fontWeight:700,textTransform:"uppercase"}}>
-            {TIER_ICON[p.tier]} {p.tier.toUpperCase()}
-          </span>
-        </div>
-        <div style={{marginLeft:"auto",display:"flex",gap:5,alignItems:"center"}}>
-          {LANGS.map(lang => (
-            <button key={lang.code} onClick={() => setUiLang(lang.code)} title={lang.label}
-              style={{background:uiLang===lang.code?"rgba(99,102,241,0.2)":"transparent",border:`2px solid ${uiLang===lang.code?"#6366f1":"transparent"}`,borderRadius:8,padding:"3px 5px",cursor:"pointer",fontSize:"1.1em",lineHeight:1,transition:"all 0.15s"}}>
-              {lang.flag}
-            </button>
-          ))}
-          <div style={{width:1,height:18,background:"#2a2d3a",margin:"0 4px"}}/>
-          <button onClick={() => { setLoggedIn(false); setMessages([]); }}
-            style={{background:"#1e2235",border:"1px solid #2a2d3a",borderRadius:8,padding:"5px 12px",cursor:"pointer",color:"#94a3b8",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s"}}>
-            {t.switchBtn}
-          </button>
-          <button className="mode-toggle" onClick={onSwitchToOps}
-            style={{background:"transparent",border:"1px solid #312e81",borderRadius:8,padding:"5px 12px",cursor:"pointer",color:"#818cf8",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s",whiteSpace:"nowrap"}}>
-            📊 Ops
-          </button>
-        </div>
+      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"8px 12px",flexShrink:0,zIndex:10}}>
+        {isMobile ? (
+          <>
+            {/* ── Mobile Row 1: ☰ · SiDOBet (centre) · name+avatar ── */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",position:"relative",padding:"2px 0"}}>
+              <button onClick={() => setSidebarOpen(o => !o)}
+                style={{background:"#1e2235",border:"1px solid #2a2d3a",borderRadius:8,padding:"6px 11px",cursor:"pointer",color:"#94a3b8",fontSize:"1.1em",fontFamily:"inherit",flexShrink:0,zIndex:1}}>
+                ☰
+              </button>
+              <div style={{position:"absolute",left:0,right:0,display:"flex",justifyContent:"center",pointerEvents:"none"}}>
+                <span style={{fontSize:"1.1em",fontWeight:800,letterSpacing:"-0.01em"}}>
+                  <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
+                </span>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:6,zIndex:1}}>
+                <span style={{fontWeight:600,color:"#c8cde0",fontSize:"0.78em",maxWidth:80,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name.split(" ")[0]}</span>
+                <span style={{width:30,height:30,borderRadius:"50%",background:"#1e2235",border:"2px solid #2a2d3a",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1em",flexShrink:0}}>
+                  {p.flag}
+                </span>
+              </div>
+            </div>
+            {/* ── Mobile Row 2: flags · Switch · Ops ── */}
+            <div style={{display:"flex",alignItems:"center",gap:4,marginTop:8,flexWrap:"wrap"}}>
+              {LANGS.map(lang => (
+                <button key={lang.code} onClick={() => setUiLang(lang.code)} title={lang.label}
+                  style={{background:uiLang===lang.code?"rgba(99,102,241,0.2)":"transparent",border:`2px solid ${uiLang===lang.code?"#6366f1":"transparent"}`,borderRadius:8,padding:"3px 5px",cursor:"pointer",fontSize:"1em",lineHeight:1,transition:"all 0.15s"}}>
+                  {lang.flag}
+                </button>
+              ))}
+              <div style={{marginLeft:"auto",display:"flex",gap:6}}>
+                <button onClick={() => { setLoggedIn(false); setMessages([]); }}
+                  style={{background:"#1e2235",border:"1px solid #2a2d3a",borderRadius:8,padding:"5px 10px",cursor:"pointer",color:"#94a3b8",fontSize:"0.72em",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                  {t.switchBtn}
+                </button>
+                <button className="mode-toggle" onClick={onSwitchToOps}
+                  style={{background:"transparent",border:"1px solid #312e81",borderRadius:8,padding:"5px 10px",cursor:"pointer",color:"#818cf8",fontSize:"0.72em",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                  📊 Ops
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{fontSize:"1.1em",fontWeight:800,letterSpacing:"-0.01em",flexShrink:0}}>
+              <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
+            </div>
+            <div style={{width:1,height:16,background:"#2a2d3a",flexShrink:0}}/>
+            <div style={{fontSize:"0.75em",color:"#64748b",display:"flex",alignItems:"center",gap:6}}>
+              <span style={{width:7,height:7,borderRadius:"50%",background:apiStatus==="offline"?"#f87171":apiStatus==="connecting"?"#f59e0b":"#4ade80",display:"inline-block",flexShrink:0}}/>
+              <span style={{color:apiStatus==="offline"?"#f87171":apiStatus==="connecting"?"#f59e0b":"#4ade80"}}>{apiStatus==="connecting"?"Connecting…":t.liveChat}</span>
+              <span style={{color:"#2a2d3a"}}>|</span>
+              <span>{p.flag} {p.name}</span>
+              <span style={{color:"#2a2d3a"}}>|</span>
+              <span style={{background:ts.bg,color:ts.color,padding:"2px 6px",borderRadius:6,fontSize:"0.82em",fontWeight:700,textTransform:"uppercase",flexShrink:0}}>
+                {TIER_ICON[p.tier]} {p.tier.toUpperCase()}
+              </span>
+            </div>
+            <div style={{marginLeft:"auto",display:"flex",gap:5,alignItems:"center"}}>
+              {LANGS.map(lang => (
+                <button key={lang.code} onClick={() => setUiLang(lang.code)} title={lang.label}
+                  style={{background:uiLang===lang.code?"rgba(99,102,241,0.2)":"transparent",border:`2px solid ${uiLang===lang.code?"#6366f1":"transparent"}`,borderRadius:8,padding:"3px 5px",cursor:"pointer",fontSize:"1.1em",lineHeight:1,transition:"all 0.15s"}}>
+                  {lang.flag}
+                </button>
+              ))}
+              <div style={{width:1,height:16,background:"#2a2d3a",margin:"0 2px"}}/>
+              <button onClick={() => { setLoggedIn(false); setMessages([]); }}
+                style={{background:"#1e2235",border:"1px solid #2a2d3a",borderRadius:8,padding:"5px 10px",cursor:"pointer",color:"#94a3b8",fontSize:"0.75em",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                {t.switchBtn}
+              </button>
+              <button className="mode-toggle" onClick={onSwitchToOps}
+                style={{background:"transparent",border:"1px solid #312e81",borderRadius:8,padding:"5px 10px",cursor:"pointer",color:"#818cf8",fontSize:"0.75em",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                📊 Ops
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* RG Banner */}
@@ -569,7 +658,22 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
       <div style={{flex:1,display:"flex",overflow:"hidden"}}>
 
         {/* Left panel */}
-        <div style={{width:252,background:"#0a0c10",borderRight:"1px solid #1e2130",padding:14,overflowY:"auto",flexShrink:0,display:"flex",flexDirection:"column",gap:10}}>
+        {/* Mobile overlay backdrop */}
+        {sidebarOpen && <div onClick={() => setSidebarOpen(false)}
+          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:20}} />}
+
+        {/* Left panel — desktop always visible, mobile slides in as overlay */}
+        <div style={{
+          width:252,background:"#0a0c10",borderRight:"1px solid #1e2130",padding:14,
+          overflowY:"auto",flexShrink:0,display:"flex",flexDirection:"column",gap:10,
+          position:"var(--sidebar-pos,relative)",
+          left:"var(--sidebar-left,auto)",
+          top:"var(--sidebar-top,auto)",
+          bottom:"var(--sidebar-bottom,auto)",
+          zIndex:"var(--sidebar-z,auto)",
+          transform:"var(--sidebar-transform,none)",
+          transition:"transform 0.25s ease",
+        }} className={`sidebar-panel ${sidebarOpen?"sidebar-open":""}`}>
 
           {/* Account card */}
           <div style={{background:"linear-gradient(135deg,#1a1d27,#12151e)",border:"1px solid #2a2d3a",borderRadius:14,padding:"14px 16px"}}>
@@ -691,7 +795,7 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
             <input value={input} onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if(e.key==="Enter" && !e.shiftKey && !typing){ e.preventDefault(); sendMessage(); }}}
               placeholder={t.placeholder} disabled={typing}
-              style={{flex:1,background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:12,padding:"10px 16px",color:"#e2e8f0",fontSize:"0.87em",outline:"none",fontFamily:"inherit",transition:"border-color 0.15s",opacity:typing?0.7:1}}
+              className="chat-input" style={{flex:1,background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:12,padding:"10px 16px",color:"#e2e8f0",fontSize:"var(--input-font,0.87em)",outline:"none",fontFamily:"inherit",transition:"border-color 0.15s",opacity:typing?0.7:1}}
               onFocus={e => e.target.style.borderColor="#6366f1"}
               onBlur={e => e.target.style.borderColor="#2a2d3a"}
             />
@@ -991,44 +1095,74 @@ function OpsConsole({ onSwitch }) {
     }
   }
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
   useEffect(() => { fetchAll(); }, []);
 
   return (
     <div style={{height:"100%",display:"flex",flexDirection:"column",background:"#0d0f14",overflow:"hidden"}}>
 
       {/* Header */}
-      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"0 20px",flexShrink:0}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",height:52}}>
-          <div style={{display:"flex",alignItems:"center",gap:14}}>
-            <div style={{fontWeight:700,fontSize:"1em",color:"#e2e8f0",letterSpacing:"0.02em"}}>
-              <span style={{color:"#6366f1"}}>SiDO</span>Bet
-            </div>
-            <div style={{width:1,height:18,background:"#1e2130"}} />
-            <div style={{fontSize:"0.8em",color:"#475569",fontWeight:500}}>Ops Console</div>
-            <div style={{background:"#1a1a2e",border:"1px solid #312e81",color:"#818cf8",fontSize:"0.68em",padding:"2px 8px",borderRadius:20,fontWeight:600}}>READ ONLY</div>
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            {lastRefresh && (
-              <span style={{fontSize:"0.72em",color:"#374151"}}>
-                updated {lastRefresh.toLocaleTimeString()}
+      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"0",flexShrink:0}}>
+        {isMobile ? (
+          <>
+            {/* Mobile Row 1: SiDOBet centred */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"10px 14px"}}>
+              <span style={{fontSize:"1.1em",fontWeight:800,letterSpacing:"-0.01em"}}>
+                <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
               </span>
-            )}
-            <button className="ops-refresh" onClick={fetchAll} disabled={loading}
-              style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"5px 10px",color:"#64748b",cursor:loading?"not-allowed":"pointer",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s",display:"flex",alignItems:"center",gap:6}}>
-              {loading ? <Spinner /> : "↻"} Refresh
-            </button>
-            <button className="mode-toggle" onClick={onSwitch}
-              style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"5px 12px",color:"#64748b",cursor:"pointer",fontSize:"0.78em",fontFamily:"inherit",transition:"all 0.15s",whiteSpace:"nowrap"}}>
-              🎮 Player Chat
-            </button>
+            </div>
+            {/* Mobile Row 2: Ops Console · READ ONLY (left) · Refresh · Player Chat (right) */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 12px 8px"}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <span style={{fontSize:"0.72em",color:"#475569",fontWeight:500}}>Ops Console</span>
+                <div style={{background:"#1a1a2e",border:"1px solid #312e81",color:"#818cf8",fontSize:"0.6em",padding:"2px 6px",borderRadius:20,fontWeight:600}}>READ ONLY</div>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                <button className="ops-refresh" onClick={fetchAll} disabled={loading}
+                  style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"4px 8px",color:"#64748b",cursor:loading?"not-allowed":"pointer",fontSize:"0.68em",fontFamily:"inherit",display:"flex",alignItems:"center",gap:4}}>
+                  {loading ? <Spinner /> : "↻"} Refresh
+                </button>
+                <button className="mode-toggle" onClick={onSwitch}
+                  style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"4px 8px",color:"#64748b",cursor:"pointer",fontSize:"0.68em",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                  🎮 Player Chat
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",height:52,padding:"0 20px"}}>
+            <div style={{display:"flex",alignItems:"center",gap:14}}>
+              <div style={{fontWeight:700,fontSize:"1em",color:"#e2e8f0",letterSpacing:"0.02em"}}>
+                <span style={{color:"#6366f1"}}>SiDO</span>Bet
+              </div>
+              <div style={{width:1,height:18,background:"#1e2130"}} />
+              <div style={{fontSize:"0.8em",color:"#475569",fontWeight:500}}>Ops Console</div>
+              <div style={{background:"#1a1a2e",border:"1px solid #312e81",color:"#818cf8",fontSize:"0.68em",padding:"2px 8px",borderRadius:20,fontWeight:600}}>READ ONLY</div>
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              {lastRefresh && <span style={{fontSize:"0.72em",color:"#374151"}}>updated {lastRefresh.toLocaleTimeString()}</span>}
+              <button className="ops-refresh" onClick={fetchAll} disabled={loading}
+                style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"5px 10px",color:"#64748b",cursor:loading?"not-allowed":"pointer",fontSize:"0.78em",fontFamily:"inherit",display:"flex",alignItems:"center",gap:6}}>
+                {loading ? <Spinner /> : "↻"} Refresh
+              </button>
+              <button className="mode-toggle" onClick={onSwitch}
+                style={{background:"transparent",border:"1px solid #1e2130",borderRadius:8,padding:"5px 12px",color:"#64748b",cursor:"pointer",fontSize:"0.78em",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                🎮 Player Chat
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Tabs */}
-        <div style={{display:"flex",gap:0,marginTop:0}}>
+        {/* Tabs — always scrollable */}
+        <div style={{display:"flex",gap:0,overflowX:"auto",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
           {TABS.map(t => (
             <button key={t.id} className={`ops-tab-btn${tab===t.id?" active":""}`} onClick={() => setTab(t.id)}
-              style={{background:"transparent",border:"none",borderBottom:tab===t.id?"2px solid #6366f1":"2px solid transparent",padding:"8px 16px",color:tab===t.id?"#a5b4fc":"#475569",cursor:"pointer",fontSize:"0.82em",fontFamily:"inherit",fontWeight:tab===t.id?600:400,transition:"all 0.15s",whiteSpace:"nowrap"}}>
+              style={{background:"transparent",border:"none",borderBottom:tab===t.id?"2px solid #6366f1":"2px solid transparent",padding:isMobile?"6px 10px":"8px 16px",color:tab===t.id?"#a5b4fc":"#475569",cursor:"pointer",fontSize:isMobile?"0.68em":"0.82em",fontFamily:"inherit",fontWeight:tab===t.id?600:400,transition:"all 0.15s",whiteSpace:"nowrap",flexShrink:0}}>
               {t.label}
               {t.id==="escalations" && escData && escData.length > 0 && (
                 <span style={{marginLeft:6,background:"#ef4444",color:"white",borderRadius:10,padding:"1px 6px",fontSize:"0.78em",fontWeight:700}}>{escData.length}</span>
@@ -1036,6 +1170,7 @@ function OpsConsole({ onSwitch }) {
             </button>
           ))}
         </div>
+
       </div>
 
       {/* Error banner */}
@@ -1054,9 +1189,18 @@ function OpsConsole({ onSwitch }) {
       </div>
 
       {/* Footer */}
-      <div style={{background:"#0a0c10",borderTop:"1px solid #0f111a",padding:"8px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
-        <span style={{fontSize:"0.7em",color:"#1e2130"}}>SiDOBet Ops Console · Read-only · Data from {API_BASE}</span>
-        <span style={{fontSize:"0.7em",color:"#1e2130"}}>SiDO Strategies © 2026</span>
+      <div style={{background:"#0a0c10",borderTop:"1px solid #0f111a",padding:"8px 20px",flexShrink:0}}>
+        {isMobile ? (
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+            <span style={{fontSize:"0.62em",color:"#1e2130",textAlign:"center"}}>SiDOBet Ops Console · Read-only · Data from {API_BASE}</span>
+            <span style={{fontSize:"0.62em",color:"#1e2130"}}>SiDO Strategies © 2026</span>
+          </div>
+        ) : (
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span style={{fontSize:"0.7em",color:"#1e2130"}}>SiDOBet Ops Console · Read-only · Data from {API_BASE}</span>
+            <span style={{fontSize:"0.7em",color:"#1e2130"}}>SiDO Strategies © 2026</span>
+          </div>
+        )}
       </div>
     </div>
   );
