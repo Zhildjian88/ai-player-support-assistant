@@ -565,7 +565,7 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
     <div style={{background:"#0d0f14",height:"100vh",display:"flex",flexDirection:"column",fontSize:"14px",overflow:"hidden"}}>
 
       {/* Top bar */}
-      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"8px 12px",flexShrink:0,zIndex:10}}>
+      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:isMobile?"6px 12px":"8px 12px",flexShrink:0,zIndex:10}}>
         {isMobile ? (
           <>
             {/* ── Mobile Row 1: ☰ · SiDOBet (centre) · name+avatar ── */}
@@ -575,8 +575,8 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
                 ☰
               </button>
               <div style={{position:"absolute",left:0,right:0,display:"flex",justifyContent:"center",pointerEvents:"none"}}>
-                <span style={{fontSize:"1.1em",fontWeight:800,letterSpacing:"-0.01em"}}>
-                  <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
+                <span style={{fontSize:"16px",fontWeight:700,letterSpacing:"0.02em",color:"#e2e8f0"}}>
+                  <span style={{color:"#6366f1"}}>SiDO</span>Bet
                 </span>
               </div>
               <div style={{display:"flex",alignItems:"center",gap:6,zIndex:1}}>
@@ -644,10 +644,10 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
       </div>
 
       {/* RG Banner */}
-      <div style={{background:"linear-gradient(90deg,#0f1e3d,#0d1829)",borderBottom:"1px solid #1a3060",padding:"7px 18px",fontSize:"0.78em",color:"#93c5fd",display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
+      <div style={{background:"linear-gradient(90deg,#0f1e3d,#0d1829)",borderBottom:"1px solid #1a3060",padding:isMobile?"5px 12px":"7px 18px",fontSize:"0.78em",color:"#93c5fd",display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
         <span>🛡️ <strong>{t.rgBanner}</strong></span>
-        <span style={{color:"#475569"}}>·</span>
-        <span style={{color:p.rg?"#fbbf24":"#64748b"}}>{p.rg ? t.rgActive : t.rgDefault}</span>
+        {!isMobile && <><span style={{color:"#475569"}}>·</span>
+        <span style={{color:p.rg?"#fbbf24":"#64748b"}}>{p.rg ? t.rgActive : t.rgDefault}</span></>}
         <button className="rg-manage" onClick={() => sendMessage("action:rg")}
           style={{marginLeft:"auto",background:"transparent",border:"none",color:"#60a5fa",cursor:"pointer",fontSize:"0.9em",padding:0,fontFamily:"inherit",transition:"all 0.15s"}}>
           {t.rgManage}
@@ -1111,9 +1111,9 @@ function OpsConsole({ onSwitch }) {
         {isMobile ? (
           <>
             {/* Mobile Row 1: SiDOBet centred */}
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"10px 14px"}}>
-              <span style={{fontSize:"1.1em",fontWeight:800,letterSpacing:"-0.01em"}}>
-                <span style={{color:"#6366f1"}}>SiDO</span><span style={{color:"#e2e8f0"}}>Bet</span>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"8px 14px"}}>
+              <span style={{fontSize:"16px",fontWeight:700,letterSpacing:"0.02em",color:"#e2e8f0"}}>
+                <span style={{color:"#6366f1"}}>SiDO</span>Bet
               </span>
             </div>
             {/* Mobile Row 2: Ops Console · READ ONLY (left) · Refresh · Player Chat (right) */}
