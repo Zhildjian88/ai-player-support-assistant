@@ -154,48 +154,49 @@ def _call_gemini(messages: list, start: float, lang: str) -> dict | None:
         return None
 
     try:
-        import importlib
-        genai = importlib.import_module("google.genai")
-        genai_types = importlib.import_module("google.genai.types")
+        import requests as _requests
 
-        client     = genai.Client(api_key=api_key)
         model_name = os.getenv("LLM_MODEL", DEFAULT_GEMINI_MODEL)
         max_tokens = int(os.getenv("LLM_MAX_TOKENS", "512"))
+        timeout    = int(os.getenv("LLM_TIMEOUT_SECONDS", "10"))
 
         system_content = next(
             (m["content"] for m in messages if m["role"] == "system"), ""
         )
         chat_messages = [m for m in messages if m["role"] != "system"]
 
+        # Build Gemini REST contents list
         contents = []
         for m in chat_messages:
             role = "model" if m["role"] == "assistant" else "user"
-            contents.append(genai_types.Content(
-                role=role,
-                parts=[genai_types.Part(text=m["content"])]
-            ))
+            contents.append({"role": role, "parts": [{"text": m["content"]}]})
 
         # Keep variable name for test compatibility
-        sandwiched_message = contents[-1].parts[0].text
+        sandwiched_message = contents[-1]["parts"][0]["text"]
 
-        config   = genai_types.GenerateContentConfig(
-            system_instruction = system_content,
-            max_output_tokens  = max_tokens,
+        payload = {
+            "system_instruction": {"parts": [{"text": system_content}]},
+            "contents": contents,
+            "generationConfig": {"maxOutputTokens": max_tokens},
+        }
+
+        url = (
+            f"https://generativelanguage.googleapis.com/v1beta/models"
+            f"/{model_name}:generateContent?key={api_key}"
         )
-        response      = client.models.generate_content(
-            model    = model_name,
-            contents = contents,
-            config   = config,
-        )
+        resp = _requests.post(url, json=payload, timeout=timeout)
+        resp.raise_for_status()
+        data = resp.json()
+
+        response_text = data["candidates"][0]["content"]["parts"][0]["text"]
+        usage         = data.get("usageMetadata", {})
+        input_tokens  = usage.get("promptTokenCount", 0)
+        output_tokens = usage.get("candidatesTokenCount", 0)
         latency_ms    = int((time.monotonic() - start) * 1000)
-
-        usage         = response.usage_metadata
-        input_tokens  = getattr(usage, "prompt_token_count", 0) or 0
-        output_tokens = getattr(usage, "candidates_token_count", 0) or 0
 
         print(f"[llm_service] Gemini OK — {input_tokens}+{output_tokens} tokens, {latency_ms}ms")
         return {
-            "response":      response.text,
+            "response":      response_text,
             "model":         model_name,
             "input_tokens":  input_tokens,
             "output_tokens": output_tokens,

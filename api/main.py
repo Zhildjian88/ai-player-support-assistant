@@ -1,12 +1,6 @@
 """
 main.py
 FastAPI gateway for the AI Player Support Assistant.
-
-Responsibilities:
-- Receive player chat requests
-- Pass to the decision router
-- Return structured responses
-- Expose health and audit endpoints
 """
 
 from fastapi import FastAPI, HTTPException
@@ -19,8 +13,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.router import process_message
-
-# ── App setup ─────────────────────────────────────────────────────────────────
 
 app = FastAPI(
     title="AI Player Support Assistant",
@@ -45,8 +37,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Request / Response models ─────────────────────────────────────────────────
-
 class ChatRequest(BaseModel):
     user_id:  Optional[str] = None
     message:  str
@@ -63,11 +53,8 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    # Core response
     response:    str
     language:    str
-
-    # Decision trace — for audit, compliance, and Trust & Safety visibility
     route_taken: str
     source:      str
     intent:      str
@@ -76,18 +63,12 @@ class ChatResponse(BaseModel):
     risk_flags:  list[str]
     escalated:   bool
     llm_called:  bool
-
-    # LLM instrumentation (populated only when llm_called=True)
     llm_model:   Optional[str] = None
     llm_success: Optional[bool] = None
     latency_ms:  Optional[int] = None
-
-    # Audit reference
     audit_id:    Optional[str] = None
     session_id:  Optional[str] = None
 
-
-# ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @app.get("/", tags=["health"])
 def root():
@@ -104,25 +85,22 @@ def health():
     from app.distress_detector import check as distress_check
     msg = "我再也无法忍受了，我想结束我的生命。"
     lang = detect_language(msg)
-    result = distress_check(msg, lang)
+    distress = distress_check(msg, lang)
+    route_result = process_message(msg, user_id="U1001")
     return {
         "status": "ok",
         "debug_lang": lang,
-        "debug_signal": result["signal"],
-        "debug_subtype": result["subtype"],
-        "debug_response": result["response"][:80],
+        "debug_signal": distress["signal"],
+        "debug_subtype": distress["subtype"],
+        "debug_distress_response": distress["response"][:60],
+        "pipeline_route": route_result["route_taken"],
+        "pipeline_lang": route_result["language"],
+        "pipeline_response": route_result["response"][:80],
     }
 
 
 @app.post("/chat", response_model=ChatResponse, tags=["chat"])
 def chat(request: ChatRequest):
-    """
-    Main chat endpoint.
-
-    Accepts a player message with an optional user_id.
-    Returns a structured response including routing metadata
-    for transparency and audit purposes.
-    """
     if not request.message or not request.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
 
@@ -137,10 +115,6 @@ def chat(request: ChatRequest):
 
 @app.get("/audit/recent", tags=["audit"])
 def recent_audit_logs(limit: int = 20):
-    """
-    Returns the most recent audit log entries.
-    Useful for the operations monitoring dashboard.
-    """
     from app.db_init import get_connection
     conn = get_connection()
     rows = conn.execute(
@@ -152,42 +126,24 @@ def recent_audit_logs(limit: int = 20):
 
 @app.get("/cost/summary", tags=["cost"])
 def cost_summary():
-    """
-    Returns LLM usage and cost statistics.
-    Shows token consumption, estimated USD spend, LLM call rate,
-    success/failure counts, and per-model breakdown.
-    """
     from app.cost_service import get_summary
     return get_summary()
 
 
 @app.get("/metrics", tags=["metrics"])
 def metrics():
-    """
-    Returns operational telemetry: route distribution, safety events,
-    LLM usage rate, latency statistics, and system health indicators.
-    """
     from app.metrics_service import get_metrics
     return get_metrics()
 
 
 @app.get("/search/stats", tags=["search"])
 def search_stats():
-    """
-    Returns FAISS index and corpus statistics.
-    Confirms which backend is active (neural vs TF-IDF),
-    index dimensions, and corpus composition.
-    """
     from app.similarity_service import get_index_stats
     return get_index_stats()
 
 
 @app.get("/escalations/open", tags=["escalation"])
 def open_escalations():
-    """
-    Returns all open escalation queue items.
-    Intended for the human review dashboard.
-    """
     from app.db_init import get_connection
     conn = get_connection()
     rows = conn.execute(
@@ -195,7 +151,3 @@ def open_escalations():
     ).fetchall()
     conn.close()
     return [dict(r) for r in rows]
-
-
-# ── Updated response model with decision trace ────────────────────────────────
-# Re-export so imports still work — ChatResponse is extended below

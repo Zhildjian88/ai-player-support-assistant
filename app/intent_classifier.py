@@ -131,21 +131,20 @@ def classify(message: str, lang_code: str = "en") -> dict:
     gemini_key = os.getenv("GEMINI_API_KEY", "")
     if gemini_key:
         try:
-            import importlib
-            genai = importlib.import_module("google.genai")
-            genai_types = importlib.import_module("google.genai.types")
-            client   = genai.Client(api_key=gemini_key)
-            config   = genai_types.GenerateContentConfig(
-                system_instruction = CLASSIFIER_SYSTEM_PROMPT,
-                max_output_tokens  = 120,
-                temperature        = 0.0,
+            import requests as _requests
+            payload = {
+                "system_instruction": {"parts": [{"text": CLASSIFIER_SYSTEM_PROMPT}]},
+                "contents": [{"role": "user", "parts": [{"text": message}]}],
+                "generationConfig": {"maxOutputTokens": 120, "temperature": 0.0},
+            }
+            url = (
+                "https://generativelanguage.googleapis.com/v1beta/models"
+                f"/gemini-2.0-flash:generateContent?key={gemini_key}"
             )
-            response = client.models.generate_content(
-                model    = "gemini-2.0-flash",
-                contents = message,
-                config   = config,
-            )
-            raw = response.text.strip()
+            resp = _requests.post(url, json=payload, timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+            raw  = data["candidates"][0]["content"]["parts"][0]["text"].strip()
         except Exception as e:
             print(f"[intent_classifier] Gemini error: {type(e).__name__}: {e}")
             raw = None
