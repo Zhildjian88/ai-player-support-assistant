@@ -236,14 +236,10 @@ const sortedPlayers = Object.entries(PLAYERS).sort(([,a],[,b]) =>
   a.country.localeCompare(b.country) || a.name.localeCompare(b.name));
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
-function App({ onSwitchToOps }) {
-  const [loggedIn,    setLoggedIn]    = useState(false);
-  const [selectedId,  setSelectedId]  = useState("U1003");
+function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, messages, setMessages, sessionId, setSessionId }) {
   const [uiLang,      setUiLang]      = useState("en");
-  const [messages,    setMessages]    = useState([]);
   const [input,       setInput]       = useState("");
   const [typing,      setTyping]      = useState(false);
-  const [sessionId,   setSessionId]   = useState(null);
   const [apiStatus,   setApiStatus]   = useState("unknown"); // unknown | online | offline
   const chatEndRef = useRef(null);
 
@@ -1068,11 +1064,24 @@ function OpsConsole({ onSwitch }) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ROOT — toggles between Player Chat and Ops Console
+// Persists loggedIn + selectedId so switching to Ops and back
+// returns to the active chat instead of the login screen.
 // ─────────────────────────────────────────────────────────────────────────────
 function Root() {
-  const [mode, setMode] = useState("player");
+  const [mode,       setMode]       = useState("player");
+  const [loggedIn,   setLoggedIn]   = useState(false);
+  const [selectedId, setSelectedId] = useState("U1003");
+  const [messages,   setMessages]   = useState([]);
+  const [sessionId,  setSessionId]  = useState(null);
+
   if (mode === "ops") return <OpsConsole onSwitch={() => setMode("player")} />;
-  return <App onSwitchToOps={() => setMode("ops")} />;
+  return <App
+    onSwitchToOps={() => setMode("ops")}
+    loggedIn={loggedIn}         setLoggedIn={setLoggedIn}
+    selectedId={selectedId}     setSelectedId={setSelectedId}
+    messages={messages}         setMessages={setMessages}
+    sessionId={sessionId}       setSessionId={setSessionId}
+  />;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<Root />);
