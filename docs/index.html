@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>SiDOBet — Player Support</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -13,6 +13,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body, #root { height: 100%; width: 100%; }
     body { background: #0d0f14; font-family: 'Sora', 'Segoe UI', sans-serif; color: #e2e8f0; overflow: hidden; }
+    @supports (height: 100dvh) {
+      html, body, #root { height: 100dvh; }
+    }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #0d0f14; }
     ::-webkit-scrollbar-thumb { background: #2a2d3a; border-radius: 2px; }
@@ -41,38 +44,7 @@
 
     /* ── Responsive layout ── */
 
-    /* Sidebar always visible on desktop */
-    .sidebar-panel {
-      position: relative;
-      transform: none;
-      z-index: auto;
-      width: 252px;
-      transition: transform 0.25s ease;
-    }
-
     @media (max-width: 768px) {
-      /* Sidebar — fixed overlay, slides in on open */
-      .sidebar-panel {
-        position: fixed !important;
-        left: 0 !important; top: 0 !important; bottom: 0 !important;
-        z-index: 25 !important;
-        transform: translateX(-100%) !important;
-        transition: transform 0.25s ease !important;
-        width: 280px !important;
-      }
-      .sidebar-panel.sidebar-open {
-        transform: translateX(0) !important;
-      }
-
-      /* Input — 16px prevents iOS auto-zoom */
-      .chat-input {
-        font-size: 13px !important;
-        padding: 10px 12px !important;
-      }
-      .chat-input::placeholder {
-        font-size: 12px !important;
-      }
-
       /* Send button thumb-friendly */
       .send-btn { padding: 12px 14px !important; min-width: 46px !important; }
     }
@@ -562,10 +534,10 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
   ];
 
   return (
-    <div style={{background:"#0d0f14",height:"100vh",display:"flex",flexDirection:"column",fontSize:"14px",overflow:"hidden"}}>
+    <div style={{background:"#0d0f14",height:"100dvh",display:"flex",flexDirection:"column",fontSize:"14px",overflow:"hidden",paddingTop:"env(safe-area-inset-top)",paddingBottom:"env(safe-area-inset-bottom)"}}>
 
-      {/* Top bar */}
-      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:isMobile?"6px 12px":"8px 12px",flexShrink:0,zIndex:10}}>
+      {/* Top bar — fixed so keyboard doesn't push it off screen */}
+      <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:isMobile?"6px 12px":"8px 12px",flexShrink:0,zIndex:50,position:"sticky",top:0}}>
         {isMobile ? (
           <>
             {/* ── Mobile Row 1: ☰ · SiDOBet (centre) · name+avatar ── */}
@@ -644,7 +616,7 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
       </div>
 
       {/* RG Banner */}
-      <div style={{background:"linear-gradient(90deg,#0f1e3d,#0d1829)",borderBottom:"1px solid #1a3060",padding:isMobile?"5px 12px":"7px 18px",fontSize:"0.78em",color:"#93c5fd",display:"flex",gap:10,alignItems:"center",flexShrink:0}}>
+      <div style={{background:"linear-gradient(90deg,#0f1e3d,#0d1829)",borderBottom:"1px solid #1a3060",padding:isMobile?"5px 12px":"7px 18px",fontSize:"0.78em",color:"#93c5fd",display:"flex",gap:10,alignItems:"center",flexShrink:0,position:"sticky",top:0,zIndex:49}}>
         <span>🛡️ <strong>{t.rgBanner}</strong></span>
         {!isMobile && <><span style={{color:"#475569"}}>·</span>
         <span style={{color:p.rg?"#fbbf24":"#64748b"}}>{p.rg ? t.rgActive : t.rgDefault}</span></>}
@@ -660,20 +632,24 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
         {/* Left panel */}
         {/* Mobile overlay backdrop */}
         {sidebarOpen && <div onClick={() => setSidebarOpen(false)}
-          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:20}} />}
+          style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",zIndex:200}} />}
 
         {/* Left panel — desktop always visible, mobile slides in as overlay */}
         <div style={{
           width:252,background:"#0a0c10",borderRight:"1px solid #1e2130",padding:14,
           overflowY:"auto",flexShrink:0,display:"flex",flexDirection:"column",gap:10,
-          position:"var(--sidebar-pos,relative)",
-          left:"var(--sidebar-left,auto)",
-          top:"var(--sidebar-top,auto)",
-          bottom:"var(--sidebar-bottom,auto)",
-          zIndex:"var(--sidebar-z,auto)",
-          transform:"var(--sidebar-transform,none)",
-          transition:"transform 0.25s ease",
-        }} className={`sidebar-panel ${sidebarOpen?"sidebar-open":""}`}>
+          ...(isMobile ? {
+            position:"fixed",
+            left:0, top:0, bottom:0,
+            zIndex:201,
+            transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)",
+            transition:"transform 0.25s ease",
+            width:280,
+          } : {
+            position:"relative",
+            transform:"none",
+          })
+        }}>
 
           {/* Account card */}
           <div style={{background:"linear-gradient(135deg,#1a1d27,#12151e)",border:"1px solid #2a2d3a",borderRadius:14,padding:"14px 16px"}}>
@@ -791,11 +767,11 @@ function App({ onSwitchToOps, loggedIn, setLoggedIn, selectedId, setSelectedId, 
           </div>
 
           {/* Input bar */}
-          <div style={{padding:"12px 16px",borderTop:"1px solid #1e2130",background:"#0a0c10",display:"flex",gap:10,flexShrink:0}}>
+          <div style={{padding:"12px 16px",borderTop:"1px solid #1e2130",background:"#0a0c10",display:"flex",gap:10,flexShrink:0,position:"sticky",bottom:0,zIndex:49}}>
             <input value={input} onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if(e.key==="Enter" && !e.shiftKey && !typing){ e.preventDefault(); sendMessage(); }}}
               placeholder={t.placeholder} disabled={typing}
-              className="chat-input" style={{flex:1,background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:12,padding:"10px 16px",color:"#e2e8f0",fontSize:"var(--input-font,0.87em)",outline:"none",fontFamily:"inherit",transition:"border-color 0.15s",opacity:typing?0.7:1}}
+              className="chat-input" style={{flex:1,background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:12,padding:"10px 16px",color:"#e2e8f0",fontSize:"16px",outline:"none",fontFamily:"inherit",transition:"border-color 0.15s",opacity:typing?0.7:1}}
               onFocus={e => e.target.style.borderColor="#6366f1"}
               onBlur={e => e.target.style.borderColor="#2a2d3a"}
             />
@@ -1104,7 +1080,7 @@ function OpsConsole({ onSwitch }) {
   useEffect(() => { fetchAll(); }, []);
 
   return (
-    <div style={{height:"100%",display:"flex",flexDirection:"column",background:"#0d0f14",overflow:"hidden"}}>
+    <div style={{height:"100dvh",display:"flex",flexDirection:"column",background:"#0d0f14",overflow:"hidden",paddingTop:"env(safe-area-inset-top)",paddingBottom:"env(safe-area-inset-bottom)"}}>
 
       {/* Header */}
       <div style={{background:"#0a0c10",borderBottom:"1px solid #1e2130",padding:"0",flexShrink:0}}>
