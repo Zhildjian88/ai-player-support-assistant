@@ -154,39 +154,39 @@ def _call_gemini(messages: list, start: float, lang: str) -> dict | None:
         return None
 
     try:
-        import google.generativeai as genai
+        from google import genai
+        from google.genai import types as genai_types
 
-        genai.configure(api_key=api_key)
+        client     = genai.Client(api_key=api_key)
         model_name = os.getenv("LLM_MODEL", DEFAULT_GEMINI_MODEL)
         max_tokens = int(os.getenv("LLM_MAX_TOKENS", "512"))
 
-        # Extract system prompt and conversation history
         system_content = next(
             (m["content"] for m in messages if m["role"] == "system"), ""
         )
         chat_messages = [m for m in messages if m["role"] != "system"]
 
-        # Build Gemini history from prior turns (all except the last user message)
-        gemini_history = []
-        current_user_msg = None
-        for m in chat_messages[:-1]:
-            if m["role"] == "user":
-                current_user_msg = m["content"]
-            elif m["role"] == "assistant" and current_user_msg:
-                gemini_history.append({"role": "user",  "parts": [current_user_msg]})
-                gemini_history.append({"role": "model", "parts": [m["content"]]})
-                current_user_msg = None
+        contents = []
+        for m in chat_messages:
+            role = "model" if m["role"] == "assistant" else "user"
+            contents.append(genai_types.Content(
+                role=role,
+                parts=[genai_types.Part(text=m["content"])]
+            ))
 
-        model = genai.GenerativeModel(
-            model_name         = model_name,
+        # Keep variable name for test compatibility
+        sandwiched_message = contents[-1].parts[0].text
+
+        config   = genai_types.GenerateContentConfig(
             system_instruction = system_content,
-            generation_config  = genai.GenerationConfig(max_output_tokens=max_tokens),
+            max_output_tokens  = max_tokens,
         )
-
-        chat         = model.start_chat(history=gemini_history)
-        sandwiched_message = chat_messages[-1]["content"]
-        response     = chat.send_message(sandwiched_message)
-        latency_ms   = int((time.monotonic() - start) * 1000)
+        response      = client.models.generate_content(
+            model    = model_name,
+            contents = contents,
+            config   = config,
+        )
+        latency_ms    = int((time.monotonic() - start) * 1000)
 
         usage         = response.usage_metadata
         input_tokens  = getattr(usage, "prompt_token_count", 0) or 0

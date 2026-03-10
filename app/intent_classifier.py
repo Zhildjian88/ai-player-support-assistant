@@ -131,17 +131,19 @@ def classify(message: str, lang_code: str = "en") -> dict:
     gemini_key = os.getenv("GEMINI_API_KEY", "")
     if gemini_key:
         try:
-            import google.generativeai as genai
-            genai.configure(api_key=gemini_key)
-            model = genai.GenerativeModel(
-                model_name         = "gemini-2.0-flash",
+            from google import genai
+            from google.genai import types as genai_types
+            client   = genai.Client(api_key=gemini_key)
+            config   = genai_types.GenerateContentConfig(
                 system_instruction = CLASSIFIER_SYSTEM_PROMPT,
-                generation_config  = genai.GenerationConfig(
-                    max_output_tokens = 120,
-                    temperature       = 0.0,
-                ),
+                max_output_tokens  = 120,
+                temperature        = 0.0,
             )
-            response = model.generate_content(message)
+            response = client.models.generate_content(
+                model    = "gemini-2.0-flash",
+                contents = message,
+                config   = config,
+            )
             raw = response.text.strip()
         except Exception as e:
             print(f"[intent_classifier] Gemini error: {type(e).__name__}: {e}")
