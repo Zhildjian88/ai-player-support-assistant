@@ -22,4 +22,5 @@ requests>=2.31.0
 
 # Lexical similarity (TF-IDF)
 scikit-learn>=1.3.0
+faiss-cpu>=1.7.4
 numpy>=1.26.0
